@@ -1,0 +1,40 @@
+import json
+from typing import Union
+from time import sleep
+
+# LOGPATH = r"C:\MultiMC\instances\1.20.2 copy 2\.minecraft\logs\latest.log"
+LOGPATH = r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log"
+DATAPATH = r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json"
+STATSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\stats.json"
+
+
+class __data__:
+    """__data__ class contained load and dump methods to work with JSON files more comfy"""
+
+    def __init__(self, file_path: str):
+        self.file_path = file_path
+
+    def load(self):
+        """loads data from json file"""
+        with open(self.file_path, "r", encoding="UTF-8") as data_file:
+            return json.load(data_file)
+
+    def dump(self, data: Union[dict, list]):
+        """dumps selected data to the file"""
+        with open(self.file_path, "w", encoding="UTF-8") as data_file:
+            json.dump(data, data_file, indent=4)
+
+
+def follow(file):
+    '''follows selected file'''
+    file.seek(0, 2)
+    while True:
+        li = file.readline()
+        if not li:
+            sleep(0.1)
+            continue
+        yield li
+
+
+cvdbdata = __data__(DATAPATH)
+statsdataobj = __data__(STATSPATH)
