@@ -106,13 +106,13 @@ async def getdata(ctx, nickname):
     try:
         uuid = mapi.get_uuid(nickname)
         if uuid in data:
-            await ctx.send(f"```{json.dumps(data[uuid], indent=4)}```")
+            await ctx.send(f"```json\n{json.dumps(data[uuid], indent=4)}```")
         else:
             await ctx.send("The bot has never seen this player.", ephemeral=True)
     except errors.NotFound:
         nickname = nickname.lower()
         if nickname in data:
-            await ctx.send(f"```{json.dumps(data[nickname], indent=4)}```")
+            await ctx.send(f"```json\n{json.dumps(data[nickname], indent=4)}```")
         else:
             await ctx.send(f"Player {nickname} doesn't exist.", ephemeral=True)
 
