@@ -1,7 +1,7 @@
 from mojang import API, errors
-from time import sleep
+from time import sleep, time
 from __data__ import cvdbdata, LOGPATH, follow
-
+from json import dumps
 mapi = API()
 
 while True:
@@ -40,6 +40,7 @@ while True:
                     count -= 1
                     print(f"{nickname} doesn't exist.")
                     continue
+                sleep(0.25)
             print(f"Updated {count} players.")
             exit(0)
         case "2":
@@ -59,10 +60,10 @@ while True:
                         count = len(nicknames)
                         for nickname in nicknames:
                             nickname = nickname.strip()
+                            data = cvdbdata.load()
                             try:
                                 uuid = mapi.get_uuid(nickname)
                                 profile = mapi.get_profile(uuid)
-                                data = cvdbdata.load()
                                 data[uuid] = {
                                     "id": profile.id,
                                     "name": profile.name,
@@ -85,31 +86,32 @@ while True:
                                 }
                                 cvdbdata.dump(data)
                                 print(f"{profile.name}'s dictionary was updated/added.")
-                                sleep(0.1)
+                                print(dumps(data[uuid], indent=2))
                             except errors.NotFound:
-                                data[nickname] = {
-                                    "id": profile.id,
-                                    "name": profile.name,
-                                    "last_seen": round(float(profile.timestamp) / 1000),
+                                data[nickname.lower()] = {
+                                    "id": None,
+                                    "name": nickname,
+                                    "last_seen": int(time()),
                                     "first_time_seen": (
-                                        round(float(profile.timestamp) / 1000)
-                                        if uuid not in data
-                                        else data[uuid]["first_time_seen"]
+                                        int(time())
+                                        if nickname not in data
+                                        else data[nickname]["first_time_seen"]
                                     ),
-                                    "is_legacy_profile": profile.is_legacy_profile,
-                                    "skin_variant": profile.skin_variant,
-                                    "cape_url": profile.cape_url,
-                                    "skin_url": profile.skin_url,
+                                    "is_legacy_profile": None,
+                                    "skin_variant": None,
+                                    "cape_url": None,
+                                    "skin_url": None,
                                     "db_id": (
                                         len(data)
-                                        if uuid not in data
-                                        else data[uuid]["db_id"]
+                                        if nickname not in data
+                                        else data[nickname]["db_id"]
                                     ),
                                     "does_exist": False,
                                 }
                                 cvdbdata.dump(data)
-                                print(f"{profile.name}'s dictionary was updated/added.")
-                                sleep(0.1)
+                                print(f"{nickname}'s dictionary was updated/added.")
+                                print(dumps(data[nickname.lower()], indent=2))
                                 continue
+                            sleep(0.25)
                         print(f"Updated {count} players.")
                         exit(0)

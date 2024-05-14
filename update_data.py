@@ -1,4 +1,5 @@
 from __data__ import cvdbdata
+from json import dumps
 from time import sleep
 from mojang import API
 
@@ -22,6 +23,7 @@ for uuid in data:
             "does_exist": True,
         }
         print(f"Updated {profile.name}")
+        print(dumps(data[uuid], indent=2))
         sleep(0.25)
 
 

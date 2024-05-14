@@ -1,4 +1,5 @@
 import time
+import json
 from mojang import API, errors
 from __data__ import cvdbdata, LOGPATH, follow
 
@@ -44,17 +45,17 @@ while True:
                     }
                     cvdbdata.dump(data)
                     print(f"{nickname}'s dictionary updated.")
-                    time.sleep(0.1)
+                    print(json.dumps(data[uuid], indent=2))
                 except errors.NotFound:
                     if nickname != "*":
                         data[nickname.lower()] = {
                             "id": None,
                             "name": nickname,
-                            "last_seen": round(float(profile.timestamp) / 1000),
+                            "last_seen": int(time.time()),
                             "first_time_seen": (
-                                round(float(profile.timestamp) / 1000)
-                                if uuid not in data
-                                else data[uuid]["first_time_seen"]
+                                int(time.time())
+                                if nickname not in data
+                                else data[nickname]["first_time_seen"]
                             ),
                             "is_legacy_profile": None,
                             "skin_variant": None,
@@ -69,5 +70,7 @@ while True:
                         }
                         cvdbdata.dump(data)
                         print(f"{nickname}'s dictionary updated.")
+                        print(json.dumps(data[nickname.lower()], indent=2))
                 except Exception as e:
                     print(f"Exception {e} occurred at {int(time.time())}.")
+                print("\n")
