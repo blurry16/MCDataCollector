@@ -2,12 +2,13 @@ from __data__ import cvdbdata
 from datetime import datetime
 from time import time
 from mojang import API, errors
+from json import dumps
 
 mapi = API()
 
 while True:
     print(
-        "1. Get last seen data by nickname\n2. Get first seen data by nickname\n3. Get full data by nickname\n4. Get database id by nickname\n5. Get all players' nicknames in the DB\n6. Get all zombie accounts nicknames in the DB\n7. Quit"
+        "1. Get last seen data by nickname\n2. Get first seen data by nickname\n3. Get full data by nickname in JSON format\n4. Get database id by nickname\n5. Get all players' nicknames in the DB\n6. Get all zombie accounts nicknames in the DB\n7. Quit"
     )
     inp = input()
     try:
@@ -58,16 +59,23 @@ while True:
                         print("This player doesn't exist.")
             case "3":
                 try:
-                    nickname = input("Nickname: ").lower()
+                    inp = input("Nickname: ").lower()
+                    nickname = inp.split()[0]
+                    indent = 2
+                    if "--indent" in inp.split():
+                        try:
+                            indent = int(inp.split()[inp.split().index("--indent") + 1])
+                        except ValueError:
+                            pass
                     data = cvdbdata.load()
                     local_uuid = mapi.get_uuid(nickname)
                     if local_uuid in data:
-                        print(data[local_uuid])
+                        print(dumps(data[local_uuid], indent=indent))
                     else:
                         print(f"The bot has never seen {nickname}")
                 except errors.NotFound:
                     if nickname in data:
-                        print(data[nickname])
+                        print(dumps(data[nickname], indent=indent))
                     else:
                         print("This player doesn't exist.")
             case "4":

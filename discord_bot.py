@@ -100,19 +100,26 @@ async def getdbid(ctx, nickname):
 @bot.slash_command(
     description="Returns data of selected player from the database in JSON format."
 )
-async def getdata(ctx, nickname):
+async def getdata(ctx, nickname, indent=2):
     print(f"{ctx.author} used /getdata {nickname}")
+
+    try:
+        indent = int(indent)
+    except ValueError:
+        indent = 2
+
+    indent = 2 if (0 > indent) or (indent > 20) else indent
     data = cvdbdata.load()
     try:
         uuid = mapi.get_uuid(nickname)
         if uuid in data:
-            await ctx.send(f"```json\n{json.dumps(data[uuid], indent=4)}```")
+            await ctx.send(f"```json\n{json.dumps(data[uuid], indent=indent)}```")
         else:
             await ctx.send("The bot has never seen this player.", ephemeral=True)
     except errors.NotFound:
         nickname = nickname.lower()
         if nickname in data:
-            await ctx.send(f"```json\n{json.dumps(data[nickname], indent=4)}```")
+            await ctx.send(f"```json\n{json.dumps(data[nickname], indent=indent)}```")
         else:
             await ctx.send(f"Player {nickname} doesn't exist.", ephemeral=True)
 
