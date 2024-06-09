@@ -17,6 +17,7 @@ def mcprint(text: str):
     sleep(0.5)
     keyboard.press_and_release("enter")
 
+
 banned = []
 for i in range(len(banned)):
     banned[i] = banned[i].lower()
