@@ -1,32 +1,39 @@
 from mojang import API, errors
 from __data__ import cvdbdata
+import json
+import time
 
 mapi = API()
 
 data = cvdbdata.load()
 
-# with open(r"data\es_players.txt", "r", encoding="UTF-8") as file:
-#     esnicknames = file.read().split("\n")
+with open(r"data\es_players.txt", "r", encoding="UTF-8") as file:
+    esnicknames = file.read().split("\n")
 
 
-# dbnicknaes = []
+# dbnicknames = []
 # for player in data:
 #     if data[player]["does_exist"]:
-#         dbnicknaes.append(data[player]["name"])
+#         dbnicknames.append(data[player]["name"])
 
-# for esnickname in esnicknames:
-#     if esnickname not in dbnicknaes:
-#         try:
-#             profile = mapi.get_profile(mapi.get_uuid(esnickname))
-#             esnicknames[esnicknames.index(esnickname)] = profile.name
-#         except errors.NotFound:
-#             print(f"{esnickname} invalid.")
-
-# print(esnicknames)
-
+esplayers = []
+for esnickname in esnicknames:
+    # if esnickname not in dbnicknames:
+        # print(esnickname)
+    try:
+        profile = mapi.get_profile(mapi.get_uuid(esnickname))
+        esplayers.append(profile.name)
+        # esplayers[profile.id] = profile.__dict__
+    except errors.NotFound:
+        print(f"{esnickname} invalid.")
+    time.sleep(1)
+# print(json.dumps(dbnicknames,))
+print(esplayers)
+# print(dbnicknames)
+# print(json.dumps(esplayers, indent=4))
 players = [
     "fredlime",
-    "Aves_Felix",
+    "Dr_Aves",
     "cagedFALC0N",
     "blurry16",
     "MamaCheckers",
@@ -34,7 +41,7 @@ players = [
     "Goaticecream",
     "_kittyxx",
     "rxyc",
-    "ItsMeQueenLuna_I",
+    "DaKittiQueenOfSK",
     "Syrynn",
     "PookieCrafter",
     "BooBearCrafter",
@@ -55,7 +62,7 @@ players = [
     "_Sammiee_",
     "daddybearcrafter",
     "LissaLaine",
-    "RainyDemon101",
+    "SunnyDemon202",
     "redstone_nub",
     "Lumeriana",
     "DripstoneCrafter",
@@ -77,14 +84,14 @@ players = [
     "101Wolves",
     "Bluebear1858",
     "Firesnuke",
-    "XxRyan303",
+    "vip1kea",
+    "TsoMein",
     "LoganDaNinja",
-    "KINGGREYSON",
+    "PartyGreyson",
     "OverDhill",
     "whamWHAMmooMOO",
     "CheetahGhost92",
-    "ItzMeTindur",
-    "TsoMein",
+    "TindurMar",
     "SpaceFox884",
     "VictoryMan123",
     "PuppyFancier",
@@ -92,7 +99,7 @@ players = [
     "ChowTime",
     "Erwut",
     "pterr",
-    "SkyButYes",
+    "TheActualSky",
     "GamerAnthony14",
     "IW_Hisl",
     "EmmaKR",
@@ -105,7 +112,7 @@ players = [
     "ItsMeNeon",
     "shoppingcartt",
     "slef69",
-    "MCG9",
+    "HalZurkit",
     "RenFurnael",
     "AidanEJ",
     "_Moza",
@@ -116,8 +123,10 @@ players = [
     "Clanky_Minecraft",
     "EagleKneagle",
     "Heidsy",
+    "Itss01diesyl",
+    "MrSmall8",
 ]
 
 
-print("\n".join(sorted(players)))
+print("\n".join(sorted(list(set(players)))))
 print(len(list(set(players))))

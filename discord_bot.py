@@ -13,7 +13,7 @@ bot = commands.Bot(
     command_prefix="$",
     intents=disnake.Intents.all(),
     activity=activity,
-    status=disnake.Status.idle,
+    status=disnake.Status.offline,
 )
 TOKEN = ""
 
@@ -122,6 +122,15 @@ async def count(ctx):
     print(f"{ctx.author} used /count")
     data = cvdbdata.load()
     await ctx.send(f"There are {len(data)} players in the database.")
+
+
+@bot.slash_command(description="Project in a nutshell")
+async def description(ctx):
+    print(f"{ctx.author} used /description")
+    await ctx.send(
+        (f"# This project is NOT run by Cubeville staff. Everything is done by blurry16.\nYour personal data is not collected, your account is completely safe ||(only Mojang API data, last/first time joined/left the server are collected)||.") +
+        (f"\nSource code can be provided if it's needed.\n\n*Licensed under MIT License, Copyright (c) 2024 blurry16*"), ephemeral=True
+    )
 
 
 bot.run(TOKEN)
