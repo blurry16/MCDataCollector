@@ -20,10 +20,9 @@ while True:
                 if (
                     "<" not in line_upd
                     and "[" not in line_upd
-                    and (
-                        "joined" == splitted[2] or "left" == splitted[2]
-                    )
-                    and "the" == splitted[3] and "game." == splitted[4]
+                    and ("joined" == splitted[2] or "left" == splitted[2])
+                    and "the" == splitted[3]
+                    and "game." == splitted[4]
                 ):
                     try:
                         nickname = line.split("[CHAT]")[1].split()[0]
