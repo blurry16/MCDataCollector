@@ -16,7 +16,7 @@ class __data__:
     def __init__(self, file_path: str):
         self.file_path = file_path
 
-    def load(self):
+    def load(self) -> Union[dict, list]:
         """loads data from json file"""
         with open(self.file_path, "r", encoding="UTF-8") as data_file:
             return json.load(data_file)
