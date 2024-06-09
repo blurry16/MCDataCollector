@@ -2,10 +2,10 @@ import json
 from typing import Union
 from time import sleep
 
-# LOGPATH = r"C:\MultiMC\instances\1.20.2 copy 2\.minecraft\logs\latest.log"
 LOGPATH = r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log"
 DATAPATH = r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json"
 STATSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\stats.json"
+MODELSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\models"
 
 
 class __data__:
@@ -26,7 +26,7 @@ class __data__:
 
 
 def follow(file):
-    '''follows selected file'''
+    """follows selected file"""
     file.seek(0, 2)
     while True:
         li = file.readline()
