@@ -1,3 +1,8 @@
+"""
+Let it just be here. Okay?
+I made it at the time I was making the sorted list of ES nicknames. Last updated version of the list can be obtained at pins of #general in ES discord
+"""
+
 from mojang import API, errors
 from __data__ import cvdbdata
 import json
@@ -19,7 +24,7 @@ with open(r"data\es_players.txt", "r", encoding="UTF-8") as file:
 esplayers = []
 for esnickname in esnicknames:
     # if esnickname not in dbnicknames:
-        # print(esnickname)
+    # print(esnickname)
     try:
         profile = mapi.get_profile(mapi.get_uuid(esnickname))
         esplayers.append(profile.name)
