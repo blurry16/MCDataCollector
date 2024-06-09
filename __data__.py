@@ -7,6 +7,8 @@ DATAPATH = r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json"
 STATSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\stats.json"
 MODELSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\models"
 
+UKNOWNVALUEEXCEPTION = Exception("Unknown value")
+
 
 class __data__:
     """__data__ class contained load and dump methods to work with JSON files more comfy"""

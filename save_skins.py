@@ -1,9 +1,9 @@
 import requests
-from __data__ import cvdbdata, MODELSPATH
+from __data__ import cvdbdata, MODELSPATH, UKNOWNVALUEEXCEPTION
 
 mode = input("1: url, 2: name, 3: html model\n")
 if mode not in ["1", "2", "3"]:
-    raise Exception("Unknown value")
+    raise UKNOWNVALUEEXCEPTION
 
 data = cvdbdata.load()
 if mode == "3":
