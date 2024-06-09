@@ -1,4 +1,4 @@
-# mcPlayersData (collector)
+# MCDataCollector
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were last on.
 
 ### Requirements
