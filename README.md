@@ -9,7 +9,7 @@ Install requirements ofc :p
 So first of all replace `LOGPATH` constant in `__data__.py` with your latest.log path (don't mind those I have already left :p) with your values.  
 Then create a .json file at `DATAPATH` (you should replace it with your value) and run `main.py` script.  
 It will write Mojang API data and last&first (in unix timestamp) time seen date in the file you gave it.  
-If you want to have my main data.json file please contact me in Discord (blurry16) or Telegram (@blurry16).  
+If you want to have my main data.json file please contact me in Discord (blurry16) or in [![Telegram Badge](https://img.shields.io/badge/Telegram-blue?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/blurry16).  
 Good luck in collecting data!
 
 ### Meaning of collected points
