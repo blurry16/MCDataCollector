@@ -129,7 +129,7 @@ async def description(ctx):
     print(f"{ctx.author} used /description")
     await ctx.send(
         (f"# This project is NOT run by Cubeville staff. Everything is done by blurry16.\nYour personal data is not collected, your account is completely safe ||(only Mojang API data, last/first time joined/left the server are collected)||.") +
-        (f"\nSource code can be provided if it's needed.\n\n*Licensed under MIT License, Copyright (c) 2024 blurry16*"), ephemeral=True
+        (f"\nSource code can be gotten [here](https://github.com/blurry16/MCDataCollector).\n\n*Licensed under MIT License, Copyright (c) 2024 blurry16*"), ephemeral=True
     )
 
 

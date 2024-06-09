@@ -45,6 +45,7 @@ match a:
                 continue
             sleep(0.25)
         print(f"Updated {count} players.")
+        exit(0)
 
     case "2":
         LOGFILE = open(
@@ -117,6 +118,7 @@ match a:
                             continue
                         sleep(0.25)
                     print(f"Updated {count} players.")
+                    exit(0)
 
     case "3":
         data = cvdbdata.load()
@@ -138,3 +140,4 @@ match a:
                 print(f"Updated {profile.name}")
                 print(dumps(data[uuid], indent=2))
                 sleep(0.25)
+        exit(0)
