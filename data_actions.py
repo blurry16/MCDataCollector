@@ -160,38 +160,54 @@ while True:
                     else:
                         data = cvdbdata.load()
                         if mode == "1":
+                            proceed = ""
                             if len(os.listdir(SKINSURLPATH)) > 0:
                                 print(
                                     f"{Fore.RED}Deleting old files... All .png files in following directorory will be deleted."
                                 )
-                                for i in os.listdir(SKINSURLPATH):
-                                    if os.path.splitext(i)[1] == ".png":
-                                        rem = rf"{SKINSURLPATH}\{i}"
-                                        os.remove(rem)
-                                    print(f"{Fore.RED}Deleted {i}")
-                                del rem
-                            print(f"{Fore.GREEN}Saving new files...")
-                            for i in data:
-                                url = data[i]["skin_url"]
-                                if url != None:
-                                    response = requests.get(url=url)
-                                    with open(
-                                        rf"{SKINSURLPATH}\{url[38:]}.png", "wb"
-                                    ) as file:
-                                        file.write(response.content)
-                                    print(f"{Fore.GREEN}Saved {url[38:]}.png")
-                                sleep(0.5)
+                                print(
+                                    f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
+                                )
+                                proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
+                                print(Fore.RESET)
+                                if proceed.lower() == "y" or proceed == "":
+                                    for i in os.listdir(SKINSURLPATH):
+                                        if os.path.splitext(i)[1] == ".png":
+                                            rem = rf"{SKINSURLPATH}\{i}"
+                                            os.remove(rem)
+                                        print(f"{Fore.RED}Deleted {i}")
+                                    del rem
+                            if proceed.lower() != "n":
+                                print(f"{Fore.GREEN}Saving new files...")
+                                for i in data:
+                                    url = data[i]["skin_url"]
+                                    if url != None:
+                                        response = requests.get(url=url)
+                                        with open(
+                                            rf"{SKINSURLPATH}\{url[38:]}.png", "wb"
+                                        ) as file:
+                                            file.write(response.content)
+                                        print(f"{Fore.GREEN}Saved {url[38:]}.png")
+                                    sleep(0.5)
                         elif mode == "2":
+                            proceed = ""
                             if len(os.listdir(SKINSPATH)) > 0:
                                 print(
                                     f"{Fore.RED}Deleting old files... All .png files in following directorory will be deleted."
                                 )
-                                for i in os.listdir(SKINSPATH):
-                                    rem = rf"{SKINSPATH}\{i}"
-                                    if os.path.splitext(i)[1] == ".png":
-                                        os.remove(rem)
-                                        print(f"{Fore.RED}Deleted {i}")
-                                del rem
+                                print(
+                                    f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
+                                )
+                                proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
+                                print(Fore.RESET)
+                                if proceed.lower() == "y" or proceed == "":
+                                    for i in os.listdir(SKINSPATH):
+                                        rem = rf"{SKINSPATH}\{i}"
+                                        if os.path.splitext(i)[1] == ".png":
+                                            os.remove(rem)
+                                            print(f"{Fore.RED}Deleted {i}")
+                                    del rem
+                            if proceed.lower() != "n":
                                 print(f"{Fore.GREEN}Saving new files...")
                                 for i in data:
                                     url = data[i]["skin_url"]
@@ -207,20 +223,32 @@ while True:
                                     sleep(0.5)
 
                         elif mode == "3":
-                            print(
-                                f"{Fore.RED}Deleting old files... All .html files in following directorory will be deleted."
-                            )
-                            for i in os.listdir(MODELSPATH):
-                                if os.path.splitext(i)[1] == ".html":
-                                    os.remove(f"{MODELSPATH}\{i}")
-                                    print(f"{Fore.RED}Deleted {i}")
-                            print(f"{Fore.GREEN}Saving new files...")
-                            for i in data:
-                                name = data[i]["name"]
-                                to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" frameborder="0" width="1920px" height="972px"></iframe>'
-                                with open(rf"{MODELSPATH}\{name}.html", "x") as file:
-                                    file.write(to_save)
-                                print(f"{Fore.GREEN}Saved {name}.html")
+                            proceed = ""
+                            if len(os.listdir(MODELSPATH)) > 0:
+                                print(
+                                    f"{Fore.RED}Deleting old files... All .html files in following directorory will be deleted."
+                                )
+                                print(
+                                    f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
+                                )
+                                proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
+                                print(Fore.RESET)
+                                if proceed.lower() == "y" or proceed == "":
+                                    for i in os.listdir(MODELSPATH):
+                                        if os.path.splitext(i)[1] == ".html":
+                                            os.remove(f"{MODELSPATH}\{i}")
+                                            print(f"{Fore.RED}Deleted {i}")
+                            if proceed.lower() != "n":
+                                del proceed
+                                print(f"{Fore.GREEN}Saving new files...")
+                                for i in data:
+                                    name = data[i]["name"]
+                                    to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" frameborder="0" width="1920px" height="972px"></iframe>'
+                                    with open(
+                                        rf"{MODELSPATH}\{name}.html", "x"
+                                    ) as file:
+                                        file.write(to_save)
+                                    print(f"{Fore.GREEN}Saved {name}.html")
 
             case "3":
                 while True:
