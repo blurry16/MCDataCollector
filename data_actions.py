@@ -93,7 +93,7 @@ while True:
                                                     inp.split().index("--indent") + 1
                                                 ]
                                             )
-                                        except ValueError:
+                                        except IndexError:
                                             pass
                                     data = cvdbdata.load()
                                     local_uuid = mapi.get_uuid(nickname)
