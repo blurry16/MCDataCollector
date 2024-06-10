@@ -2,3 +2,4 @@ mojang
 disnake
 requests
 colorama
+keyboard
