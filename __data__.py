@@ -6,6 +6,8 @@ LOGPATH = r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log"
 DATAPATH = r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json"
 STATSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\stats.json"
 MODELSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\models"
+SKINSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\skins"
+SKINSURLPATH = r"C:\Users\Blurry\PycharmProjects\playersData\skins_url"
 
 UKNOWNVALUEEXCEPTION = Exception("Unknown value")
 

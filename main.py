@@ -1,9 +1,11 @@
 import time
 import json
+from colorama import init, Fore
 from mojang import API, errors
 from __data__ import cvdbdata, LOGPATH, follow
 
 mapi = API()
+init()
 
 while True:
     LOGFILE = open(
@@ -48,7 +50,7 @@ while True:
                             "does_exist": True,
                         }
                         cvdbdata.dump(data)
-                        print(f"{nickname}'s dictionary updated.")
+                        print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
                         print(json.dumps(data[uuid], indent=2))
                     except errors.NotFound:
                         if nickname != "*":
@@ -73,7 +75,7 @@ while True:
                                 "does_exist": False,
                             }
                             cvdbdata.dump(data)
-                            print(f"{nickname}'s dictionary updated.")
+                            print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
                             print(json.dumps(data[nickname.lower()], indent=2))
                     except Exception as e:
                         print(f"Exception {e} occurred at {int(time.time())}.")

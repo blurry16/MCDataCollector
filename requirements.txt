@@ -1,3 +1,4 @@
 mojang
 disnake
 requests
+colorama
