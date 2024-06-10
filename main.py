@@ -20,8 +20,8 @@ def mcprint(text: str):
 
 
 def generatepasscode() -> str:
-    PASSCODE = str(random.randint(0, 9999))
-    return "0" * (4 - len(PASSCODE)) + PASSCODE
+    __PASSCODE__ = str(random.randint(0, 9999))
+    return "0" * (4 - len(__PASSCODE__)) + __PASSCODE__
 
 
 mapi = API()
@@ -69,7 +69,7 @@ while True:
                 elif CHATBOTACTIVE:
                     match line.lower().split()[5]:
                         case "#lastseen":
-                            print(f"{Fore.MAGENTA}{line}")
+                            print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
                             command = line.split()[5]
                             username = line.split()[4].split("<")[1].split(">")[0]
                             arg = (
@@ -96,7 +96,7 @@ while True:
                                             f"{data[arg]['name']} was seen for the last time at {datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
                                         )
                         case "#firsttimeseen":
-                            print(f"{Fore.MAGENTA}{line}")
+                            print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
                             command = line.split()[5]
                             username = line.split()[4].split("<")[1].split(">")[0]
                             arg = (
@@ -124,17 +124,18 @@ while True:
                                         )
 
                         case "#count":
-                            print(f"{Fore.MAGENTA}{line}")
+                            print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
                             username = line.split()[4].split("<")[1].split(">")[0]
                             if username.lower() not in BANNED:
                                 data = cvdbdata.load()
                                 mcprint(f"{len(data)} players are currently in the db.")
                         case "#getdbid":
-                            print(f"{Fore.MAGENTA}{line}")
+                            print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
                             username = line.split()[4].split("<")[1].split(">")[0]
+                            command = line.split()[5]
                             arg = (
                                 line.replace("\n", "")
-                                .split(f"{command} ", 1)[1]
+                                .split(f"{command} ")[1]
                                 .split()[0]
                             )
                             if username.lower() not in BANNED:
@@ -155,25 +156,25 @@ while True:
                                     else:
                                         nickname = data[arg]["name"]
                                         mcprint(
-                                            f"{nickname}'s database ID is {data[uuid]['db_id']}"
+                                            f"{nickname}'s database ID is {data[arg]['db_id']}"
                                         )
 
             else:
                 line_upd = line.split("CHAT")[1]
-                splitted = line_upd.split()
-                if len(splitted) > 2:
+                split = line_upd.split()
+                if len(split) > 2:
                     if (
                         "<" not in line_upd
                         and "[" not in line_upd
-                        and ("joined" == splitted[2] or "left" == splitted[2])
-                        and "the" == splitted[3]
-                        and "game." == splitted[4]
+                        and ("joined" == split[2] or "left" == split[2])
+                        and "the" == split[3]
+                        and "game." == split[4]
                     ):
+                        data = cvdbdata.load()
+                        nickname = line.split("[CHAT]")[1].split()[0]
                         try:
-                            nickname = line.split("[CHAT]")[1].split()[0]
                             uuid = mapi.get_uuid(nickname)
                             profile = mapi.get_profile(uuid)
-                            data = cvdbdata.load()
                             data[uuid] = {
                                 "id": profile.id,
                                 "name": profile.name,
@@ -202,9 +203,9 @@ while True:
                                 data[nickname.lower()] = {
                                     "id": None,
                                     "name": nickname,
-                                    "last_seen": int(time.time.time()),
+                                    "last_seen": int(time.time()),
                                     "first_time_seen": (
-                                        int(time.time.time())
+                                        int(time.time())
                                         if nickname not in data
                                         else data[nickname]["first_time_seen"]
                                     ),
@@ -223,5 +224,5 @@ while True:
                                 print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
                                 print(json.dumps(data[nickname.lower()], indent=2))
                         except Exception as e:
-                            print(f"Exception {e} occurred at {int(time.time.time())}.")
+                            print(f"Exception {e} occurred at {int(time.time())}.")
                         print("\n")

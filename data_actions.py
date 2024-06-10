@@ -34,9 +34,9 @@ while True:
                     try:
                         match inp:
                             case "1":
+                                nickname = input("Nickname: ").lower()
+                                data = cvdbdata.load()
                                 try:
-                                    nickname = input("Nickname: ").lower()
-                                    data = cvdbdata.load()
                                     local_uuid = mapi.get_uuid(nickname)
                                     if local_uuid in data:
                                         local_data = data[local_uuid]
@@ -60,9 +60,9 @@ while True:
                                     else:
                                         print("This player doesn't exist.")
                             case "2":
+                                nickname = input("Nickname: ").lower()
+                                data = cvdbdata.load()
                                 try:
-                                    nickname = input("Nickname: ").lower()
-                                    data = cvdbdata.load()
                                     local_uuid = mapi.get_uuid(nickname)
                                     if local_uuid in data:
                                         local_data = data[local_uuid]
@@ -82,10 +82,11 @@ while True:
                                     else:
                                         print("This player doesn't exist.")
                             case "3":
+                                inp = input("Nickname: ").lower()
+                                nickname = inp.split()[0]
+                                indent = 2
+                                data = cvdbdata.load()
                                 try:
-                                    inp = input("Nickname: ").lower()
-                                    nickname = inp.split()[0]
-                                    indent = 2
                                     if "--indent" in inp.split():
                                         try:
                                             indent = int(
@@ -95,7 +96,6 @@ while True:
                                             )
                                         except IndexError:
                                             pass
-                                    data = cvdbdata.load()
                                     local_uuid = mapi.get_uuid(nickname)
                                     if local_uuid in data:
                                         print(dumps(data[local_uuid], indent=indent))
@@ -107,9 +107,9 @@ while True:
                                     else:
                                         print("This player doesn't exist.")
                             case "4":
+                                inp = input("Nickname: ").lower()
+                                data = cvdbdata.load()
                                 try:
-                                    inp = input("Nickname: ").lower()
-                                    data = cvdbdata.load()
                                     uuid = mapi.get_uuid(inp)
                                     nickname = data[uuid]["name"]
                                     if uuid in data:
@@ -163,7 +163,7 @@ while True:
                             proceed = ""
                             if len(os.listdir(SKINSURLPATH)) > 0:
                                 print(
-                                    f"{Fore.RED}Deleting old files... All .png files in following directorory will be deleted."
+                                    f"{Fore.RED}Deleting old files... All .png files in following directory will be deleted."
                                 )
                                 print(
                                     f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
@@ -181,7 +181,7 @@ while True:
                                 print(f"{Fore.GREEN}Saving new files...")
                                 for i in data:
                                     url = data[i]["skin_url"]
-                                    if url != None:
+                                    if url is not None:
                                         response = requests.get(url=url)
                                         with open(
                                             rf"{SKINSURLPATH}\{url[38:]}.png", "wb"
@@ -193,7 +193,7 @@ while True:
                             proceed = ""
                             if len(os.listdir(SKINSPATH)) > 0:
                                 print(
-                                    f"{Fore.RED}Deleting old files... All .png files in following directorory will be deleted."
+                                    f"{Fore.RED}Deleting old files... All .png files in following directory will be deleted."
                                 )
                                 print(
                                     f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
@@ -211,7 +211,7 @@ while True:
                                 print(f"{Fore.GREEN}Saving new files...")
                                 for i in data:
                                     url = data[i]["skin_url"]
-                                    if url != None:
+                                    if url is not None:
                                         response = requests.get(url=url)
                                         name = data[i]["name"]
                                         with open(
@@ -226,7 +226,7 @@ while True:
                             proceed = ""
                             if len(os.listdir(MODELSPATH)) > 0:
                                 print(
-                                    f"{Fore.RED}Deleting old files... All .html files in following directorory will be deleted."
+                                    f"{Fore.RED}Deleting old files... All .html files in following directory will be deleted."
                                 )
                                 print(
                                     f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
@@ -236,7 +236,7 @@ while True:
                                 if proceed.lower() == "y" or proceed == "":
                                     for i in os.listdir(MODELSPATH):
                                         if os.path.splitext(i)[1] == ".html":
-                                            os.remove(f"{MODELSPATH}\{i}")
+                                            os.remove(rf"{MODELSPATH}\{i}")
                                             print(f"{Fore.RED}Deleted {i}")
                             if proceed.lower() != "n":
                                 del proceed
@@ -265,9 +265,7 @@ while True:
                                 nicknames = list(
                                     map(
                                         str,
-                                        input(
-                                            "Nicknames (splitted by space): "
-                                        ).split(),
+                                        input("Nicknames (split by space): ").split(),
                                     )
                                 )
                                 count = len(nicknames)
@@ -407,7 +405,7 @@ while True:
                             case "3":
                                 data = cvdbdata.load()
                                 for uuid in data:
-                                    if data[uuid]["id"] != None:
+                                    if data[uuid]["id"] is not None:
                                         profile = mapi.get_profile(uuid)
                                         data[uuid] = {
                                             "id": profile.id,
