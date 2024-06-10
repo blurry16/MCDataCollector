@@ -5,35 +5,37 @@ I made it at the time I was making the sorted list of ES nicknames. Last updated
 
 from mojang import API, errors
 from __data__ import cvdbdata
+from colorama import init, Back
 import json
 import time
 
 mapi = API()
 
-data = cvdbdata.load()
+init(autoreset=True)
+# data = cvdbdata.load()
 
 with open(r"data\es_players.txt", "r", encoding="UTF-8") as file:
     esnicknames = file.read().split("\n")
-
 
 # dbnicknames = []
 # for player in data:
 #     if data[player]["does_exist"]:
 #         dbnicknames.append(data[player]["name"])
 
-esplayers = []
-for esnickname in esnicknames:
-    # if esnickname not in dbnicknames:
-    # print(esnickname)
-    try:
-        profile = mapi.get_profile(mapi.get_uuid(esnickname))
-        esplayers.append(profile.name)
-        # esplayers[profile.id] = profile.__dict__
-    except errors.NotFound:
-        print(f"{esnickname} invalid.")
-    time.sleep(1)
-# print(json.dumps(dbnicknames,))
-print(esplayers)
+# esplayers = []
+# for esnickname in esnicknames:
+#     # if esnickname not in dbnicknames:
+#     # print(esnickname)
+#     try:
+#         profile = mapi.get_profile(mapi.get_uuid(esnickname))
+#         esplayers.append(profile.name)
+#         print(profile.name)
+#         # esplayers[profile.id] = profile.__dict__
+#     except errors.NotFound:
+#         print(f"{Back.RED}{esnickname} invalid.")
+#     time.sleep(5)
+# # print(json.dumps(dbnicknames,))
+# print(esplayers)
 # print(dbnicknames)
 # print(json.dumps(esplayers, indent=4))
 players = [
@@ -56,10 +58,10 @@ players = [
     "_M1nnow",
     "Cora216",
     "FITJ2564",
-    "JinKiJoo",
+    "Jinkijoo",
     "TT_McQueen",
     "PositiveTherapy1",
-    "vic_torus",
+    "Vic_Torus",
     "Tisjstme",
     "Joshiek",
     "SleepyBean",
@@ -89,11 +91,11 @@ players = [
     "101Wolves",
     "Bluebear1858",
     "Firesnuke",
-    "vip1kea",
+    "_Rt11",
     "TsoMein",
     "LoganDaNinja",
     "PartyGreyson",
-    "OverDhill",
+    "OverDHill",
     "whamWHAMmooMOO",
     "CheetahGhost92",
     "TindurMar",
@@ -103,20 +105,20 @@ players = [
     "less_more",
     "ChowTime",
     "Erwut",
-    "pterr",
+    "Pterr",
     "TheActualSky",
     "GamerAnthony14",
     "IW_Hisl",
     "EmmaKR",
     "xxmn",
-    "DADFISH",
+    "DadFish",
     "StrmtrooprMB9910",
     "MiaMiaMiana",
     "CastleMiner64",
     "mariomilkm",
     "ItsMeNeon",
     "shoppingcartt",
-    "slef69",
+    "Slef69",
     "HalZurkit",
     "RenFurnael",
     "AidanEJ",
@@ -128,8 +130,10 @@ players = [
     "Clanky_Minecraft",
     "EagleKneagle",
     "Heidsy",
-    "Itss01diesyl",
+    "Itss01Diesyl",
     "MrSmall8",
+    "AwhDennis",
+    "Majest0",
 ]
 
 
