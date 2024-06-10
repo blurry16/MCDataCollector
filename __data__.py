@@ -23,10 +23,10 @@ class __data__:
         with open(self.file_path, "r", encoding="UTF-8") as data_file:
             return json.load(data_file)
 
-    def dump(self, data: Union[dict, list]):
+    def dump(self, data: Union[dict, list], indent=4):
         """dumps selected data to the file"""
         with open(self.file_path, "w", encoding="UTF-8") as data_file:
-            json.dump(data, data_file, indent=4)
+            json.dump(data, data_file, indent=indent)
 
 
 def follow(file):
