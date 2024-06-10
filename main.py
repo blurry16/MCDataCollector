@@ -22,6 +22,8 @@ def mcprint(text: str):
 def generatepasscode() -> str:
     PASSCODE = str(random.randint(0, 9999))
     return "0" * (4 - len(PASSCODE)) + PASSCODE
+
+
 mapi = API()
 init(autoreset=True)
 
@@ -45,7 +47,9 @@ while True:
                     command = line.split()[5]
                     username = line.split()[4].split("<")[1].split(">")[0]
                     try:
-                        arg = line.replace("\n", "").split(f"{command} ", 1)[1].split()[0]
+                        arg = (
+                            line.replace("\n", "").split(f"{command} ", 1)[1].split()[0]
+                        )
                         if username == HOST and arg == PASSCODE:
                             CHATBOTACTIVE = not CHATBOTACTIVE
                             print(

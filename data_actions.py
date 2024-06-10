@@ -1,8 +1,16 @@
 import requests
 import os
 from colorama import init, Fore
-from __data__ import cvdbdata, MODELSPATH, LOGPATH, follow, SKINSPATH, SKINSURLPATH
-from datetime import datetime
+from __data__ import (
+    cvdbdata,
+    MODELSPATH,
+    LOGPATH,
+    follow,
+    SKINSPATH,
+    SKINSURLPATH,
+    statsdataobj,
+)
+from datetime import datetime, timedelta
 from time import time, sleep
 from mojang import API, errors
 from json import dumps
@@ -11,8 +19,10 @@ mapi = API()
 init(autoreset=True)
 
 while True:
-    inp = input("1. Get data.\n2. Save skins.\n3. Update data.\n4. Quit\n")
-    if inp not in ["1", "2", "3", "4"]:
+    inp = input(
+        "1. Get data.\n2. Save skins.\n3. Update data.\n4. Add stats\n5. Quit\n"
+    )
+    if inp not in ["1", "2", "3", "4", "5"]:
         print("Unknown value")
     else:
         match inp:
@@ -390,4 +400,23 @@ while True:
                                         sleep(0.25)
 
             case "4":
+                data_len = len(cvdbdata.load())
+                statsdata = statsdataobj.load()
+                # prev_date = (datetime.now().date() - timedelta(days=2)).strftime("%Y-%m-%d")
+                last_date = list(statsdata)[-1]
+                now_date = (datetime.now().date() - timedelta(days=1)).strftime(
+                    "%Y-%m-%d"
+                )
+                statsdata[now_date] = {
+                    "count": data_len,
+                    "delta": data_len - int(statsdata[last_date]["count"]),
+                }
+
+                print(dumps(statsdata, indent=4))
+                a = input(f"{Fore.MAGENTA}Proceed? y/n: ")
+                if a.lower() == "y" or a == "":
+                    statsdataobj.dump(statsdata)
+                print(Fore.RESET)
+
+            case "5":
                 quit(0)
