@@ -28,7 +28,6 @@ mapi = API()
 init(autoreset=True)
 
 startday = datetime.now().day
-print(startday)
 
 CHATBOTACTIVE = False
 HOST = "blurry16"
