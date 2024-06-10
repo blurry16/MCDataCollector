@@ -27,6 +27,9 @@ def generatepasscode() -> str:
 mapi = API()
 init(autoreset=True)
 
+startday = datetime.now().day
+print(startday)
+
 CHATBOTACTIVE = False
 HOST = "blurry16"
 BANNED = []
@@ -41,6 +44,10 @@ while True:
     )
     lines = follow(LOGFILE)
     for line in lines:
+        if datetime.now().day != startday:
+            raise Exception(
+                f"{Fore.RED}The program may stop working properly. Please, restart it. (The problem is known and will be fixed once I get an idea of its fix)"
+            )
         if "[CHAT]" in line:
             if line[40] == "<":
                 if line.lower().split()[5] == "#activate":
