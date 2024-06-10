@@ -23,24 +23,24 @@ Good luck in collecting data!
 - "skin_url" - URL to player's skin.
 - "db_id" - ID of a player in .json file. Pretty useless but cool at the same time.
 - "does_exist" - This thing is there since people like AddictiveOracle exist. Those who have their name faked or accounts cracked.
-<details>   
-    <summary> Example of collected data </summary>
-    Well, if you opened this it means you still care about your privacy and you don't trust me. I don't really care about your trust but here is an example of collected data.  
-    ```json
-    "ef2b9013f4ca4749b3bfaf83146c538e": {
-        "id": "ef2b9013f4ca4749b3bfaf83146c538e",
-        "name": "blurry16",
-        "last_seen": 1718031633,
-        "first_time_seen": 1708259854,
-        "is_legacy_profile": false,
-        "skin_variant": "slim",
-        "cape_url": null,
-        "skin_url": "http://textures.minecraft.net/texture/bc77f0eb5be2e69d320144242a29dcbeedfe2fc42df48638d86bac470fdab786",
-        "db_id": 0,
-        "does_exist": true
-    }
-    ```
-</details>
+
+### Example of collected data
+Well, if you read this it means you still care about your privacy and you probably don't trust me (or you just wonder what I collect lol). I don't really care about your trust but here is an example of collected data.  
+Points meaning can be found at "Meaning of collected points" paragraph.
+```json
+{
+    "id": "ef2b9013f4ca4749b3bfaf83146c538e",
+    "name": "blurry16",
+    "last_seen": 1718031633,
+    "first_time_seen": 1708259854,
+    "is_legacy_profile": false,
+    "skin_variant": "slim",
+    "cape_url": null,
+    "skin_url": "http://textures.minecraft.net/texture/bc77f0eb5be2e69d320144242a29dcbeedfe2fc42df48638d86bac470fdab786",
+    "db_id": 0,
+    "does_exist": true
+}
+```
 
 ### Notes for followers
 If you want to continue collecting data just like I did I'm always happy to contribute to your forks or projects. If you need help, contact me (I left my contacts at the top of the file).
