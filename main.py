@@ -5,7 +5,7 @@ from mojang import API, errors
 from __data__ import cvdbdata, LOGPATH, follow
 
 mapi = API()
-init()
+init(autoreset=True)
 
 while True:
     LOGFILE = open(
