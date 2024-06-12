@@ -9,8 +9,6 @@ MODELSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\models"
 SKINSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\skins"
 SKINSURLPATH = r"C:\Users\Blurry\PycharmProjects\playersData\skins_url"
 
-UKNOWNVALUEEXCEPTION = Exception("Unknown value")
-
 
 class __data__:
     """__data__ class contained load and dump methods to work with JSON files more comfy"""
