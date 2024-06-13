@@ -32,18 +32,18 @@ async def lastseen(ctx, nickname):
     try:
         uuid = mapi.get_uuid(nickname)
         if uuid in data:
-            last_seen = datetime.fromtimestamp(data[uuid]["last_seen"])
+            last_seen = data[uuid]["last_seen"]
             await ctx.send(
-                f"{data[uuid]['name']} was last seen at {last_seen} UTC+3. ({datetime.fromtimestamp(round(time())) - last_seen} ago.)"
+                f"{data[uuid]['name']} was last seen at <t:{last_seen}:f> (shows in local time). ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(last_seen)} ago.)"
             )
         else:
             await ctx.send("The bot has never seen this player.", ephemeral=True)
     except errors.NotFound:
         nickname = nickname.lower()
         if nickname in data:
-            last_seen = datetime.fromtimestamp(data[nickname]["last_seen"])
+            last_seen = data[nickname]["last_seen"]
             await ctx.send(
-                f"{data[nickname]['name']} was last seen at {last_seen} UTC+3 ({datetime.fromtimestamp(round(time())) - last_seen} ago.)"
+                f"{data[nickname]['name']} was last seen at <t:{last_seen}:f> (shows in local time). ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(last_seen)} ago.)"
             )
         else:
             await ctx.send(f"Player {nickname} doesn't exist.", ephemeral=True)
@@ -58,18 +58,18 @@ async def firsttimeseen(ctx, nickname):
     try:
         uuid = mapi.get_uuid(nickname)
         if uuid in data:
-            first_time_seen = datetime.fromtimestamp(data[uuid]["first_time_seen"])
+            first_time_seen = data[uuid]["first_time_seen"]
             await ctx.send(
-                f"{data[uuid]['name']} was seen for the first time at {first_time_seen} UTC+3. ({datetime.fromtimestamp(round(time())) - first_time_seen} ago.)"
+                f"{data[uuid]['name']} was seen for the first time at <t:{first_time_seen}:f> (shows in local time). ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(first_time_seen)} ago.)"
             )
         else:
             await ctx.send("The bot has never seen this player.", ephemeral=True)
     except errors.NotFound:
         nickname = nickname.lower()
         if nickname in data:
-            first_time_seen = datetime.fromtimestamp(data[nickname]["first_time_seen"])
+            first_time_seen = data[nickname]["first_time_seen"]
             await ctx.send(
-                f"{data[nickname]['name']} was seen for the first time at {first_time_seen} UTC+3. ({datetime.fromtimestamp(round(time())) - first_time_seen} ago.)"
+                f"{data[nickname]['name']} was seen for the first time at <t:{first_time_seen}:f> (shows in local time). ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(first_time_seen)} ago.)"
             )
         else:
             await ctx.send(f"Player {nickname} doesn't exist.", ephemeral=True)
