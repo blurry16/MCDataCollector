@@ -94,7 +94,7 @@ while True:
                                                     inp.split().index("--indent") + 1
                                                 ]
                                             )
-                                        except IndexError:
+                                        except (IndexError, ValueError):
                                             pass
                                     local_uuid = mapi.get_uuid(nickname)
                                     if local_uuid in data:
