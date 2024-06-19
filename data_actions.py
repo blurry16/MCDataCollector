@@ -435,7 +435,7 @@ while True:
             print(Fore.RESET)
 
         case "5":
-            quit(0)
+            break
 
         case _:
             print(f"{Fore.RED}Unknown command.")
