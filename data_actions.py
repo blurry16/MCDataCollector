@@ -23,7 +23,7 @@ while True:
                 try:
                     match inp:
                         case "1":
-                            nickname = input("Nickname: ").lower()
+                            nickname = input("Nickname: ").lower().strip()
                             data = cvdbdata.load()
                             try:
                                 local_uuid = mapi.get_uuid(nickname)
@@ -49,7 +49,7 @@ while True:
                                 else:
                                     print("This player doesn't exist.")
                         case "2":
-                            nickname = input("Nickname: ").lower()
+                            nickname = input("Nickname: ").lower().strip()
                             data = cvdbdata.load()
                             try:
                                 local_uuid = mapi.get_uuid(nickname)
@@ -71,7 +71,7 @@ while True:
                                 else:
                                     print("This player doesn't exist.")
                         case "3":
-                            inp = input("Nickname: ").lower()
+                            inp = input("Nickname: ").lower().strip()
                             nickname = inp.split()[0]
                             indent = 2
                             data = cvdbdata.load()
@@ -98,7 +98,7 @@ while True:
                                 else:
                                     print("This player doesn't exist.")
                         case "4":
-                            inp = input("Nickname: ").lower()
+                            inp = input("Nickname: ").lower().strip()
                             data = cvdbdata.load()
                             try:
                                 uuid = mapi.get_uuid(inp)
