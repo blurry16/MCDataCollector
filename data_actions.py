@@ -274,9 +274,7 @@ while True:
                                 data[uuid] = {
                                     "id": profile.id,
                                     "name": profile.name,
-                                    "last_seen": round(
-                                        float(profile.timestamp) / 1000
-                                    ),
+                                    "last_seen": round(float(profile.timestamp) / 1000),
                                     "first_time_seen": (
                                         round(float(profile.timestamp) / 1000)
                                         if uuid not in data
@@ -334,13 +332,10 @@ while True:
                                                 ),
                                                 "first_time_seen": (
                                                     round(
-                                                        float(profile.timestamp)
-                                                        / 1000
+                                                        float(profile.timestamp) / 1000
                                                     )
                                                     if uuid not in data
-                                                    else data[uuid][
-                                                        "first_time_seen"
-                                                    ]
+                                                    else data[uuid]["first_time_seen"]
                                                 ),
                                                 "is_legacy_profile": profile.is_legacy_profile,
                                                 "skin_variant": profile.skin_variant,
@@ -405,9 +400,7 @@ while True:
                                     "id": profile.id,
                                     "name": profile.name,
                                     "last_seen": data[uuid]["last_seen"],
-                                    "first_time_seen": data[uuid][
-                                        "first_time_seen"
-                                    ],
+                                    "first_time_seen": data[uuid]["first_time_seen"],
                                     "is_legacy_profile": profile.is_legacy_profile,
                                     "skin_variant": profile.skin_variant,
                                     "cape_url": profile.cape_url,
@@ -418,12 +411,11 @@ while True:
                                 print(f"{Fore.GREEN}Updated {profile.name}")
                                 print(dumps(data[uuid], indent=2))
                                 sleep(0.25)
-                    
+
                     case "4":
                         break
                     case _:
                         print(f"{Fore.RED}Unknown command.")
-
 
         case "4":
             data_len = len(cvdbdata.load())
@@ -444,6 +436,6 @@ while True:
 
         case "5":
             quit(0)
-        
+
         case _:
             print(f"{Fore.RED}Unknown command.")
