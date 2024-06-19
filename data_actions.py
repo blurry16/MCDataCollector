@@ -14,8 +14,6 @@ while True:
     inp = input(
         "1. Get data.\n2. Save skins.\n3. Update data.\n4. Add stats\n5. Quit\n"
     )
-    if inp not in ["1", "2", "3", "4", "5"]:
-        print("Unknown value")
     match inp:
         case "1":
             while True:
@@ -137,7 +135,7 @@ while True:
                             break
 
                         case _:
-                            print("Unknown command.")
+                            print(f"{Fore.RED}Unknown command.")
                 except KeyError:
                     print("The bot has never seen this player.")
 
@@ -146,286 +144,293 @@ while True:
                 mode = input(
                     "1. URL\n2. Name\n3. HTML model\n4. Get back to previous stage.\n"
                 )
-                if mode == "4":
-                    break
-                if mode not in ["1", "2", "3"]:
-                    print(f"{Fore.RED}Unknown value.")
-                else:
-                    data = cvdbdata.load()
-                    if mode == "1":
-                        proceed = ""
-                        if len(os.listdir(SKINSURLPATH)) > 0:
-                            print(
-                                f"{Fore.RED}Deleting old files... All .png files in following directory will be deleted."
-                            )
-                            print(
-                                f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
-                            )
-                            proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
-                            print(Fore.RESET)
-                            if proceed.lower() == "y" or proceed == "":
-                                for i in os.listdir(SKINSURLPATH):
-                                    if os.path.splitext(i)[1] == ".png":
-                                        rem = rf"{SKINSURLPATH}\{i}"
-                                        os.remove(rem)
-                                    print(f"{Fore.RED}Deleted {i}")
-                                del rem
-                        if proceed.lower() != "n":
-                            print(f"{Fore.GREEN}Saving new files...")
-                            for i in data:
-                                url = data[i]["skin_url"]
-                                if url is not None:
-                                    response = requests.get(url=url)
+                data = cvdbdata.load()
+                if mode == "1":
+                    proceed = ""
+                    if len(os.listdir(SKINSURLPATH)) > 0:
+                        print(
+                            f"{Fore.RED}Deleting old files... All .png files in following directory will be deleted."
+                        )
+                        print(
+                            f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
+                        )
+                        proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
+                        print(Fore.RESET)
+                        if proceed.lower() == "y" or proceed == "":
+                            for i in os.listdir(SKINSURLPATH):
+                                if os.path.splitext(i)[1] == ".png":
+                                    rem = rf"{SKINSURLPATH}\{i}"
+                                    os.remove(rem)
+                                print(f"{Fore.RED}Deleted {i}")
+                            del rem
+                    if proceed.lower() != "n":
+                        print(f"{Fore.GREEN}Saving new files...")
+                        for i in data:
+                            url = data[i]["skin_url"]
+                            if url is not None:
+                                response = requests.get(url=url)
+                                try:
                                     with open(
                                         rf"{SKINSURLPATH}\{url[38:]}.png", "wb"
                                     ) as file:
                                         file.write(response.content)
-                                    print(f"{Fore.GREEN}Saved {url[38:]}.png")
-                                sleep(0.5)
-                    elif mode == "2":
-                        proceed = ""
-                        if len(os.listdir(SKINSPATH)) > 0:
-                            print(
-                                f"{Fore.RED}Deleting old files... All .png files in following directory will be deleted."
-                            )
-                            print(
-                                f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
-                            )
-                            proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
-                            print(Fore.RESET)
-                            if proceed.lower() == "y" or proceed == "":
-                                for i in os.listdir(SKINSPATH):
-                                    rem = rf"{SKINSPATH}\{i}"
-                                    if os.path.splitext(i)[1] == ".png":
-                                        os.remove(rem)
-                                        print(f"{Fore.RED}Deleted {i}")
-                                del rem
-                        if proceed.lower() != "n":
-                            print(f"{Fore.GREEN}Saving new files...")
-                            for i in data:
-                                url = data[i]["skin_url"]
-                                if url is not None:
-                                    response = requests.get(url=url)
-                                    name = data[i]["name"]
+                                except FileExistsError:
+                                    print(
+                                        rf"{Back.RED}File {SKINSURLPATH}\{url[38:]}.png already exists."
+                                    )
+                                print(f"{Fore.GREEN}Saved {url[38:]}.png")
+                            sleep(0.5)
+                elif mode == "2":
+                    proceed = ""
+                    if len(os.listdir(SKINSPATH)) > 0:
+                        print(
+                            f"{Fore.RED}Deleting old files... All .png files in following directory will be deleted."
+                        )
+                        print(
+                            f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
+                        )
+                        proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
+                        print(Fore.RESET)
+                        if proceed.lower() == "y" or proceed == "":
+                            for i in os.listdir(SKINSPATH):
+                                rem = rf"{SKINSPATH}\{i}"
+                                if os.path.splitext(i)[1] == ".png":
+                                    os.remove(rem)
+                                    print(f"{Fore.RED}Deleted {i}")
+                            del rem
+                    if proceed.lower() != "n":
+                        print(f"{Fore.GREEN}Saving new files...")
+                        for i in data:
+                            url = data[i]["skin_url"]
+                            if url is not None:
+                                response = requests.get(url=url)
+                                name = data[i]["name"]
+                                try:
                                     with open(
-                                        (rf"skins\{name}.png"),
+                                        (rf"{SKINSPATH}\{name}.png"),
                                         "wb",
                                     ) as file:
                                         file.write(response.content)
                                     print(f"{Fore.GREEN}Saved {name}.png")
-                                sleep(0.5)
+                                except FileExistsError:
+                                    print(
+                                        rf"{Back.RED}File {SKINSPATH}\{name}.png already exists."
+                                    )
+                            sleep(0.5)
 
-                    elif mode == "3":
-                        proceed = ""
-                        if len(os.listdir(MODELSPATH)) > 0:
-                            print(
-                                f"{Fore.RED}Deleting old files... All .html files in following directory will be deleted."
-                            )
-                            print(
-                                f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
-                            )
-                            proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
-                            print(Fore.RESET)
-                            if proceed.lower() == "y" or proceed == "":
-                                for i in os.listdir(MODELSPATH):
-                                    if os.path.splitext(i)[1] == ".html":
-                                        os.remove(rf"{MODELSPATH}\{i}")
-                                        print(f"{Fore.RED}Deleted {i}")
-                        if proceed.lower() != "n":
-                            del proceed
-                            print(f"{Fore.GREEN}Saving new files...")
-                            for i in data:
-                                name = data[i]["name"]
-                                to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" frameborder="0" width="1920px" height="972px"></iframe>'
-                                with open(
-                                    rf"{MODELSPATH}\{name}.html", "x"
-                                ) as file:
+                elif mode == "3":
+                    proceed = ""
+                    if len(os.listdir(MODELSPATH)) > 0:
+                        print(
+                            f"{Fore.RED}Deleting old files... All .html files in following directory will be deleted."
+                        )
+                        print(
+                            f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
+                        )
+                        proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
+                        print(Fore.RESET)
+                        if proceed.lower() == "y" or proceed == "":
+                            for i in os.listdir(MODELSPATH):
+                                if os.path.splitext(i)[1] == ".html":
+                                    os.remove(rf"{MODELSPATH}\{i}")
+                                    print(f"{Fore.RED}Deleted {i}")
+                    if proceed.lower() != "n":
+                        del proceed
+                        print(f"{Fore.GREEN}Saving new files...")
+                        for i in data:
+                            name = data[i]["name"]
+                            to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" frameborder="0" width="1920px" height="972px"></iframe>'
+                            try:
+                                with open(rf"{MODELSPATH}\{name}.html", "x") as file:
                                     file.write(to_save)
                                 print(f"{Fore.GREEN}Saved {name}.html")
-
+                            except FileExistsError:
+                                print(
+                                    rf"{Back.RED}File {MODELSPATH}\{name}.html already exists."
+                                )
+                elif mode == "4":
+                    break
+                else:
+                    print(f"{Fore.RED}Unknown command.")
         case "3":
             while True:
                 a = input(
                     "1. By nicknames\n2. With /list\n3. Everyone's data (last time seen won't be touched)\n4. Get back to previous stage.\n"
                 )
-                if a == "4":
-                    break
-                if a not in ["1", "2", "3"]:
-                    print(f"{Fore.RED}Unknown value.")
-                else:
-                    match a:
-                        case "1":
-                            nicknames = list(
-                                map(
-                                    str,
-                                    input("Nicknames (split by space): ").split(),
+                match a:
+                    case "1":
+                        nicknames = list(
+                            map(
+                                str,
+                                input("Nicknames (split by space): ").split(),
+                            )
+                        )
+                        count = len(nicknames)
+                        for nickname in nicknames:
+                            try:
+                                uuid = mapi.get_uuid(nickname)
+                                profile = mapi.get_profile(uuid)
+                                data = cvdbdata.load()
+                                data[uuid] = {
+                                    "id": profile.id,
+                                    "name": profile.name,
+                                    "last_seen": round(
+                                        float(profile.timestamp) / 1000
+                                    ),
+                                    "first_time_seen": (
+                                        round(float(profile.timestamp) / 1000)
+                                        if uuid not in data
+                                        else data[uuid]["first_time_seen"]
+                                    ),
+                                    "is_legacy_profile": profile.is_legacy_profile,
+                                    "skin_variant": profile.skin_variant,
+                                    "cape_url": profile.cape_url,
+                                    "skin_url": profile.skin_url,
+                                    "db_id": (
+                                        len(data)
+                                        if uuid not in data
+                                        else data[uuid]["db_id"]
+                                    ),
+                                    "does_exist": True,
+                                }
+                                cvdbdata.dump(data)
+                                print(
+                                    f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
                                 )
-                            )
-                            count = len(nicknames)
-                            for nickname in nicknames:
-                                try:
-                                    uuid = mapi.get_uuid(nickname)
-                                    profile = mapi.get_profile(uuid)
-                                    data = cvdbdata.load()
-                                    data[uuid] = {
-                                        "id": profile.id,
-                                        "name": profile.name,
-                                        "last_seen": round(
-                                            float(profile.timestamp) / 1000
-                                        ),
-                                        "first_time_seen": (
-                                            round(float(profile.timestamp) / 1000)
-                                            if uuid not in data
-                                            else data[uuid]["first_time_seen"]
-                                        ),
-                                        "is_legacy_profile": profile.is_legacy_profile,
-                                        "skin_variant": profile.skin_variant,
-                                        "cape_url": profile.cape_url,
-                                        "skin_url": profile.skin_url,
-                                        "db_id": (
-                                            len(data)
-                                            if uuid not in data
-                                            else data[uuid]["db_id"]
-                                        ),
-                                        "does_exist": True,
-                                    }
-                                    cvdbdata.dump(data)
-                                    print(
-                                        f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
-                                    )
-                                    sleep(0.1)
-                                except errors.NotFound:
-                                    count -= 1
-                                    print(f"{Fore.RED}{nickname} doesn't exist.")
-                                    continue
-                                sleep(0.25)
-                            print(f"Updated {count} players.")
+                                sleep(0.1)
+                            except errors.NotFound:
+                                count -= 1
+                                print(f"{Fore.RED}{nickname} doesn't exist.")
+                                continue
+                            sleep(0.25)
+                        print(f"Updated {count} players.")
 
-                        case "2":
-                            LOGFILE = open(
-                                LOGPATH,
-                                "r",
-                                encoding="UTF-8",
-                            )
-                            loglines = follow(LOGFILE)
-                            print("Waiting for /list...")
-                            for line in loglines:
-                                if "[CHAT]" in line:
-                                    line_upd = line.split("[CHAT] ")[1]
-                                    if line_upd.split()[0] == "Cubeville":
-                                        nicknames = line_upd.split("): ")[1].split(
-                                            ", "
-                                        )
-                                        print(f"Updating: {', '.join(nicknames)}.")
-                                        count = len(nicknames)
-                                        for nickname in nicknames:
-                                            nickname = nickname.strip()
-                                            data = cvdbdata.load()
-                                            try:
-                                                uuid = mapi.get_uuid(nickname)
-                                                profile = mapi.get_profile(uuid)
-                                                data[uuid] = {
-                                                    "id": profile.id,
-                                                    "name": profile.name,
-                                                    "last_seen": round(
+                    case "2":
+                        LOGFILE = open(
+                            LOGPATH,
+                            "r",
+                            encoding="UTF-8",
+                        )
+                        loglines = follow(LOGFILE)
+                        print("Waiting for /list...")
+                        for line in loglines:
+                            if "[CHAT]" in line:
+                                line_upd = line.split("[CHAT] ")[1]
+                                if line_upd.split()[0] == "Cubeville":
+                                    nicknames = line_upd.split("): ")[1].split(", ")
+                                    print(f"Updating: {', '.join(nicknames)}.")
+                                    count = len(nicknames)
+                                    for nickname in nicknames:
+                                        nickname = nickname.strip()
+                                        data = cvdbdata.load()
+                                        try:
+                                            uuid = mapi.get_uuid(nickname)
+                                            profile = mapi.get_profile(uuid)
+                                            data[uuid] = {
+                                                "id": profile.id,
+                                                "name": profile.name,
+                                                "last_seen": round(
+                                                    float(profile.timestamp) / 1000
+                                                ),
+                                                "first_time_seen": (
+                                                    round(
                                                         float(profile.timestamp)
                                                         / 1000
-                                                    ),
-                                                    "first_time_seen": (
-                                                        round(
-                                                            float(profile.timestamp)
-                                                            / 1000
-                                                        )
-                                                        if uuid not in data
-                                                        else data[uuid][
-                                                            "first_time_seen"
-                                                        ]
-                                                    ),
-                                                    "is_legacy_profile": profile.is_legacy_profile,
-                                                    "skin_variant": profile.skin_variant,
-                                                    "cape_url": profile.cape_url,
-                                                    "skin_url": profile.skin_url,
-                                                    "db_id": (
-                                                        len(data)
-                                                        if uuid not in data
-                                                        else data[uuid]["db_id"]
-                                                    ),
-                                                    "does_exist": True,
-                                                }
-                                                cvdbdata.dump(data)
-                                                print(
-                                                    f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
-                                                )
-                                                print(dumps(data[uuid], indent=2))
-                                            except errors.NotFound:
-                                                data[nickname.lower()] = {
-                                                    "id": None,
-                                                    "name": nickname,
-                                                    "last_seen": int(time()),
-                                                    "first_time_seen": (
-                                                        int(time())
-                                                        if nickname not in data
-                                                        else data[nickname][
-                                                            "first_time_seen"
-                                                        ]
-                                                    ),
-                                                    "is_legacy_profile": None,
-                                                    "skin_variant": None,
-                                                    "cape_url": None,
-                                                    "skin_url": None,
-                                                    "db_id": (
-                                                        len(data)
-                                                        if nickname not in data
-                                                        else data[nickname]["db_id"]
-                                                    ),
-                                                    "does_exist": False,
-                                                }
-                                                cvdbdata.dump(data)
-                                                print(
-                                                    f"{Fore.GREEN}{nickname}'s dictionary was updated/added."
-                                                )
-                                                print(
-                                                    dumps(
-                                                        data[nickname.lower()],
-                                                        indent=2,
                                                     )
+                                                    if uuid not in data
+                                                    else data[uuid][
+                                                        "first_time_seen"
+                                                    ]
+                                                ),
+                                                "is_legacy_profile": profile.is_legacy_profile,
+                                                "skin_variant": profile.skin_variant,
+                                                "cape_url": profile.cape_url,
+                                                "skin_url": profile.skin_url,
+                                                "db_id": (
+                                                    len(data)
+                                                    if uuid not in data
+                                                    else data[uuid]["db_id"]
+                                                ),
+                                                "does_exist": True,
+                                            }
+                                            cvdbdata.dump(data)
+                                            print(
+                                                f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
+                                            )
+                                            print(dumps(data[uuid], indent=2))
+                                        except errors.NotFound:
+                                            data[nickname.lower()] = {
+                                                "id": None,
+                                                "name": nickname,
+                                                "last_seen": int(time()),
+                                                "first_time_seen": (
+                                                    int(time())
+                                                    if nickname not in data
+                                                    else data[nickname][
+                                                        "first_time_seen"
+                                                    ]
+                                                ),
+                                                "is_legacy_profile": None,
+                                                "skin_variant": None,
+                                                "cape_url": None,
+                                                "skin_url": None,
+                                                "db_id": (
+                                                    len(data)
+                                                    if nickname not in data
+                                                    else data[nickname]["db_id"]
+                                                ),
+                                                "does_exist": False,
+                                            }
+                                            cvdbdata.dump(data)
+                                            print(
+                                                f"{Fore.GREEN}{nickname}'s dictionary was updated/added."
+                                            )
+                                            print(
+                                                dumps(
+                                                    data[nickname.lower()],
+                                                    indent=2,
                                                 )
-                                                continue
-                                            sleep(0.25)
-                                        print(f"Updated {count} players.")
-                                        break
+                                            )
+                                            continue
+                                        sleep(0.25)
+                                    print(f"Updated {count} players.")
+                                    break
 
-                        case "3":
-                            data = cvdbdata.load()
-                            for uuid in data:
-                                if data[uuid]["id"] is not None:
-                                    profile = mapi.get_profile(uuid)
-                                    data[uuid] = {
-                                        "id": profile.id,
-                                        "name": profile.name,
-                                        "last_seen": data[uuid]["last_seen"],
-                                        "first_time_seen": data[uuid][
-                                            "first_time_seen"
-                                        ],
-                                        "is_legacy_profile": profile.is_legacy_profile,
-                                        "skin_variant": profile.skin_variant,
-                                        "cape_url": profile.cape_url,
-                                        "skin_url": profile.skin_url,
-                                        "db_id": data[uuid]["db_id"],
-                                        "does_exist": True,
-                                    }
-                                    print(f"{Fore.GREEN}Updated {profile.name}")
-                                    print(dumps(data[uuid], indent=2))
-                                    sleep(0.25)
+                    case "3":
+                        data = cvdbdata.load()
+                        for uuid in data:
+                            if data[uuid]["id"] is not None:
+                                profile = mapi.get_profile(uuid)
+                                data[uuid] = {
+                                    "id": profile.id,
+                                    "name": profile.name,
+                                    "last_seen": data[uuid]["last_seen"],
+                                    "first_time_seen": data[uuid][
+                                        "first_time_seen"
+                                    ],
+                                    "is_legacy_profile": profile.is_legacy_profile,
+                                    "skin_variant": profile.skin_variant,
+                                    "cape_url": profile.cape_url,
+                                    "skin_url": profile.skin_url,
+                                    "db_id": data[uuid]["db_id"],
+                                    "does_exist": True,
+                                }
+                                print(f"{Fore.GREEN}Updated {profile.name}")
+                                print(dumps(data[uuid], indent=2))
+                                sleep(0.25)
+                    
+                    case "4":
+                        break
+                    case _:
+                        print(f"{Fore.RED}Unknown command.")
+
 
         case "4":
             data_len = len(cvdbdata.load())
             statsdata = statsdataobj.load()
             # prev_date = (datetime.now().date() - timedelta(days=2)).strftime("%Y-%m-%d")
             last_date = list(statsdata)[-1]
-            now_date = (datetime.now().date() - timedelta(days=1)).strftime(
-                "%Y-%m-%d"
-            )
+            now_date = (datetime.now().date() - timedelta(days=1)).strftime("%Y-%m-%d")
             statsdata[now_date] = {
                 "count": data_len,
                 "delta": data_len - int(statsdata[last_date]["count"]),
@@ -439,3 +444,6 @@ while True:
 
         case "5":
             quit(0)
+        
+        case _:
+            print(f"{Fore.RED}Unknown command.")
