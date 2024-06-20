@@ -14,7 +14,7 @@ import time
 players = [
     "blurry16",
     "cagedFALC0N",
-    "DaKittiQueenOfSK",
+    "TatortotLuna",
     "Dr_Aves",
     "fredlime",
     "Goaticecream",
@@ -106,12 +106,13 @@ players = [
     "Itss01diesyl",
     "Majest0",
     "MrSmall8",
+    "isorry123",
 ]
 
 uuids = {
     "blurry16": "ef2b9013f4ca4749b3bfaf83146c538e",
     "cagedFALC0N": "e2cc4960bead4748baa7b25c86ab736d",
-    "DaKittiQueenOfSK": "afcdd440b5cb457490ebaf3ec54f1cff",
+    "TatortotLuna": "afcdd440b5cb457490ebaf3ec54f1cff",
     "Dr_Aves": "e9fd6719be254ac88f0b1ee23e2bcbd6",
     "fredlime": "8eba079e7e9448aa96c06ec4998ab8c3",
     "Goaticecream": "d3288805405d48959423ca25ed532f0c",
@@ -203,6 +204,7 @@ uuids = {
     "Itss01diesyl": "a84d8740746a4cd88233e8b03c3bcc73",
     "Majest0": "f96ea76ad4644e0ab06fbdd69a696e97",
     "MrSmall8": "b92482d57365443386e08acb855782b6",
+    "isorry123": "69e823cd8d2e47b79abeb0c77f078818",
 }
 
 mapi = API()
@@ -213,8 +215,8 @@ esplayersdata = __data__(
     r"C:\Users\Blurry\PycharmProjects\playersData\es_players_data.json"
 )
 
-with open(r"data\es_players.txt", "r", encoding="UTF-8") as file:
-    esnicknames = file.read().split("\n")
+# with open(r"data\es_players.txt", "r", encoding="UTF-8") as file:
+#     esnicknames = file.read().split("\n")
 
 # dbnicknames = []
 # for player in data:
@@ -254,7 +256,8 @@ for i in uuids:
 print("\n".join(UUIDSONLY))
 if input(f"{Fore.MAGENTA}Would you like to update data? y/n: ").lower() in ["y", ""]:
     print(Fore.RESET)
-    for i in uuids:
+    length = len(data)
+    for index, i in enumerate(uuids):
         profile = mapi.get_profile(uuids[i])
         data[profile.id] = {
             "id": profile.id,
@@ -264,11 +267,13 @@ if input(f"{Fore.MAGENTA}Would you like to update data? y/n: ").lower() in ["y",
             "cape_url": profile.cape_url,
             "skin_url": profile.skin_url,
         }
-        print(f"{Fore.GREEN}{profile.name} updated")
+        print(f"{Fore.GREEN}{profile.name} updated. [{index + 1}/{length}]")
         print(json.dumps(data[profile.id], indent=2))
         print("\n")
         time.sleep(1)
+    del length
     esplayersdata.dump(data)
+    print(f"{Back.GREEN}Successfully dumped data in {esplayersdata.file_path}")
 print(Fore.RESET)
 data = esplayersdata.load()
 names = [data[i]["name"] for i in data]
