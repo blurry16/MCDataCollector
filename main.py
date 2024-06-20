@@ -3,7 +3,7 @@ import json
 import random
 import keyboard
 from datetime import datetime
-from colorama import init, Fore
+from colorama import Fore
 from mojang import API, errors
 from __data__ import cvdbdata, LOGPATH, follow
 

@@ -1,6 +1,6 @@
 import requests
 import os
-from colorama import init, Fore
+from colorama import Fore
 from __data__ import *
 from datetime import datetime, timedelta
 from time import time, sleep

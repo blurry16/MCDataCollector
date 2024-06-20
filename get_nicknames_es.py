@@ -7,7 +7,7 @@ This is some kind of scratch so don't mind lol.
 
 from mojang import API, errors
 from __data__ import cvdbdata, __data__
-from colorama import init, Back, Fore
+from colorama import Back, Fore
 import json
 import time
 
