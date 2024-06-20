@@ -207,7 +207,6 @@ uuids = {
 
 mapi = API()
 
-init(autoreset=True)
 # data = cvdbdata.load()
 
 esplayersdata = __data__(
