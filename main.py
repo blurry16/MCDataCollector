@@ -25,7 +25,6 @@ def generatepasscode() -> str:
 
 
 mapi = API()
-init(autoreset=True)
 
 startday = datetime.now().day
 

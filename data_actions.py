@@ -8,7 +8,6 @@ from mojang import API, errors
 from json import dumps
 
 mapi = API()
-init(autoreset=True)
 
 while True:
     inp = input(
