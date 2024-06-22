@@ -145,108 +145,54 @@ while True:
                 )
                 data = cvdbdata.load()
                 if mode == "1":
-                    proceed = ""
-                    if len(os.listdir(SKINSURLPATH)) > 0:
-                        print(
-                            f"{Fore.RED}Deleting old files... All .png files in following directory will be deleted."
-                        )
-                        print(
-                            f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
-                        )
-                        proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
-                        print(Fore.RESET)
-                        if proceed.lower() == "y" or proceed == "":
-                            for i in os.listdir(SKINSURLPATH):
-                                if os.path.splitext(i)[1] == ".png":
-                                    rem = rf"{SKINSURLPATH}\{i}"
-                                    os.remove(rem)
-                                print(f"{Fore.RED}Deleted {i}")
-                            del rem
-                    if proceed.lower() != "n":
-                        print(f"{Fore.GREEN}Saving new files...")
-                        for i in data:
-                            url = data[i]["skin_url"]
-                            if url is not None:
-                                response = requests.get(url=url)
-                                try:
-                                    with open(
-                                        rf"{SKINSURLPATH}\{url[38:]}.png", "wb"
-                                    ) as file:
-                                        file.write(response.content)
-                                except FileExistsError:
-                                    print(
-                                        rf"{Back.RED}File {SKINSURLPATH}\{url[38:]}.png already exists."
-                                    )
-                                print(f"{Fore.GREEN}Saved {url[38:]}.png")
-                            sleep(0.5)
+                    foldername = rf"{SKINSURLPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-M-%S')}"
+                    print(f"{Fore.GREEN}Creating new folder... ({foldername})")
+                    os.mkdir(foldername)
+                    print(f"{Fore.GREEN}Folder {foldername} created successfully.")
+                    print(f"{Fore.GREEN}Saving new files...")
+                    for i in data:
+                        url = data[i]["skin_url"]
+                        if url is not None:
+                            response = requests.get(url=url)
+                            with open(
+                                rf"{SKINSURLPATH}\{url[38:]}.png", "wb"
+                            ) as file:
+                                file.write(response.content)
+                            print(f"{Fore.GREEN}Saved {url[38:]}.png")
+                        sleep(0.5)
                 elif mode == "2":
-                    proceed = ""
-                    if len(os.listdir(SKINSPATH)) > 0:
-                        print(
-                            f"{Fore.RED}Deleting old files... All .png files in following directory will be deleted."
-                        )
-                        print(
-                            f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
-                        )
-                        proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
-                        print(Fore.RESET)
-                        if proceed.lower() == "y" or proceed == "":
-                            for i in os.listdir(SKINSPATH):
-                                rem = rf"{SKINSPATH}\{i}"
-                                if os.path.splitext(i)[1] == ".png":
-                                    os.remove(rem)
-                                    print(f"{Fore.RED}Deleted {i}")
-                            del rem
-                    if proceed.lower() != "n":
-                        print(f"{Fore.GREEN}Saving new files...")
-                        for i in data:
-                            url = data[i]["skin_url"]
-                            if url is not None:
-                                response = requests.get(url=url)
-                                name = data[i]["name"]
-                                try:
-                                    with open(
-                                        (rf"{SKINSPATH}\{name}.png"),
-                                        "wb",
-                                    ) as file:
-                                        file.write(response.content)
-                                    print(f"{Fore.GREEN}Saved {name}.png")
-                                except FileExistsError:
-                                    print(
-                                        rf"{Back.RED}File {SKINSPATH}\{name}.png already exists."
-                                    )
-                            sleep(0.5)
+                    foldername = rf"{SKINSPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-M-%S')}"
+                    print(f"{Fore.GREEN}Creating new folder... ({foldername})")
+                    os.mkdir(foldername)
+                    print(f"{Fore.GREEN}Folder {foldername} created successfully.")
+                    print(f"{Fore.GREEN}Saving new files...")
+                    for i in data:
+                        url = data[i]["skin_url"]
+                        if url is not None:
+                            response = requests.get(url=url)
+                            name = data[i]["name"]
+                            with open(
+                                (rf"{foldername}\{name}.png"),
+                                "wb",
+                            ) as file:
+                                file.write(response.content)
+                            print(f"{Fore.GREEN}Saved {name}.png")
+                        sleep(0.5)
+                    del foldername
 
                 elif mode == "3":
-                    proceed = ""
-                    if len(os.listdir(MODELSPATH)) > 0:
-                        print(
-                            f"{Fore.RED}Deleting old files... All .html files in following directory will be deleted."
-                        )
-                        print(
-                            f"{Fore.MAGENTA}Note: an exception will be raised if a file already exists. Put 'n' if you want to get back to a previous stage."
-                        )
-                        proceed = input(f"{Fore.MAGENTA}Proceed? y/n: ")
-                        print(Fore.RESET)
-                        if proceed.lower() == "y" or proceed == "":
-                            for i in os.listdir(MODELSPATH):
-                                if os.path.splitext(i)[1] == ".html":
-                                    os.remove(rf"{MODELSPATH}\{i}")
-                                    print(f"{Fore.RED}Deleted {i}")
-                    if proceed.lower() != "n":
-                        del proceed
-                        print(f"{Fore.GREEN}Saving new files...")
-                        for i in data:
-                            name = data[i]["name"]
-                            to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" frameborder="0" width="1920px" height="972px"></iframe>'
-                            try:
-                                with open(rf"{MODELSPATH}\{name}.html", "x") as file:
-                                    file.write(to_save)
-                                print(f"{Fore.GREEN}Saved {name}.html")
-                            except FileExistsError:
-                                print(
-                                    rf"{Back.RED}File {MODELSPATH}\{name}.html already exists."
-                                )
+                    foldername = rf"{MODELSPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-M-%S')}"
+                    print(f"{Fore.GREEN}Creating new folder... ({foldername})")
+                    os.mkdir(foldername)
+                    print(f"{Fore.GREEN}Folder {foldername} created successfully.")
+                    print(f"{Fore.GREEN}Saving new files...")
+                    for i in data:
+                        name = data[i]["name"]
+                        to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" frameborder="0" width="1920px" height="972px"></iframe>'
+                        with open(rf"{foldername}\{name}.html", "x") as file:
+                            file.write(to_save)
+                        print(f"{Fore.GREEN}Saved {name}.html")
+                    del foldername
                 elif mode == "4":
                     break
                 else:
