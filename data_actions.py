@@ -1,5 +1,9 @@
 import requests
 import os
+import disnake
+import threading
+import asyncio
+from disnake.ext import commands
 from colorama import Fore
 from __data__ import *
 from datetime import datetime, timedelta
@@ -8,6 +12,172 @@ from mojang import API, errors
 from json import dumps
 
 mapi = API()
+
+activity = disnake.Activity(name="Forrest Gump", type=disnake.ActivityType.watching)
+bot = commands.Bot(
+    command_prefix="$",
+    intents=disnake.Intents.all(),
+    activity=activity,
+    status=disnake.Status.offline,
+)
+TOKEN = ""
+
+
+class BotManager:
+    def __init__(self, token: str):
+        self.token = token
+        self.bot = commands.Bot(
+            command_prefix="$",
+            intents=disnake.Intents.all(),
+            status=disnake.Status.offline,
+        )
+        self.bot_thread = None
+        self.loop = None
+        self.bot.add_listener(self.on_ready)
+    @bot.event
+    async def on_ready(self):
+        print(f"Bot {bot.user} is ready!")
+
+
+    @bot.slash_command(
+        description="Check last time when a selected player was seen online. (if the bot saw them online)"
+    )
+    async def lastseen(self, ctx, nickname):
+        print(f"{ctx.author} used /lastseen {nickname}")
+        data = cvdbdata.load()
+        try:
+            uuid = mapi.get_uuid(nickname)
+            if uuid in data:
+                last_seen = data[uuid]["last_seen"]
+                await ctx.send(
+                    f"{data[uuid]['name']} was last seen at <t:{last_seen}:f> (shows in local time). ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(last_seen)} ago.)"
+                )
+            else:
+                await ctx.send("The bot has never seen this player.", ephemeral=True)
+        except errors.NotFound:
+            nickname = nickname.lower()
+            if nickname in data:
+                last_seen = data[nickname]["last_seen"]
+                await ctx.send(
+                    f"{data[nickname]['name']} was last seen at <t:{last_seen}:f> (shows in local time). ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(last_seen)} ago.)"
+                )
+            else:
+                await ctx.send(f"Player {nickname} doesn't exist.", ephemeral=True)
+
+
+    @bot.slash_command(
+        description="Check the first time when the bot has seen selected player."
+    )
+    async def firsttimeseen(self, ctx, nickname):
+        print(f"{ctx.author} used /firsttimeseen {nickname}")
+        data = cvdbdata.load()
+        try:
+            uuid = mapi.get_uuid(nickname)
+            if uuid in data:
+                first_time_seen = data[uuid]["first_time_seen"]
+                await ctx.send(
+                    f"{data[uuid]['name']} was seen for the first time at <t:{first_time_seen}:f> (shows in local time). ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(first_time_seen)} ago.)"
+                )
+            else:
+                await ctx.send("The bot has never seen this player.", ephemeral=True)
+        except errors.NotFound:
+            nickname = nickname.lower()
+            if nickname in data:
+                first_time_seen = data[nickname]["first_time_seen"]
+                await ctx.send(
+                    f"{data[nickname]['name']} was seen for the first time at <t:{first_time_seen}:f> (shows in local time). ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(first_time_seen)} ago.)"
+                )
+            else:
+                await ctx.send(f"Player {nickname} doesn't exist.", ephemeral=True)
+
+
+    @bot.slash_command(description="Get database player's id with their nickname.")
+    async def getdbid(self, ctx, nickname):
+        print(f"{ctx.author} used /getdbid {nickname}")
+        data = cvdbdata.load()
+        try:
+            uuid = mapi.get_uuid(nickname)
+            if uuid in data:
+                await ctx.send(
+                    f"{data[uuid]['name']}'s database ID is {data[uuid]['db_id']}."
+                )
+            else:
+                await ctx.send("The bot has never seen this player.", ephemeral=True)
+        except errors.NotFound:
+            nickname = nickname.lower()
+            if nickname in data:
+                await ctx.send(
+                    f"{data[nickname]['name']}'s database ID is {data[nickname]['db_id']}"
+                )
+            else:
+                await ctx.send(f"Player {nickname} doesn't exist.", ephemeral=True)
+
+
+    @bot.slash_command(
+        description="Returns data of selected player from the database in JSON format."
+    )
+    async def getdata(self, ctx, nickname, indent=2):
+        print(f"{ctx.author} used /getdata {nickname}")
+
+        try:
+            indent = int(indent)
+        except ValueError:
+            indent = 2
+
+        indent = 2 if (0 > indent) or (indent > 20) else indent
+        data = cvdbdata.load()
+        try:
+            uuid = mapi.get_uuid(nickname)
+            if uuid in data:
+                await ctx.send(f"```json\n{json.dumps(data[uuid], indent=indent)}```")
+            else:
+                await ctx.send("The bot has never seen this player.", ephemeral=True)
+        except errors.NotFound:
+            nickname = nickname.lower()
+            if nickname in data:
+                await ctx.send(f"```json\n{json.dumps(data[nickname], indent=indent)}```")
+            else:
+                await ctx.send(f"Player {nickname} doesn't exist.", ephemeral=True)
+
+
+    @bot.slash_command(description="Check the count of players in the database.")
+    async def count(self, ctx):
+        print(f"{ctx.author} used /count")
+        data = cvdbdata.load()
+        await ctx.send(f"There are {len(data)} players in the database.")
+
+
+    @bot.slash_command(description="Project in a nutshell")
+    async def description(self, ctx):
+        print(f"{ctx.author} used /description")
+        await ctx.send(
+            (
+                f"# This project is NOT run by Cubeville staff. Everything is done by blurry16.\nYour personal data is not collected, your account is completely safe ||(only Mojang API data, last/first time joined/left the server are collected)||."
+            )
+            + (
+                f"\nSource code can be gotten [here](https://github.com/blurry16/MCDataCollector).\n\n*Licensed under MIT License, Copyright (c) 2024 blurry16*"
+            ),
+            ephemeral=True,
+        )
+
+    def run_bot(self):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.create_task(bot.start(self.token))
+        loop.run_forever()
+
+    def start_bot(self):
+        self.bot_thread = threading.Thread(target=self.run_bot)
+        self.bot_thread.start()
+        print("Bot started.")
+
+    def stop_bot(self):
+        asyncio.run_coroutine_threadsafe(self.bot.close(), self.loop)
+        self.bot_thread.join()
+        print("Bot stopped.")
+
+TOKEN = ""
+manager = BotManager(TOKEN)
 
 while True:
     inp = input(
@@ -380,6 +550,11 @@ while True:
             print(Fore.RESET)
 
         case "5":
+            if manager.bot.is_closed:
+                manager.start_bot()
+            else:
+                manager.stop_bot()
+        case "6":
             break
 
         case _:
