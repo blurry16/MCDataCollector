@@ -1,17 +1,247 @@
 import requests
 import os
+import keyboard
+import random
+import time
+import threading
 from colorama import Fore
 from __data__ import *
 from datetime import datetime, timedelta
-from time import time, sleep
 from mojang import API, errors
 from json import dumps
 
 mapi = API()
 
+
+def mcprint(text: str):
+    """prints given text on the keyboard and sends it to minecraft chat"""
+    keyboard.press("T")
+    time.sleep(0.001)
+    keyboard.release("T")
+    time.sleep(0.1)
+    keyboard.write(text, delay=0)
+    time.sleep(0.5)
+    keyboard.press_and_release("enter")
+
+
+def generatepasscode() -> str:
+    __PASSCODE__ = str(random.randint(0, 9999))
+    return "0" * (4 - len(__PASSCODE__)) + __PASSCODE__
+
+
+is_collecting_active = False
+
+
+def collectdata():
+    PASSCODE = generatepasscode()
+    CHATBOTACTIVE = False
+    HOST = "blurry16"
+    BANNED = []
+    global is_collecting_active
+    print(f"{Fore.MAGENTA}Chatbot passcode for this session is: {PASSCODE}")
+    while True:
+        LOGFILE = open(
+            LOGPATH,
+            "r",
+            encoding="UTF-8",
+        )
+        lines = follow(LOGFILE)
+        for line in lines:
+            if not is_collecting_active:
+                return
+
+            if "[CHAT]" in line:
+                if line[40] == "<":
+                    if line.lower().split()[5] == "#activate":
+                        command = line.split()[5]
+                        username = line.split()[4].split("<")[1].split(">")[0]
+                        try:
+                            arg = (
+                                line.replace("\n", "")
+                                .split(f"{command} ", 1)[1]
+                                .split()[0]
+                            )
+                            if username == HOST and arg == PASSCODE:
+                                CHATBOTACTIVE = not CHATBOTACTIVE
+                                print(
+                                    f"{Fore.GREEN}Chatbot activated."
+                                    if CHATBOTACTIVE
+                                    else f"{Fore.RED}Chatbot unactivated."
+                                )
+                        except IndexError:
+                            if username == HOST:
+                                print(f"{Fore.MAGENTA}Not enough arguments!")
+                    elif CHATBOTACTIVE:
+                        match line.lower().split()[5]:
+                            case "#lastseen":
+                                print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
+                                command = line.split()[5]
+                                username = line.split()[4].split("<")[1].split(">")[0]
+                                arg = (
+                                    line.replace("\n", "")
+                                    .split(f"{command} ", 1)[1]
+                                    .split()[0]
+                                )
+                                if username.lower() not in BANNED:
+                                    data = cvdbdata.load()
+                                    try:
+                                        uuid = mapi.get_uuid(arg)
+                                        if uuid not in data:
+                                            mcprint(f"The bot has never seen {arg}.")
+                                        else:
+                                            mcprint(
+                                                f"{data[uuid]['name']} was seen for the last time at {datetime.fromtimestamp(data[uuid]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
+                                            )
+                                    except errors.NotFound:
+                                        arg = arg.lower()
+                                        if arg not in data:
+                                            mcprint("This player doesn't exist.")
+                                        else:
+                                            mcprint(
+                                                f"{data[arg]['name']} was seen for the last time at {datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
+                                            )
+                            case "#firsttimeseen":
+                                print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
+                                command = line.split()[5]
+                                username = line.split()[4].split("<")[1].split(">")[0]
+                                arg = (
+                                    line.replace("\n", "")
+                                    .split(f"{command} ", 1)[1]
+                                    .split()[0]
+                                )
+                                if username.lower() not in BANNED:
+                                    data = cvdbdata.load()
+                                    try:
+                                        uuid = mapi.get_uuid(arg)
+                                        if uuid not in data:
+                                            mcprint(f"The bot has never seen {arg}.")
+                                        else:
+                                            mcprint(
+                                                f"{data[uuid]['name']} was seen for the first time at {datetime.fromtimestamp(data[uuid]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
+                                            )
+                                    except errors.NotFound:
+                                        arg = arg.lower()
+                                        if arg not in data:
+                                            mcprint("This player doesn't exist.")
+                                        else:
+                                            mcprint(
+                                                f"{data[arg]['name']} was seen for the first time at {datetime.fromtimestamp(data[arg]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
+                                            )
+
+                            case "#count":
+                                print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
+                                username = line.split()[4].split("<")[1].split(">")[0]
+                                if username.lower() not in BANNED:
+                                    data = cvdbdata.load()
+                                    mcprint(
+                                        f"{len(data)} players are currently in the db."
+                                    )
+                            case "#getdbid":
+                                print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
+                                username = line.split()[4].split("<")[1].split(">")[0]
+                                command = line.split()[5]
+                                arg = (
+                                    line.replace("\n", "")
+                                    .split(f"{command} ")[1]
+                                    .split()[0]
+                                )
+                                if username.lower() not in BANNED:
+                                    data = cvdbdata.load()
+                                    try:
+                                        uuid = mapi.get_uuid(arg)
+                                        nickname = data[uuid]["name"]
+                                        if uuid not in data:
+                                            mcprint(
+                                                f"{nickname} is not in the database."
+                                            )
+                                        else:
+                                            mcprint(
+                                                f"{nickname}'s database ID is {data[uuid]['db_id']}"
+                                            )
+                                    except errors.NotFound:
+                                        arg = arg.lower()
+                                        if arg not in data:
+                                            mcprint("This player doesn't exist.")
+                                        else:
+                                            nickname = data[arg]["name"]
+                                            mcprint(
+                                                f"{nickname}'s database ID is {data[arg]['db_id']}"
+                                            )
+
+                else:
+                    line_upd = line.split("CHAT")[1]
+                    split = line_upd.split()
+                    if len(split) > 2:
+                        if (
+                            "<" not in line_upd
+                            and "[" not in line_upd
+                            and ("joined" == split[2] or "left" == split[2])
+                            and "the" == split[3]
+                            and "game." == split[4]
+                        ):
+                            data = cvdbdata.load()
+                            nickname = line.split("[CHAT]")[1].split()[0]
+                            try:
+                                uuid = mapi.get_uuid(nickname)
+                                profile = mapi.get_profile(uuid)
+                                data[uuid] = {
+                                    "id": profile.id,
+                                    "name": profile.name,
+                                    "last_seen": round(float(profile.timestamp) / 1000),
+                                    "first_time_seen": (
+                                        round(float(profile.timestamp) / 1000)
+                                        if uuid not in data
+                                        else data[uuid]["first_time_seen"]
+                                    ),
+                                    "is_legacy_profile": profile.is_legacy_profile,
+                                    "skin_variant": profile.skin_variant,
+                                    "cape_url": profile.cape_url,
+                                    "skin_url": profile.skin_url,
+                                    "db_id": (
+                                        len(data)
+                                        if uuid not in data
+                                        else data[uuid]["db_id"]
+                                    ),
+                                    "does_exist": True,
+                                }
+                                cvdbdata.dump(data)
+                                print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
+                                print(json.dumps(data[uuid], indent=2))
+                            except errors.NotFound:
+                                if nickname != "*":
+                                    data[nickname.lower()] = {
+                                        "id": None,
+                                        "name": nickname,
+                                        "last_seen": int(time.time()),
+                                        "first_time_seen": (
+                                            int(time.time())
+                                            if nickname not in data
+                                            else data[nickname]["first_time_seen"]
+                                        ),
+                                        "is_legacy_profile": None,
+                                        "skin_variant": None,
+                                        "cape_url": None,
+                                        "skin_url": None,
+                                        "db_id": (
+                                            len(data)
+                                            if nickname not in data
+                                            else data[nickname]["db_id"]
+                                        ),
+                                        "does_exist": False,
+                                    }
+                                    cvdbdata.dump(data)
+                                    print(
+                                        f"{Fore.GREEN}{nickname}'s dictionary updated."
+                                    )
+                                    print(json.dumps(data[nickname.lower()], indent=2))
+                            except Exception as e:
+                                print(f"Exception {e} occurred at {int(time.time())}.")
+                            print("\n")
+
+
 while True:
     inp = input(
-        "1. Get data.\n2. Save skins.\n3. Update data.\n4. Add stats\n5. Quit\n"
+        f"1. Get data.\n2. Save skins.\n3. Update data.\n4. Add stats\n5. {'Start' if not is_collecting_active else 'Stop'} collecting data & chatbot\n6. Quit\n"
     )
     match inp:
         case "1":
@@ -32,10 +262,10 @@ while True:
                                         local_data["last_seen"]
                                     )
                                     print(
-                                        f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                        f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
                                     )
                                 else:
-                                    print(f"The bot has never seen {nickname}")
+                                    print(f"The bot has never seen {nickname}.")
                             except errors.NotFound:
                                 if nickname in data:
                                     local_data = data[nickname]
@@ -43,7 +273,7 @@ while True:
                                         local_data["last_seen"]
                                     )
                                     print(
-                                        f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                        f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
                                     )
                                 else:
                                     print("This player doesn't exist.")
@@ -56,16 +286,16 @@ while True:
                                     local_data = data[local_uuid]
                                     timestamp = local_data["first_time_seen"]
                                     print(
-                                        f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                        f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                     )
                                 else:
-                                    print(f"The bot has never seen {nickname}")
+                                    print(f"The bot has never seen {nickname}.")
                             except errors.NotFound:
                                 if nickname in data:
                                     local_data = data[nickname]
                                     timestamp = local_data["first_time_seen"]
                                     print(
-                                        f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                        f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                     )
                                 else:
                                     print("This player doesn't exist.")
@@ -90,7 +320,7 @@ while True:
                                 if local_uuid in data:
                                     print(dumps(data[local_uuid], indent=indent))
                                 else:
-                                    print(f"The bot has never seen {nickname}")
+                                    print(f"The bot has never seen {nickname}.")
                             except errors.NotFound:
                                 if nickname in data:
                                     print(dumps(data[nickname], indent=indent))
@@ -119,7 +349,7 @@ while True:
                             data = cvdbdata.load()
                             for i in data:
                                 print(data[i]["name"])
-                            print(f"{len(data)} players in DB")
+                            print(f"{len(data)} players in DB.")
 
                         case "6":
                             data = cvdbdata.load()
@@ -128,7 +358,7 @@ while True:
                                 if i == data[i]["name"].lower():
                                     count += 1
                                     print(data[i]["name"])
-                            print(f"{count} zombies in the DB")
+                            print(f"{count} zombies in the DB.")
 
                         case "7":
                             break
@@ -154,12 +384,10 @@ while True:
                         url = data[i]["skin_url"]
                         if url is not None:
                             response = requests.get(url=url)
-                            with open(
-                                rf"{SKINSURLPATH}\{url[38:]}.png", "wb"
-                            ) as file:
+                            with open(rf"{SKINSURLPATH}\{url[38:]}.png", "wb") as file:
                                 file.write(response.content)
                             print(f"{Fore.GREEN}Saved {url[38:]}.png")
-                        sleep(0.5)
+                        time.sleep(0.5)
                 elif mode == "2":
                     foldername = rf"{SKINSPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-M-%S')}"
                     print(f"{Fore.GREEN}Creating new folder... ({foldername})")
@@ -177,7 +405,7 @@ while True:
                             ) as file:
                                 file.write(response.content)
                             print(f"{Fore.GREEN}Saved {name}.png")
-                        sleep(0.5)
+                        time.sleep(0.5)
                     del foldername
 
                 elif mode == "3":
@@ -240,12 +468,12 @@ while True:
                                 print(
                                     f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
                                 )
-                                sleep(0.1)
+                                time.sleep(0.1)
                             except errors.NotFound:
                                 count -= 1
                                 print(f"{Fore.RED}{nickname} doesn't exist.")
                                 continue
-                            sleep(0.25)
+                            time.sleep(0.25)
                         print(f"Updated {count} players.")
 
                     case "2":
@@ -302,9 +530,9 @@ while True:
                                             data[nickname.lower()] = {
                                                 "id": None,
                                                 "name": nickname,
-                                                "last_seen": int(time()),
+                                                "last_seen": int(time.time()),
                                                 "first_time_seen": (
-                                                    int(time())
+                                                    int(time.time())
                                                     if nickname not in data
                                                     else data[nickname][
                                                         "first_time_seen"
@@ -332,7 +560,7 @@ while True:
                                                 )
                                             )
                                             continue
-                                        sleep(0.25)
+                                        time.sleep(0.25)
                                     print(f"Updated {count} players.")
                                     break
 
@@ -355,7 +583,7 @@ while True:
                                 }
                                 print(f"{Fore.GREEN}Updated {profile.name}")
                                 print(dumps(data[uuid], indent=2))
-                                sleep(0.25)
+                                time.sleep(0.25)
 
                     case "4":
                         break
@@ -380,6 +608,15 @@ while True:
             print(Fore.RESET)
 
         case "5":
+            is_collecting_active = not is_collecting_active
+            if is_collecting_active:
+                print(f"{Fore.GREEN}Starting collecting data...")
+                collectdatathread = threading.Thread(target=collectdata)
+                collectdatathread.start()
+            else:
+                print(f"{Fore.RED}Stopping collecting data...")
+                collectdatathread.join()
+        case "6":
             break
 
         case _:
