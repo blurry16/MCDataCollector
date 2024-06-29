@@ -32,6 +32,31 @@ def generatepasscode() -> str:
 is_collecting_active = False
 
 
+def follow(file):
+    """follows selected file"""
+    file.seek(0, 2)
+    while True:
+        li = file.readline()
+        if not li:
+            sleep(0.1)
+            continue
+        yield li
+
+
+def collectdata(file):
+    """follows selected file, used in data collecting not updating via /list"""
+    global is_collecting_active
+    file.seek(0, 2)
+    while True:
+        if not is_collecting_active:
+            break
+        li = file.readline()
+        if not li:
+            sleep(0.1)
+            continue
+        yield li
+
+
 def collectdata():
     PASSCODE = generatepasscode()
     CHATBOTACTIVE = False
@@ -45,11 +70,10 @@ def collectdata():
             "r",
             encoding="UTF-8",
         )
-        lines = follow(LOGFILE)
+        lines = collectdata(LOGFILE)
+        if not is_collecting_active:
+            return
         for line in lines:
-            if not is_collecting_active:
-                return
-
             if "[CHAT]" in line:
                 if line[40] == "<":
                     if line.lower().split()[5] == "#activate":

@@ -64,16 +64,5 @@ class __data__:
             json.dump(data, data_file, indent=indent)
 
 
-def follow(file):
-    """follows selected file"""
-    file.seek(0, 2)
-    while True:
-        li = file.readline()
-        if not li:
-            sleep(0.1)
-            continue
-        yield li
-
-
 cvdbdata = __data__(DATAPATH)
 statsdataobj = __data__(STATSPATH)
