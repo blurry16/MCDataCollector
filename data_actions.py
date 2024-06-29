@@ -11,7 +11,7 @@ from json import dumps
 mapi = API()
 
 
-def followupdatwithlist(file):
+def followupdatewithlist(file):
     global return_updatewithlist
     """follows selected file, used only in update with /list"""
     file.seek(0, 2)
@@ -33,7 +33,7 @@ def updatewithlist():
         "r",
         encoding="UTF-8",
     )
-    loglines = followupdatwithlist(LOGFILE)
+    loglines = followupdatewithlist(LOGFILE)
     print("Waiting for /list...")
     for line in loglines:
         if "[CHAT]" in line:
