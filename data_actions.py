@@ -43,7 +43,7 @@ def follow(file):
         yield li
 
 
-def collectdata(file):
+def _follow(file):
     """follows selected file, used in data collecting not updating via /list"""
     global is_collecting_active
     file.seek(0, 2)
@@ -70,7 +70,7 @@ def collectdata():
             "r",
             encoding="UTF-8",
         )
-        lines = collectdata(LOGFILE)
+        lines = _follow(LOGFILE)
         if not is_collecting_active:
             return
         for line in lines:
