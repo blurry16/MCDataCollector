@@ -399,7 +399,7 @@ while True:
                 )
                 data = cvdbdata.load()
                 if mode == "1":
-                    foldername = rf"{SKINSURLPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-M-%S')}"
+                    foldername = rf"{SKINSURLPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}"
                     print(f"{Fore.GREEN}Creating new folder... ({foldername})")
                     os.mkdir(foldername)
                     print(f"{Fore.GREEN}Folder {foldername} created successfully.")
@@ -413,7 +413,7 @@ while True:
                             print(f"{Fore.GREEN}Saved {url[38:]}.png")
                         time.sleep(0.5)
                 elif mode == "2":
-                    foldername = rf"{SKINSPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-M-%S')}"
+                    foldername = rf"{SKINSPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}"
                     print(f"{Fore.GREEN}Creating new folder... ({foldername})")
                     os.mkdir(foldername)
                     print(f"{Fore.GREEN}Folder {foldername} created successfully.")
@@ -433,7 +433,7 @@ while True:
                     del foldername
 
                 elif mode == "3":
-                    foldername = rf"{MODELSPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-M-%S')}"
+                    foldername = rf"{MODELSPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}"
                     print(f"{Fore.GREEN}Creating new folder... ({foldername})")
                     os.mkdir(foldername)
                     print(f"{Fore.GREEN}Folder {foldername} created successfully.")
