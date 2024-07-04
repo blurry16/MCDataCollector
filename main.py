@@ -10,9 +10,7 @@ from __data__ import cvdbdata, LOGPATH, follow
 
 def mcprint(text: str):
     """prints given text on the keyboard and sends it to minecraft chat"""
-    keyboard.press("T")
-    time.sleep(0.001)
-    keyboard.release("T")
+    keyboard.press_and_release("t")
     time.sleep(0.1)
     keyboard.write(text, delay=0)
     time.sleep(0.5)

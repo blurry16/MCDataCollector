@@ -1,13 +1,111 @@
 import requests
 import os
+import threading
+import keyboard
 from colorama import Fore
 from __data__ import *
 from datetime import datetime, timedelta
-from time import time, sleep
+from time import time
 from mojang import API, errors
-from json import dumps
 
 mapi = API()
+
+
+def followupdatewithlist(file):
+    global return_updatewithlist
+    """follows selected file, used only in update with /list"""
+    file.seek(0, 2)
+    while True:
+        if return_updatewithlist:
+            return
+        li = file.readline()
+        if not li:
+            sleep(0.1)
+            continue
+        yield li
+
+
+def updatewithlist():
+    global return_updatewithlist
+
+    LOGFILE = open(
+        LOGPATH,
+        "r",
+        encoding="UTF-8",
+    )
+    loglines = followupdatewithlist(LOGFILE)
+    print(f"{Fore.MAGENTA}Waiting for /list...")
+    for line in loglines:
+        if "[CHAT]" in line:
+            line_upd = line.split("[CHAT] ")[1]
+            if line_upd.split()[0] == "Cubeville":
+                nicknames = line_upd.split("): ")[1].split(", ")
+                print(f"Updating: {', '.join(nicknames)}.")
+                count = len(nicknames)
+                for nickname in nicknames:
+                    nickname = nickname.strip()
+                    data = cvdbdata.load()
+                    try:
+                        uuid = mapi.get_uuid(nickname)
+                        profile = mapi.get_profile(uuid)
+                        data[uuid] = {
+                            "id": profile.id,
+                            "name": profile.name,
+                            "last_seen": round(float(profile.timestamp) / 1000),
+                            "first_time_seen": (
+                                round(float(profile.timestamp) / 1000)
+                                if uuid not in data
+                                else data[uuid]["first_time_seen"]
+                            ),
+                            "is_legacy_profile": profile.is_legacy_profile,
+                            "skin_variant": profile.skin_variant,
+                            "cape_url": profile.cape_url,
+                            "skin_url": profile.skin_url,
+                            "db_id": (
+                                len(data) if uuid not in data else data[uuid]["db_id"]
+                            ),
+                            "does_exist": True,
+                        }
+                        cvdbdata.dump(data)
+                        print(
+                            f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
+                        )
+                        print(json.dumps(data[uuid], indent=2))
+                    except errors.NotFound:
+                        data[nickname.lower()] = {
+                            "id": None,
+                            "name": nickname,
+                            "last_seen": int(time()),
+                            "first_time_seen": (
+                                int(time())
+                                if nickname not in data
+                                else data[nickname]["first_time_seen"]
+                            ),
+                            "is_legacy_profile": None,
+                            "skin_variant": None,
+                            "cape_url": None,
+                            "skin_url": None,
+                            "db_id": (
+                                len(data)
+                                if nickname not in data
+                                else data[nickname]["db_id"]
+                            ),
+                            "does_exist": False,
+                        }
+                        cvdbdata.dump(data)
+                        print(f"{Fore.GREEN}{nickname}'s dictionary was updated/added.")
+                        print(
+                            json.dumps(
+                                data[nickname.lower()],
+                                indent=2,
+                            )
+                        )
+                        continue
+                    sleep(0.25)
+                print(f"Updated {count} players.")
+                return_updatewithlist = True
+                return
+
 
 while True:
     inp = input(
@@ -88,12 +186,12 @@ while True:
                                         pass
                                 local_uuid = mapi.get_uuid(nickname)
                                 if local_uuid in data:
-                                    print(dumps(data[local_uuid], indent=indent))
+                                    print(json.dumps(data[local_uuid], indent=indent))
                                 else:
                                     print(f"The bot has never seen {nickname}")
                             except errors.NotFound:
                                 if nickname in data:
-                                    print(dumps(data[nickname], indent=indent))
+                                    print(json.dumps(data[nickname], indent=indent))
                                 else:
                                     print("This player doesn't exist.")
                         case "4":
@@ -154,9 +252,7 @@ while True:
                         url = data[i]["skin_url"]
                         if url is not None:
                             response = requests.get(url=url)
-                            with open(
-                                rf"{SKINSURLPATH}\{url[38:]}.png", "wb"
-                            ) as file:
+                            with open(rf"{SKINSURLPATH}\{url[38:]}.png", "wb") as file:
                                 file.write(response.content)
                             print(f"{Fore.GREEN}Saved {url[38:]}.png")
                         sleep(0.5)
@@ -249,92 +345,18 @@ while True:
                         print(f"Updated {count} players.")
 
                     case "2":
-                        LOGFILE = open(
-                            LOGPATH,
-                            "r",
-                            encoding="UTF-8",
-                        )
-                        loglines = follow(LOGFILE)
-                        print("Waiting for /list...")
-                        for line in loglines:
-                            if "[CHAT]" in line:
-                                line_upd = line.split("[CHAT] ")[1]
-                                if line_upd.split()[0] == "Cubeville":
-                                    nicknames = line_upd.split("): ")[1].split(", ")
-                                    print(f"Updating: {', '.join(nicknames)}.")
-                                    count = len(nicknames)
-                                    for nickname in nicknames:
-                                        nickname = nickname.strip()
-                                        data = cvdbdata.load()
-                                        try:
-                                            uuid = mapi.get_uuid(nickname)
-                                            profile = mapi.get_profile(uuid)
-                                            data[uuid] = {
-                                                "id": profile.id,
-                                                "name": profile.name,
-                                                "last_seen": round(
-                                                    float(profile.timestamp) / 1000
-                                                ),
-                                                "first_time_seen": (
-                                                    round(
-                                                        float(profile.timestamp) / 1000
-                                                    )
-                                                    if uuid not in data
-                                                    else data[uuid]["first_time_seen"]
-                                                ),
-                                                "is_legacy_profile": profile.is_legacy_profile,
-                                                "skin_variant": profile.skin_variant,
-                                                "cape_url": profile.cape_url,
-                                                "skin_url": profile.skin_url,
-                                                "db_id": (
-                                                    len(data)
-                                                    if uuid not in data
-                                                    else data[uuid]["db_id"]
-                                                ),
-                                                "does_exist": True,
-                                            }
-                                            cvdbdata.dump(data)
-                                            print(
-                                                f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
-                                            )
-                                            print(dumps(data[uuid], indent=2))
-                                        except errors.NotFound:
-                                            data[nickname.lower()] = {
-                                                "id": None,
-                                                "name": nickname,
-                                                "last_seen": int(time()),
-                                                "first_time_seen": (
-                                                    int(time())
-                                                    if nickname not in data
-                                                    else data[nickname][
-                                                        "first_time_seen"
-                                                    ]
-                                                ),
-                                                "is_legacy_profile": None,
-                                                "skin_variant": None,
-                                                "cape_url": None,
-                                                "skin_url": None,
-                                                "db_id": (
-                                                    len(data)
-                                                    if nickname not in data
-                                                    else data[nickname]["db_id"]
-                                                ),
-                                                "does_exist": False,
-                                            }
-                                            cvdbdata.dump(data)
-                                            print(
-                                                f"{Fore.GREEN}{nickname}'s dictionary was updated/added."
-                                            )
-                                            print(
-                                                dumps(
-                                                    data[nickname.lower()],
-                                                    indent=2,
-                                                )
-                                            )
-                                            continue
-                                        sleep(0.25)
-                                    print(f"Updated {count} players.")
-                                    break
+                        return_updatewithlist = False
+                        updatewithlistthread = threading.Thread(target=updatewithlist)
+                        updatewithlistthread.start()
+                        sleep(0.01)
+                        print(f"{Fore.MAGENTA}Press escape to break updating")
+                        while True:
+                            if keyboard.is_pressed("escape"):
+                                return_updatewithlist = True
+                                updatewithlistthread.join()
+                                break
+                            if return_updatewithlist:
+                                break
 
                     case "3":
                         data = cvdbdata.load()
@@ -354,7 +376,7 @@ while True:
                                     "does_exist": True,
                                 }
                                 print(f"{Fore.GREEN}Updated {profile.name}")
-                                print(dumps(data[uuid], indent=2))
+                                print(json.dumps(data[uuid], indent=2))
                                 sleep(0.25)
 
                     case "4":
@@ -373,7 +395,7 @@ while True:
                 "delta": data_len - int(statsdata[last_date]["count"]),
             }
 
-            print(dumps(statsdata, indent=4))
+            print(json.dumps(statsdata, indent=4))
             a = input(f"{Fore.MAGENTA}Proceed? y/n: ")
             if a.lower() == "y" or a == "":
                 statsdataobj.dump(statsdata)
