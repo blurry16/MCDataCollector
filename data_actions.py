@@ -1,6 +1,7 @@
 import requests
 import os
 import threading
+import keyboard
 from colorama import Fore
 from __data__ import *
 from datetime import datetime, timedelta
@@ -33,7 +34,7 @@ def updatewithlist():
         encoding="UTF-8",
     )
     loglines = followupdatewithlist(LOGFILE)
-    print("Waiting for /list...")
+    print(f"{Fore.MAGENTA}Waiting for /list...")
     for line in loglines:
         if "[CHAT]" in line:
             line_upd = line.split("[CHAT] ")[1]
@@ -348,8 +349,9 @@ while True:
                         updatewithlistthread = threading.Thread(target=updatewithlist)
                         updatewithlistthread.start()
                         sleep(0.01)
+                        print(f"{Fore.MAGENTA}Press escape to break updating")
                         while True:
-                            if input("Type 'n' to break updating.\n").lower() == "n":
+                            if keyboard.is_pressed("escape"):
                                 return_updatewithlist = True
                                 updatewithlistthread.join()
                                 break
