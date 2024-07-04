@@ -4,9 +4,8 @@ import threading
 from colorama import Fore
 from __data__ import *
 from datetime import datetime, timedelta
-from time import time, sleep
+from time import time
 from mojang import API, errors
-from json import dumps
 
 mapi = API()
 
@@ -70,7 +69,7 @@ def updatewithlist():
                         print(
                             f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
                         )
-                        print(dumps(data[uuid], indent=2))
+                        print(json.dumps(data[uuid], indent=2))
                     except errors.NotFound:
                         data[nickname.lower()] = {
                             "id": None,
@@ -95,7 +94,7 @@ def updatewithlist():
                         cvdbdata.dump(data)
                         print(f"{Fore.GREEN}{nickname}'s dictionary was updated/added.")
                         print(
-                            dumps(
+                            json.dumps(
                                 data[nickname.lower()],
                                 indent=2,
                             )
@@ -186,12 +185,12 @@ while True:
                                         pass
                                 local_uuid = mapi.get_uuid(nickname)
                                 if local_uuid in data:
-                                    print(dumps(data[local_uuid], indent=indent))
+                                    print(json.dumps(data[local_uuid], indent=indent))
                                 else:
                                     print(f"The bot has never seen {nickname}")
                             except errors.NotFound:
                                 if nickname in data:
-                                    print(dumps(data[nickname], indent=indent))
+                                    print(json.dumps(data[nickname], indent=indent))
                                 else:
                                     print("This player doesn't exist.")
                         case "4":
@@ -375,7 +374,7 @@ while True:
                                     "does_exist": True,
                                 }
                                 print(f"{Fore.GREEN}Updated {profile.name}")
-                                print(dumps(data[uuid], indent=2))
+                                print(json.dumps(data[uuid], indent=2))
                                 sleep(0.25)
 
                     case "4":
@@ -394,7 +393,7 @@ while True:
                 "delta": data_len - int(statsdata[last_date]["count"]),
             }
 
-            print(dumps(statsdata, indent=4))
+            print(json.dumps(statsdata, indent=4))
             a = input(f"{Fore.MAGENTA}Proceed? y/n: ")
             if a.lower() == "y" or a == "":
                 statsdataobj.dump(statsdata)
