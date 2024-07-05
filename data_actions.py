@@ -150,7 +150,9 @@ while True:
                                     else:
                                         print("This player doesn't exist.")
                             elif arg == "2":
-                                local_uuid = input("UUID: ").strip().replace("-", "").split()[0]
+                                local_uuid = (
+                                    input("UUID: ").strip().replace("-", "").split()[0]
+                                )
                                 if local_uuid in data:
                                     local_data = data[local_uuid]
                                     dt_obj = datetime.fromtimestamp(
@@ -207,7 +209,9 @@ while True:
                                     else:
                                         print("This player doesn't exist.")
                             elif arg == "2":
-                                local_uuid = input("UUID: ").strip().split()[0].replace("-", "")
+                                local_uuid = (
+                                    input("UUID: ").strip().split()[0].replace("-", "")
+                                )
                                 if local_uuid in data:
                                     local_data = data[local_uuid]
                                     dt_obj = datetime.fromtimestamp(
@@ -316,9 +320,7 @@ while True:
                                         f"{Fore.RED}DB has no player with {db_id} DBID."
                                     )
                             else:
-                                print(
-                                        f"{Fore.RED}DB has no player with {db_id} DBID."
-                                    )
+                                print(f"{Fore.RED}DB has no player with {db_id} DBID.")
                         case "4":
                             arg = input(
                                 "Lookup via [1] Nickname, [2] Mojang UUID: "
@@ -342,9 +344,13 @@ while True:
                                             f"{local_data['name']}'s database id is {local_data['db_id']}"
                                         )
                             elif arg == "2":
-                                local_uuid = input("UUID: ").strip().split()[0].replace("-", "")
+                                local_uuid = (
+                                    input("UUID: ").strip().split()[0].replace("-", "")
+                                )
                                 if local_uuid in data:
-                                    print(f"{local_uuid}'s ({data[local_uuid]['name']}) database id is {data[local_uuid]['db_id']}")
+                                    print(
+                                        f"{local_uuid}'s ({data[local_uuid]['name']}) database id is {data[local_uuid]['db_id']}"
+                                    )
                                 else:
                                     print(f"The bot has never seen {nickname}.")
 
