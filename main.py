@@ -2,8 +2,8 @@ import requests
 import os
 import keyboard
 import random
-import time
 import threading
+from time import time, sleep
 from colorama import Fore
 from __data__ import *
 from datetime import datetime, timedelta
@@ -15,11 +15,11 @@ mapi = API()
 def mcprint(text: str):
     """prints given text on the keyboard and sends it to minecraft chat"""
     keyboard.press("T")
-    time.sleep(0.001)
+    sleep(0.001)
     keyboard.release("T")
-    time.sleep(0.1)
+    sleep(0.1)
     keyboard.write(text, delay=0)
-    time.sleep(0.5)
+    sleep(0.5)
     keyboard.press_and_release("enter")
 
 
@@ -198,7 +198,7 @@ def collectdata():
                                             mcprint(f"The bot has never seen {arg}.")
                                         else:
                                             mcprint(
-                                                f"{data[uuid]['name']} was seen for the last time at {datetime.fromtimestamp(data[uuid]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
+                                                f"{data[uuid]['name']} was seen for the last time at {datetime.fromtimestamp(data[uuid]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
                                             )
                                     except errors.NotFound:
                                         arg = arg.lower()
@@ -206,7 +206,7 @@ def collectdata():
                                             mcprint("This player doesn't exist.")
                                         else:
                                             mcprint(
-                                                f"{data[arg]['name']} was seen for the last time at {datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
+                                                f"{data[arg]['name']} was seen for the last time at {datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
                                             )
                             case "#firsttimeseen":
                                 print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
@@ -225,7 +225,7 @@ def collectdata():
                                             mcprint(f"The bot has never seen {arg}.")
                                         else:
                                             mcprint(
-                                                f"{data[uuid]['name']} was seen for the first time at {datetime.fromtimestamp(data[uuid]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
+                                                f"{data[uuid]['name']} was seen for the first time at {datetime.fromtimestamp(data[uuid]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
                                             )
                                     except errors.NotFound:
                                         arg = arg.lower()
@@ -233,7 +233,7 @@ def collectdata():
                                             mcprint("This player doesn't exist.")
                                         else:
                                             mcprint(
-                                                f"{data[arg]['name']} was seen for the first time at {datetime.fromtimestamp(data[arg]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
+                                                f"{data[arg]['name']} was seen for the first time at {datetime.fromtimestamp(data[arg]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
                                             )
 
                             case "#count":
@@ -320,9 +320,9 @@ def collectdata():
                                     data[nickname.lower()] = {
                                         "id": None,
                                         "name": nickname,
-                                        "last_seen": int(time.time()),
+                                        "last_seen": int(time()),
                                         "first_time_seen": (
-                                            int(time.time())
+                                            int(time())
                                             if nickname not in data
                                             else data[nickname]["first_time_seen"]
                                         ),
@@ -343,7 +343,7 @@ def collectdata():
                                     )
                                     print(json.dumps(data[nickname.lower()], indent=2))
                             except Exception as e:
-                                print(f"Exception {e} occurred at {int(time.time())}.")
+                                print(f"Exception {e} occurred at {int(time())}.")
                             print("\n")
 
 
@@ -353,6 +353,269 @@ while True:
     )
     match inp:
         case "1":
+            while True:
+                inp = input(
+                    "1. Get last seen time\n2. Get first seen time\n3. Get full data in JSON format\n4. Get database id\n5. Get all players' nicknames in the DB\n6. Get all zombie accounts nicknames in the DB\n7. Get back to previous stage\n"
+                ).strip()
+                try:
+                    match inp:
+                        case "1":
+                            arg = input(
+                                "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
+                            ).strip()
+                            data = cvdbdata.load()
+                            if arg == "1":
+                                nickname = input("Nickname: ").strip().split()[0]
+                                try:
+                                    local_uuid = mapi.get_uuid(nickname)
+                                    if local_uuid in data:
+                                        local_data = data[local_uuid]
+                                        dt_obj = datetime.fromtimestamp(
+                                            local_data["last_seen"]
+                                        )
+                                        print(
+                                            f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                        )
+                                    else:
+                                        print(f"The bot has never seen {nickname}.")
+                                except errors.NotFound:
+                                    if nickname in data:
+                                        local_data = data[nickname]
+                                        dt_obj = datetime.fromtimestamp(
+                                            local_data["last_seen"]
+                                        )
+                                        print(
+                                            f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                        )
+                                    else:
+                                        print("This player doesn't exist.")
+                            elif arg == "2":
+                                local_uuid = (
+                                    input("UUID: ").strip().replace("-", "").split()[0]
+                                )
+                                if local_uuid in data:
+                                    local_data = data[local_uuid]
+                                    dt_obj = datetime.fromtimestamp(
+                                        local_data["last_seen"]
+                                    )
+                                    print(
+                                        f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                    )
+                                else:
+                                    print(f"The bot has never seen {local_uuid}.")
+                            elif arg == "3":
+                                try:
+                                    db_id = int(input("DBID: ").strip().split()[0])
+                                    local_data = data[list(data)[db_id]]
+                                    dt_obj = datetime.fromtimestamp(
+                                        local_data["last_seen"]
+                                    )
+                                    print(
+                                        f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                    )
+
+                                except ValueError:
+                                    print(f"{Fore.RED}Wrong value!")
+                                except IndexError:
+                                    print(
+                                        f"{Fore.RED}DB has no player with {db_id} DBID."
+                                    )
+                            else:
+                                print(f"{Fore.RED}Unknown command!")
+                        case "2":
+                            arg = input(
+                                "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
+                            ).strip()
+                            data = cvdbdata.load()
+                            if arg == "1":
+                                nickname = input("Nickname: ").strip().split()[0]
+                                try:
+                                    local_uuid = mapi.get_uuid(nickname)
+                                    if local_uuid in data:
+                                        local_data = data[local_uuid]
+                                        timestamp = local_data["first_time_seen"]
+                                        print(
+                                            f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                        )
+                                    else:
+                                        print(f"The bot has never seen {nickname}.")
+                                except errors.NotFound:
+                                    if nickname in data:
+                                        local_data = data[nickname]
+                                        timestamp = local_data["first_time_seen"]
+                                        print(
+                                            f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                        )
+                                    else:
+                                        print("This player doesn't exist.")
+                            elif arg == "2":
+                                local_uuid = (
+                                    input("UUID: ").strip().split()[0].replace("-", "")
+                                )
+                                if local_uuid in data:
+                                    local_data = data[local_uuid]
+                                    dt_obj = datetime.fromtimestamp(
+                                        local_data["first_time_seen"]
+                                    )
+                                    print(
+                                        f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                    )
+                                else:
+                                    print(f"The bot has never seen {local_uuid}.")
+                            elif arg == "3":
+                                try:
+                                    db_id = int(input("DBID: "))
+                                    local_data = data[list(data)[db_id]]
+                                    dt_obj = datetime.fromtimestamp(
+                                        local_data["first_time_seen"]
+                                    )
+                                    print(
+                                        f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                    )
+
+                                except ValueError:
+                                    print(f"{Fore.RED}Wrong value!")
+                                except IndexError:
+                                    print(
+                                        f"{Fore.RED}DB has no player with {db_id} DBID."
+                                    )
+                            else:
+                                print(f"{Fore.RED}Unknown command!")
+                        case "3":
+                            arg = input(
+                                "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
+                            ).strip()
+                            indent = 2
+                            data = cvdbdata.load()
+                            if arg == "1":
+                                inp = input("Nickname: ").strip().split()[0]
+                                nickname = inp.split()[0]
+                                try:
+                                    if "--indent" in inp.split():
+                                        try:
+                                            indent = int(
+                                                inp.split()[
+                                                    inp.split().index("--indent") + 1
+                                                ]
+                                            )
+                                        except IndexError:
+                                            indent = None
+                                        except ValueError:
+                                            pass
+                                    local_uuid = mapi.get_uuid(nickname)
+                                    if local_uuid in data:
+                                        print(
+                                            json.dumps(data[local_uuid], indent=indent)
+                                        )
+                                    else:
+                                        print(f"The bot has never seen {nickname}.")
+                                except errors.NotFound:
+                                    if nickname in data:
+                                        print(json.dumps(data[nickname], indent=indent))
+                                    else:
+                                        print("This player doesn't exist.")
+                            elif arg == "2":
+                                inp = input("UUID: ").strip()
+                                uuid = inp.split()[0].replace("-", "")
+                                if "--indent" in inp.split():
+                                    try:
+                                        indent = int(
+                                            inp.split()[
+                                                inp.split().index("--indent") + 1
+                                            ]
+                                        )
+                                    except IndexError:
+                                        indent = None
+                                    except ValueError:
+                                        pass
+                                if uuid in data:
+                                    print(json.dumps(data[uuid], indent=indent))
+                                else:
+                                    print(f"The bot has never seen {uuid}.")
+                            elif arg == "3":
+                                try:
+                                    inp = input("DBID: ")
+                                    if "--indent" in inp.split():
+                                        try:
+                                            indent = int(
+                                                inp.split()[
+                                                    inp.split().index("--indent") + 1
+                                                ]
+                                            )
+                                        except IndexError:
+                                            indent = None
+                                        except ValueError:
+                                            pass
+                                    db_id = int(inp.split()[0])
+
+                                    print(
+                                        json.dumps(
+                                            data[list(data)[db_id]], indent=indent
+                                        )
+                                    )
+                                except ValueError:
+                                    print(f"{Fore.RED}Wrong value!")
+                                except IndexError:
+                                    print(
+                                        f"{Fore.RED}DB has no player with {db_id} DBID."
+                                    )
+                            else:
+                                print(f"{Fore.RED}DB has no player with {db_id} DBID.")
+                        case "4":
+                            arg = input(
+                                "Lookup via [1] Nickname, [2] Mojang UUID: "
+                            ).strip()
+                            data = cvdbdata.load()
+                            if arg == "1":
+                                inp = input("Nickname: ").lower().strip().split()[0]
+                                try:
+                                    uuid = mapi.get_uuid(inp)
+                                    nickname = data[uuid]["name"]
+                                    if uuid in data:
+                                        print(
+                                            f"{nickname}'s database id is {data[uuid]['db_id']}."
+                                        )
+                                    else:
+                                        print(f"The bot has never seen {nickname}.")
+                                except errors.NotFound:
+                                    if inp.lower() in data:
+                                        local_data = data[inp]
+                                        print(
+                                            f"{local_data['name']}'s database id is {local_data['db_id']}"
+                                        )
+                            elif arg == "2":
+                                local_uuid = (
+                                    input("UUID: ").strip().split()[0].replace("-", "")
+                                )
+                                if local_uuid in data:
+                                    print(
+                                        f"{local_uuid}'s ({data[local_uuid]['name']}) database id is {data[local_uuid]['db_id']}"
+                                    )
+                                else:
+                                    print(f"The bot has never seen {nickname}.")
+
+                        case "5":
+                            data = cvdbdata.load()
+                            for i in data:
+                                print(data[i]["name"])
+                            print(f"{len(data)} players in DB")
+
+                        case "6":
+                            data = cvdbdata.load()
+                            count = 0
+                            for i in data:
+                                if i == data[i]["name"].lower():
+                                    count += 1
+                                    print(data[i]["name"])
+                            print(f"{count} zombies in the DB")
+
+                        case "7":
+                            break
+
+                        case _:
+                            print(f"{Fore.RED}Unknown command.")
+                except KeyError:
+                    print("The bot has never seen this player.")
             while True:
                 inp = input(
                     "1. Get last seen data by nickname\n2. Get first seen data by nickname\n3. Get full data by nickname in JSON format\n4. Get database id by nickname\n5. Get all players' nicknames in the DB\n6. Get all zombie accounts nicknames in the DB\n7. Get back to previous stage\n"
@@ -370,7 +633,7 @@ while True:
                                         local_data["last_seen"]
                                     )
                                     print(
-                                        f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
+                                        f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                     )
                                 else:
                                     print(f"The bot has never seen {nickname}.")
@@ -381,7 +644,7 @@ while True:
                                         local_data["last_seen"]
                                     )
                                     print(
-                                        f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
+                                        f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                     )
                                 else:
                                     print("This player doesn't exist.")
@@ -394,7 +657,7 @@ while True:
                                     local_data = data[local_uuid]
                                     timestamp = local_data["first_time_seen"]
                                     print(
-                                        f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                        f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                     )
                                 else:
                                     print(f"The bot has never seen {nickname}.")
@@ -403,7 +666,7 @@ while True:
                                     local_data = data[nickname]
                                     timestamp = local_data["first_time_seen"]
                                     print(
-                                        f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                        f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                     )
                                 else:
                                     print("This player doesn't exist.")
@@ -495,7 +758,7 @@ while True:
                             with open(rf"{SKINSURLPATH}\{url[38:]}.png", "wb") as file:
                                 file.write(response.content)
                             print(f"{Fore.GREEN}Saved {url[38:]}.png")
-                        time.sleep(0.5)
+                        sleep(0.5)
                 elif mode == "2":
                     foldername = rf"{SKINSPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}"
                     print(f"{Fore.GREEN}Creating new folder... ({foldername})")
@@ -513,7 +776,7 @@ while True:
                             ) as file:
                                 file.write(response.content)
                             print(f"{Fore.GREEN}Saved {name}.png")
-                        time.sleep(0.5)
+                        sleep(0.5)
                     del foldername
 
                 elif mode == "3":
@@ -576,12 +839,12 @@ while True:
                                 print(
                                     f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
                                 )
-                                time.sleep(0.1)
+                                sleep(0.1)
                             except errors.NotFound:
                                 count -= 1
                                 print(f"{Fore.RED}{nickname} doesn't exist.")
                                 continue
-                            time.sleep(0.25)
+                            sleep(0.25)
                         print(f"Updated {count} players.")
 
                     case "2":
@@ -617,7 +880,7 @@ while True:
                                 }
                                 print(f"{Fore.GREEN}Updated {profile.name}")
                                 print(json.dumps(data[uuid], indent=2))
-                                time.sleep(0.25)
+                                sleep(0.25)
 
                     case "4":
                         break

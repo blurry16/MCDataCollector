@@ -3,7 +3,6 @@ from colorama import init, Back
 from os.path import exists, isfile, splitext
 from os import system
 from typing import Union
-from time import sleep
 
 LOGPATH = r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log"
 DATAPATH = r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json"
