@@ -40,7 +40,7 @@ def updatewithlist():
             line_upd = line.split("[CHAT] ")[1]
             if line_upd.split()[0] == "Cubeville":
                 nicknames = line_upd.split("): ")[1].split(", ")
-                print(f"Updating: {', '.join(nicknames)}.")
+                print(f"Updating: {', '.join(nicknames)}.".replace("\n", ""))
                 count = len(nicknames)
                 for nickname in nicknames:
                     nickname = nickname.strip()
