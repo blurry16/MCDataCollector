@@ -392,7 +392,10 @@ while True:
                                             print("This player doesn't exist.")
                                 elif arg == "2":
                                     local_uuid = (
-                                        input("UUID: ").strip().replace("-", "").split()[0]
+                                        input("UUID: ")
+                                        .strip()
+                                        .replace("-", "")
+                                        .split()[0]
                                     )
                                     if local_uuid in data:
                                         local_data = data[local_uuid]
@@ -454,7 +457,10 @@ while True:
                                             print("This player doesn't exist.")
                                 elif arg == "2":
                                     local_uuid = (
-                                        input("UUID: ").strip().split()[0].replace("-", "")
+                                        input("UUID: ")
+                                        .strip()
+                                        .split()[0]
+                                        .replace("-", "")
                                     )
                                     if local_uuid in data:
                                         local_data = data[local_uuid]
@@ -502,7 +508,8 @@ while True:
                                             try:
                                                 indent = int(
                                                     inp.split()[
-                                                        inp.split().index("--indent") + 1
+                                                        inp.split().index("--indent")
+                                                        + 1
                                                     ]
                                                 )
                                             except IndexError:
@@ -512,13 +519,19 @@ while True:
                                         local_uuid = mapi.get_uuid(nickname)
                                         if local_uuid in data:
                                             print(
-                                                json.dumps(data[local_uuid], indent=indent)
+                                                json.dumps(
+                                                    data[local_uuid], indent=indent
+                                                )
                                             )
                                         else:
                                             print(f"The bot has never seen {nickname}.")
                                     except errors.NotFound:
                                         if nickname in data:
-                                            print(json.dumps(data[nickname], indent=indent))
+                                            print(
+                                                json.dumps(
+                                                    data[nickname], indent=indent
+                                                )
+                                            )
                                         else:
                                             print("This player doesn't exist.")
                                 elif arg == "2":
@@ -546,7 +559,8 @@ while True:
                                             try:
                                                 indent = int(
                                                     inp.split()[
-                                                        inp.split().index("--indent") + 1
+                                                        inp.split().index("--indent")
+                                                        + 1
                                                     ]
                                                 )
                                             except IndexError:
@@ -567,7 +581,9 @@ while True:
                                             f"{Fore.RED}DB has no player with this DBID."
                                         )
                                 else:
-                                    print(f"{Fore.RED}DB has no player with {db_id} DBID.")
+                                    print(
+                                        f"{Fore.RED}DB has no player with {db_id} DBID."
+                                    )
                             except IndexError:
                                 print(f"{Fore.RED}Not enough arguments!")
                         case "4":
@@ -595,7 +611,10 @@ while True:
                                             )
                                 elif arg == "2":
                                     local_uuid = (
-                                        input("UUID: ").strip().split()[0].replace("-", "")
+                                        input("UUID: ")
+                                        .strip()
+                                        .split()[0]
+                                        .replace("-", "")
                                     )
                                     if local_uuid in data:
                                         print(
