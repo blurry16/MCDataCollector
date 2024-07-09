@@ -2,7 +2,7 @@
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were last on.
 
 ### Requirements
-Just clone the repo and use ```pip install -r requirements.txt```. If I missed anything in that file please pull request fixed version or open an issue.
+Just clone the repo and use `pip install -r requirements.txt`. If I missed anything in that file please pull request fixed version or open an issue.
 
 ### How do I run it?
 Install requirements ofc :p  
