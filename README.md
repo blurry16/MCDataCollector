@@ -1,3 +1,7 @@
+# This branch is an experiment.
+If you want to checkout main branch please head to https://github.com/blurry16/MCDataCollector/blob/main.  
+Code at this branch can be unstable.
+
 # MCDataCollector
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were last on.
 
