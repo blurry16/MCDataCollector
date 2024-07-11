@@ -3,7 +3,7 @@ import os
 import keyboard
 import random
 import threading
-from time import time, sleep
+import time
 from colorama import Fore
 from __data__ import *
 from datetime import datetime, timedelta
@@ -14,12 +14,10 @@ mapi = API()
 
 def mcprint(text: str):
     """prints given text on the keyboard and sends it to minecraft chat"""
-    keyboard.press("T")
-    sleep(0.001)
-    keyboard.release("T")
-    sleep(0.1)
+    keyboard.press_and_release("t")
+    time.sleep(0.1)
     keyboard.write(text, delay=0)
-    sleep(0.5)
+    time.sleep(0.5)
     keyboard.press_and_release("enter")
 
 
@@ -40,7 +38,7 @@ def follow(file):
             break
         li = file.readline()
         if not li:
-            sleep(0.1)
+            time.sleep(0.1)
             continue
         yield li
 
@@ -54,7 +52,7 @@ def followupdatewithlist(file):
             return
         li = file.readline()
         if not li:
-            sleep(0.1)
+            time.sleep(0.1)
             continue
         yield li
 
@@ -108,9 +106,9 @@ def updatewithlist():
                         data[nickname.lower()] = {
                             "id": None,
                             "name": nickname,
-                            "last_seen": int(time()),
+                            "last_seen": int(time.time()),
                             "first_time_seen": (
-                                int(time())
+                                int(time.time())
                                 if nickname not in data
                                 else data[nickname]["first_time_seen"]
                             ),
@@ -133,7 +131,7 @@ def updatewithlist():
                             )
                         )
                         continue
-                    sleep(0.25)
+                    time.sleep(0.25)
                 print(f"Updated {count} players.")
                 return_updatewithlist = True
                 return
@@ -196,7 +194,7 @@ def collectdata():
                                             mcprint(f"The bot has never seen {arg}.")
                                         else:
                                             mcprint(
-                                                f"{data[uuid]['name']} was seen for the last time at {datetime.fromtimestamp(data[uuid]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
+                                                f"{data[uuid]['name']} was seen for the last time at {datetime.fromtimestamp(data[uuid]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
                                             )
                                     except errors.NotFound:
                                         arg = arg.lower()
@@ -204,7 +202,7 @@ def collectdata():
                                             mcprint("This player doesn't exist.")
                                         else:
                                             mcprint(
-                                                f"{data[arg]['name']} was seen for the last time at {datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
+                                                f"{data[arg]['name']} was seen for the last time at {datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
                                             )
                             case "#firsttimeseen":
                                 print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
@@ -223,7 +221,7 @@ def collectdata():
                                             mcprint(f"The bot has never seen {arg}.")
                                         else:
                                             mcprint(
-                                                f"{data[uuid]['name']} was seen for the first time at {datetime.fromtimestamp(data[uuid]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
+                                                f"{data[uuid]['name']} was seen for the first time at {datetime.fromtimestamp(data[uuid]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
                                             )
                                     except errors.NotFound:
                                         arg = arg.lower()
@@ -231,7 +229,7 @@ def collectdata():
                                             mcprint("This player doesn't exist.")
                                         else:
                                             mcprint(
-                                                f"{data[arg]['name']} was seen for the first time at {datetime.fromtimestamp(data[arg]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
+                                                f"{data[arg]['name']} was seen for the first time at {datetime.fromtimestamp(data[arg]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
                                             )
 
                             case "#count":
@@ -317,9 +315,9 @@ def collectdata():
                                     data[nickname.lower()] = {
                                         "id": None,
                                         "name": nickname,
-                                        "last_seen": int(time()),
+                                        "last_seen": int(time.time()),
                                         "first_time_seen": (
-                                            int(time())
+                                            int(time.time())
                                             if nickname not in data
                                             else data[nickname]["first_time_seen"]
                                         ),
@@ -339,7 +337,7 @@ def collectdata():
                                     )
                                     print(json.dumps(data[nickname.lower()], indent=2))
                             except Exception as e:
-                                print(f"Exception {e} occurred at {int(time())}.")
+                                print(f"Exception {e} occurred at {int(time.time())}.")
                             print("\n")
 
 
@@ -371,7 +369,7 @@ while True:
                                                 local_data["last_seen"]
                                             )
                                             print(
-                                                f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                                f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
                                             )
                                         else:
                                             print(f"The bot has never seen {nickname}.")
@@ -382,7 +380,7 @@ while True:
                                                 local_data["last_seen"]
                                             )
                                             print(
-                                                f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                                f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
                                             )
                                         else:
                                             print("This player doesn't exist.")
@@ -399,7 +397,7 @@ while True:
                                             local_data["last_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
                                         )
                                     else:
                                         print(f"The bot has never seen {local_uuid}.")
@@ -411,7 +409,7 @@ while True:
                                             local_data["last_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
                                         )
 
                                     except ValueError:
@@ -438,7 +436,7 @@ while True:
                                             local_data = data[local_uuid]
                                             timestamp = local_data["first_time_seen"]
                                             print(
-                                                f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                                f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                             )
                                         else:
                                             print(f"The bot has never seen {nickname}.")
@@ -447,7 +445,7 @@ while True:
                                             local_data = data[nickname]
                                             timestamp = local_data["first_time_seen"]
                                             print(
-                                                f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                                f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                             )
                                         else:
                                             print("This player doesn't exist.")
@@ -464,7 +462,7 @@ while True:
                                             local_data["first_time_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
                                         )
                                     else:
                                         print(f"The bot has never seen {local_uuid}.")
@@ -476,7 +474,7 @@ while True:
                                             local_data["first_time_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
                                         )
 
                                     except ValueError:
@@ -663,7 +661,7 @@ while True:
                             with open(rf"{SKINSURLPATH}\{url[38:]}.png", "wb") as file:
                                 file.write(response.content)
                             print(f"{Fore.GREEN}Saved {url[38:]}.png")
-                        sleep(0.5)
+                        time.sleep(0.5)
                 elif mode == "2":
                     foldername = rf"{SKINSPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}"
                     print(f"{Fore.GREEN}Creating new folder... ({foldername})")
@@ -681,7 +679,7 @@ while True:
                             ) as file:
                                 file.write(response.content)
                             print(f"{Fore.GREEN}Saved {name}.png")
-                        sleep(0.5)
+                        time.sleep(0.5)
                     del foldername
 
                 elif mode == "3":
@@ -743,19 +741,19 @@ while True:
                                 print(
                                     f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
                                 )
-                                sleep(0.1)
+                                time.sleep(0.1)
                             except errors.NotFound:
                                 count -= 1
                                 print(f"{Fore.RED}{nickname} doesn't exist.")
                                 continue
-                            sleep(0.25)
+                            time.sleep(0.25)
                         print(f"Updated {count} players.")
 
                     case "2":
                         return_updatewithlist = False
                         updatewithlistthread = threading.Thread(target=updatewithlist)
                         updatewithlistthread.start()
-                        sleep(0.01)
+                        time.sleep(0.01)
                         print(f"{Fore.MAGENTA}Press escape to break updating")
                         while True:
                             if keyboard.is_pressed("escape"):
@@ -783,7 +781,7 @@ while True:
                                 }
                                 print(f"{Fore.GREEN}Updated {profile.name}")
                                 print(json.dumps(data[uuid], indent=2))
-                                sleep(0.25)
+                                time.sleep(0.25)
 
                     case "4":
                         break
