@@ -17,7 +17,6 @@ Good luck in collecting data!
 - "name" - Mojang account nickname. E.g my is blurry16.
 - "last_seen" - Time in Unix timestamp when the player was seen for the last time.
 - "first_time_seen" - Time in Unix timestamp when the player was seen for the first time.
-- "is_legacy_profile" - Something pretty useless but because Mojang API has it why not collect it? Anyways, it's there since migration process ig.
 - "skin_variant" - Variant of player's skin. Can be "classic" or "slim".
 - "cape_url" - URL to player's cape. If the player doesn't have a cape it's null.
 - "skin_url" - URL to player's skin.
@@ -33,7 +32,6 @@ Points meaning can be found at "Meaning of collected points" paragraph.
     "name": "blurry16",
     "last_seen": 1718031633,
     "first_time_seen": 1708259854,
-    "is_legacy_profile": false,
     "skin_variant": "slim",
     "cape_url": null,
     "skin_url": "http://textures.minecraft.net/texture/bc77f0eb5be2e69d320144242a29dcbeedfe2fc42df48638d86bac470fdab786",
