@@ -91,7 +91,6 @@ def updatewithlist():
                                 if uuid not in data
                                 else data[uuid]["first_time_seen"]
                             ),
-                            "is_legacy_profile": profile.is_legacy_profile,
                             "skin_variant": profile.skin_variant,
                             "cape_url": profile.cape_url,
                             "skin_url": profile.skin_url,
@@ -115,7 +114,6 @@ def updatewithlist():
                                 if nickname not in data
                                 else data[nickname]["first_time_seen"]
                             ),
-                            "is_legacy_profile": None,
                             "skin_variant": None,
                             "cape_url": None,
                             "skin_url": None,
@@ -301,7 +299,6 @@ def collectdata():
                                         if uuid not in data
                                         else data[uuid]["first_time_seen"]
                                     ),
-                                    "is_legacy_profile": profile.is_legacy_profile,
                                     "skin_variant": profile.skin_variant,
                                     "cape_url": profile.cape_url,
                                     "skin_url": profile.skin_url,
@@ -326,7 +323,6 @@ def collectdata():
                                             if nickname not in data
                                             else data[nickname]["first_time_seen"]
                                         ),
-                                        "is_legacy_profile": None,
                                         "skin_variant": None,
                                         "cape_url": None,
                                         "skin_url": None,
@@ -733,7 +729,6 @@ while True:
                                         if uuid not in data
                                         else data[uuid]["first_time_seen"]
                                     ),
-                                    "is_legacy_profile": profile.is_legacy_profile,
                                     "skin_variant": profile.skin_variant,
                                     "cape_url": profile.cape_url,
                                     "skin_url": profile.skin_url,
@@ -780,7 +775,6 @@ while True:
                                     "name": profile.name,
                                     "last_seen": data[uuid]["last_seen"],
                                     "first_time_seen": data[uuid]["first_time_seen"],
-                                    "is_legacy_profile": profile.is_legacy_profile,
                                     "skin_variant": profile.skin_variant,
                                     "cape_url": profile.cape_url,
                                     "skin_url": profile.skin_url,
