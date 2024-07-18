@@ -119,7 +119,8 @@ while True:
                                                 local_data["last_seen"]
                                             )
                                             print(
-                                                f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                                f"{local_data['name']} was seen at {dt_obj}. "
+                                                f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                             )
                                         else:
                                             print(f"The bot has never seen {nickname}.")
@@ -130,7 +131,8 @@ while True:
                                                 local_data["last_seen"]
                                             )
                                             print(
-                                                f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                                f"{local_data['name']} was seen at {dt_obj}. "
+                                                f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                             )
                                         else:
                                             print("This player doesn't exist.")
@@ -147,7 +149,8 @@ while True:
                                             local_data["last_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj}. "
+                                            f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                         )
                                     else:
                                         print(f"The bot has never seen {local_uuid}.")
@@ -159,7 +162,8 @@ while True:
                                             local_data["last_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj}. "
+                                            f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                         )
 
                                     except ValueError:
@@ -186,7 +190,9 @@ while True:
                                             local_data = data[local_uuid]
                                             timestamp = local_data["first_time_seen"]
                                             print(
-                                                f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                                f"{local_data['name']} was seen for the first time at "
+                                                f"{datetime.fromtimestamp(timestamp)}. "
+                                                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                             )
                                         else:
                                             print(f"The bot has never seen {nickname}.")
@@ -195,7 +201,9 @@ while True:
                                             local_data = data[nickname]
                                             timestamp = local_data["first_time_seen"]
                                             print(
-                                                f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                                f"{local_data['name']} was seen for the first time at "
+                                                f"{datetime.fromtimestamp(timestamp)}. "
+                                                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                             )
                                         else:
                                             print("This player doesn't exist.")
@@ -212,7 +220,8 @@ while True:
                                             local_data["first_time_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj}. "
+                                            f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                         )
                                     else:
                                         print(f"The bot has never seen {local_uuid}.")
@@ -224,7 +233,8 @@ while True:
                                             local_data["first_time_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj}. "
+                                            f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                         )
 
                                     except ValueError:
@@ -362,7 +372,8 @@ while True:
                                     )
                                     if local_uuid in data:
                                         print(
-                                            f"{local_uuid}'s ({data[local_uuid]['name']}) database id is {data[local_uuid]['db_id']}"
+                                            f"{local_uuid}'s ({data[local_uuid]['name']}) database id is "
+                                            f"{data[local_uuid]['db_id']}"
                                         )
                                     else:
                                         print(f"The bot has never seen {nickname}.")
@@ -427,7 +438,7 @@ while True:
                             response = requests.get(url=url)
                             name = data[i]["name"]
                             with open(
-                                    (rf"{foldername}\{name}.png"),
+                                    rf"{foldername}\{name}.png",
                                     "wb",
                             ) as file:
                                 file.write(response.content)
@@ -443,7 +454,8 @@ while True:
                     print(f"{Fore.GREEN}Saving new files...")
                     for i in data:
                         name = data[i]["name"]
-                        to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" frameborder="0" width="1920px" height="972px"></iframe>'
+                        to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" \
+                        frameborder="0" width="1920px" height="972px"></iframe>'
                         with open(rf"{foldername}\{name}.html", "x") as file:
                             file.write(to_save)
                         print(f"{Fore.GREEN}Saved {name}.html")
