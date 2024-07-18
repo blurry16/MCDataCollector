@@ -81,7 +81,9 @@ while True:
                                         mcprint(f"The bot has never seen {arg}.")
                                     else:
                                         mcprint(
-                                            f"{data[uuid]['name']} was seen for the last time at {datetime.fromtimestamp(data[uuid]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
+                                            f"{data[uuid]['name']} was seen for the last time at "
+                                            f"{datetime.fromtimestamp(data[uuid]['last_seen'])} UTC+3. "
+                                            f"({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
                                         )
                                 except errors.NotFound:
                                     arg = arg.lower()
@@ -89,7 +91,9 @@ while True:
                                         mcprint("This player doesn't exist.")
                                     else:
                                         mcprint(
-                                            f"{data[arg]['name']} was seen for the last time at {datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
+                                            f"{data[arg]['name']} was seen for the last time at "
+                                            f"{datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. "
+                                            f"({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
                                         )
                         case "#firsttimeseen":
                             username, arg = getusernamearg(line)
@@ -101,7 +105,9 @@ while True:
                                         mcprint(f"The bot has never seen {arg}.")
                                     else:
                                         mcprint(
-                                            f"{data[uuid]['name']} was seen for the first time at {datetime.fromtimestamp(data[uuid]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
+                                            f"{data[uuid]['name']} was seen for the first time at "
+                                            f"{datetime.fromtimestamp(data[uuid]['first_time_seen'])} UTC+3. "
+                                            f"({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
                                         )
                                 except errors.NotFound:
                                     arg = arg.lower()
@@ -109,7 +115,9 @@ while True:
                                         mcprint("This player doesn't exist.")
                                     else:
                                         mcprint(
-                                            f"{data[arg]['name']} was seen for the first time at {datetime.fromtimestamp(data[arg]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
+                                            f"{data[arg]['name']} was seen for the first time at "
+                                            f"{datetime.fromtimestamp(data[arg]['first_time_seen'])} UTC+3. "
+                                            f"({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
                                         )
 
                         case "#count":
