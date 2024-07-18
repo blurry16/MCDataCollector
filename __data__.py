@@ -59,14 +59,14 @@ class JsonFile:
     """JsonFile class contains required methods to work with .json files"""
 
     def __init__(self, file_path: Path) -> None:
-        self.file_path = file_path
+        self.file_path: Path = file_path
 
     def load(self) -> Union[dict, list]:
         """loads data from json file"""
         with open(self.file_path, "r", encoding="UTF-8") as data_file:
             return json.load(data_file)
 
-    def dump(self, data: Union[dict, list], indent=4) -> None:
+    def dump(self, data: Union[dict, list], indent: int = 4) -> None:
         """dumps selected data to the file"""
         with open(self.file_path, "w", encoding="UTF-8") as data_file:
             json.dump(data, data_file, indent=indent)
