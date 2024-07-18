@@ -83,13 +83,23 @@ def updatewithlist():
 
 while True:
     inp = input(
-        "1. Get data.\n2. Save skins.\n3. Update data.\n4. Add stats\n5. Quit\n"
+        "1. Get data.\n"
+        "2. Save skins.\n"
+        "3. Update data.\n"
+        "4. Add stats\n"
+        "5. Quit\n"
     ).strip()
     match inp:
         case "1":
             while True:
                 inp = input(
-                    "1. Get last seen time\n2. Get first seen time\n3. Get full data in JSON format\n4. Get database id\n5. Get all players' nicknames in the DB\n6. Get all zombie accounts nicknames in the DB\n7. Get back to previous stage\n"
+                    "1. Get last seen time\n"
+                    "2. Get first seen time\n"
+                    "3. Get full data in JSON format\n"
+                    "4. Get database id\n"
+                    "5. Get all players' nicknames in the DB\n"
+                    "6. Get all zombie accounts nicknames in the DB\n"
+                    "7. Get back to previous stage\n"
                 ).strip()
                 try:
                     match inp:
@@ -385,7 +395,10 @@ while True:
         case "2":
             while True:
                 mode = input(
-                    "1. URL\n2. Name\n3. HTML model\n4. Get back to previous stage.\n"
+                    "1. URL\n"
+                    "2. Name\n"
+                    "3. HTML model\n"
+                    "4. Get back to previous stage.\n"
                 )
                 data = cvdbdata.load()
                 if mode == "1":
@@ -442,7 +455,10 @@ while True:
         case "3":
             while True:
                 a = input(
-                    "1. By nicknames\n2. With /list\n3. Everyone's data (last time seen won't be touched)\n4. Get back to previous stage.\n"
+                    "1. By nicknames\n"
+                    "2. With /list\n"
+                    "3. Everyone's data (last time seen won't be touched)\n"
+                    "4. Get back to previous stage.\n"
                 )
                 match a:
                     case "1":
