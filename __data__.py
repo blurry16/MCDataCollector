@@ -1,17 +1,18 @@
 import json
-from colorama import init, Back
+from pathlib import Path
+from mojang import API
+from colorama import init, Back, Fore
 from os.path import exists, isfile, splitext
 from os import system
 from typing import Union
 from time import sleep
 
-LOGPATH = r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log"
-DATAPATH = r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json"
-STATSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\stats.json"
-MODELSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\models"
-SKINSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\skins"
-SKINSURLPATH = r"C:\Users\Blurry\PycharmProjects\playersData\skins_url"
-
+LOGPATH = Path(r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log")
+DATAPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json")
+STATSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\stats.json")
+MODELSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\models")
+SKINSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins")
+SKINSURLPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins_url")
 
 # LOGPATH = ""
 # DATAPATH = ""
@@ -21,8 +22,11 @@ SKINSURLPATH = r"C:\Users\Blurry\PycharmProjects\playersData\skins_url"
 # SKINSURLPATH = ""
 
 init(autoreset=True)
-paths = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSURLPATH]
-files = [LOGPATH, DATAPATH, STATSPATH]
+
+mapi = API()
+
+paths: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSURLPATH]  # All paths
+files: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files paths
 
 for i in paths:
     if i == "":
@@ -47,10 +51,10 @@ if splitext(STATSPATH)[1] != ".json" and exists(STATSPATH):
     system("pause")
 
 
-class __data__:
-    """__data__ class contained load and dump methods to work with JSON files more comfy"""
+class JsonFile:
+    """JsonFile class contains required methods to work with .json files"""
 
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: Path) -> None:
         self.file_path = file_path
 
     def load(self) -> Union[dict, list]:
@@ -58,7 +62,7 @@ class __data__:
         with open(self.file_path, "r", encoding="UTF-8") as data_file:
             return json.load(data_file)
 
-    def dump(self, data: Union[dict, list], indent=4):
+    def dump(self, data: Union[dict, list], indent=4) -> None:
         """dumps selected data to the file"""
         with open(self.file_path, "w", encoding="UTF-8") as data_file:
             json.dump(data, data_file, indent=indent)
@@ -75,5 +79,33 @@ def follow(file):
         yield li
 
 
-cvdbdata = __data__(DATAPATH)
-statsdataobj = __data__(STATSPATH)
+cvdbdata = JsonFile(DATAPATH)
+statsdataobj = JsonFile(STATSPATH)
+
+
+def updateviauuid(uuid: str) -> None:
+    profile = mapi.get_profile(uuid)
+    data = cvdbdata.load()
+    data[uuid] = {
+        "id": profile.id,
+        "name": profile.name,
+        "last_seen": round(float(profile.timestamp) / 1000),
+        "first_time_seen": (
+            round(float(profile.timestamp) / 1000)
+            if uuid not in data
+            else data[uuid]["first_time_seen"]
+        ),
+        "skin_variant": profile.skin_variant,
+        "cape_url": profile.cape_url,
+        "skin_url": profile.skin_url,
+        "db_id": (
+            len(data)
+            if uuid not in data
+            else data[uuid]["db_id"]
+        ),
+        "does_exist": True,
+    }
+    cvdbdata.dump(data)
+    print(
+        f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
+    )

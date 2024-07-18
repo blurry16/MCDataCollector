@@ -5,10 +5,10 @@ import keyboard
 from datetime import datetime
 from colorama import Fore
 from mojang import API, errors
-from __data__ import cvdbdata, LOGPATH, follow
+from __data__ import cvdbdata, LOGPATH, follow, updateviauuid
 
 
-def mcprint(text: str):
+def mcprint(text: str) -> None:
     """prints given text on the keyboard and sends it to minecraft chat"""
     keyboard.press_and_release("t")
     time.sleep(0.1)
@@ -22,9 +22,19 @@ def generatepasscode() -> str:
     return "0" * (4 - len(__PASSCODE__)) + __PASSCODE__
 
 
-mapi = API()
+def getusernamearg(__line: str) -> tuple[str, str]:
+    print(f"{Fore.MAGENTA}{__line}".replace("\n", ""))
+    __command = __line.split()[5]
+    __username = __line.split()[4].split("<")[1].split(">")[0]
+    __arg = (
+        __line.replace("\n", "")
+        .split(f"{__command} ", 1)[1]
+        .split()[0]
+    )
+    return __username, __arg
 
-startday = datetime.now().day
+
+mapi = API()
 
 CHATBOTACTIVE = False
 HOST = "blurry16"
@@ -40,10 +50,6 @@ while True:
     )
     lines = follow(LOGFILE)
     for line in lines:
-        if datetime.now().day != startday:
-            raise Exception(
-                f"{Fore.RED}The program may stop working properly. Please, restart it. (The problem is known and will be fixed once I get an idea of its fix)"
-            )
         if "[CHAT]" in line:
             if line[40] == "<":
                 if line.lower().split()[5] == "#activate":
@@ -66,14 +72,7 @@ while True:
                 elif CHATBOTACTIVE:
                     match line.lower().split()[5]:
                         case "#lastseen":
-                            print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
-                            command = line.split()[5]
-                            username = line.split()[4].split("<")[1].split(">")[0]
-                            arg = (
-                                line.replace("\n", "")
-                                .split(f"{command} ", 1)[1]
-                                .split()[0]
-                            )
+                            username, arg = getusernamearg(line)
                             if username.lower() not in BANNED:
                                 data = cvdbdata.load()
                                 try:
@@ -93,14 +92,7 @@ while True:
                                             f"{data[arg]['name']} was seen for the last time at {datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
                                         )
                         case "#firsttimeseen":
-                            print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
-                            command = line.split()[5]
-                            username = line.split()[4].split("<")[1].split(">")[0]
-                            arg = (
-                                line.replace("\n", "")
-                                .split(f"{command} ", 1)[1]
-                                .split()[0]
-                            )
+                            username, arg = getusernamearg(line)
                             if username.lower() not in BANNED:
                                 data = cvdbdata.load()
                                 try:
@@ -161,38 +153,17 @@ while True:
                 split = line_upd.split()
                 if len(split) > 2:
                     if (
-                        "<" not in line_upd
-                        and "[" not in line_upd
-                        and ("joined" == split[2] or "left" == split[2])
-                        and "the" == split[3]
-                        and "game." == split[4]
+                            "<" not in line_upd
+                            and "[" not in line_upd
+                            and ("joined" == split[2] or "left" == split[2])
+                            and "the" == split[3]
+                            and "game." == split[4]
                     ):
                         data = cvdbdata.load()
                         nickname = line.split("[CHAT]")[1].split()[0]
                         try:
                             uuid = mapi.get_uuid(nickname)
-                            profile = mapi.get_profile(uuid)
-                            data[uuid] = {
-                                "id": profile.id,
-                                "name": profile.name,
-                                "last_seen": round(float(profile.timestamp) / 1000),
-                                "first_time_seen": (
-                                    round(float(profile.timestamp) / 1000)
-                                    if uuid not in data
-                                    else data[uuid]["first_time_seen"]
-                                ),
-                                "skin_variant": profile.skin_variant,
-                                "cape_url": profile.cape_url,
-                                "skin_url": profile.skin_url,
-                                "db_id": (
-                                    len(data)
-                                    if uuid not in data
-                                    else data[uuid]["db_id"]
-                                ),
-                                "does_exist": True,
-                            }
-                            cvdbdata.dump(data)
-                            print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
+                            updateviauuid(uuid)
                             print(json.dumps(data[uuid], indent=2))
                         except errors.NotFound:
                             if nickname != "*":

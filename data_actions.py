@@ -2,13 +2,10 @@ import requests
 import os
 import threading
 import keyboard
-from colorama import Fore
 from __data__ import *
 from datetime import datetime, timedelta
 from time import time
-from mojang import API, errors
-
-mapi = API()
+from mojang import errors
 
 
 def followupdatewithlist(file):
@@ -28,12 +25,12 @@ def followupdatewithlist(file):
 def updatewithlist():
     global return_updatewithlist
 
-    LOGFILE = open(
+    logfile = open(
         LOGPATH,
         "r",
         encoding="UTF-8",
     )
-    loglines = followupdatewithlist(LOGFILE)
+    loglines = followupdatewithlist(logfile)
     print(f"{Fore.MAGENTA}Waiting for /list...")
     for line in loglines:
         if "[CHAT]" in line:
@@ -46,29 +43,8 @@ def updatewithlist():
                     nickname = nickname.strip()
                     data = cvdbdata.load()
                     try:
-                        uuid = mapi.get_uuid(nickname)
-                        profile = mapi.get_profile(uuid)
-                        data[uuid] = {
-                            "id": profile.id,
-                            "name": profile.name,
-                            "last_seen": round(float(profile.timestamp) / 1000),
-                            "first_time_seen": (
-                                round(float(profile.timestamp) / 1000)
-                                if uuid not in data
-                                else data[uuid]["first_time_seen"]
-                            ),
-                            "skin_variant": profile.skin_variant,
-                            "cape_url": profile.cape_url,
-                            "skin_url": profile.skin_url,
-                            "db_id": (
-                                len(data) if uuid not in data else data[uuid]["db_id"]
-                            ),
-                            "does_exist": True,
-                        }
-                        cvdbdata.dump(data)
-                        print(
-                            f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
-                        )
+                        uuid: str = mapi.get_uuid(nickname)
+                        updateviauuid(uuid)
                         print(json.dumps(data[uuid], indent=2))
                     except errors.NotFound:
                         data[nickname.lower()] = {
@@ -107,13 +83,23 @@ def updatewithlist():
 
 while True:
     inp = input(
-        "1. Get data.\n2. Save skins.\n3. Update data.\n4. Add stats\n5. Quit\n"
+        "1. Get data.\n"
+        "2. Save skins.\n"
+        "3. Update data.\n"
+        "4. Add stats\n"
+        "5. Quit\n"
     ).strip()
     match inp:
         case "1":
             while True:
                 inp = input(
-                    "1. Get last seen time\n2. Get first seen time\n3. Get full data in JSON format\n4. Get database id\n5. Get all players' nicknames in the DB\n6. Get all zombie accounts nicknames in the DB\n7. Get back to previous stage\n"
+                    "1. Get last seen time\n"
+                    "2. Get first seen time\n"
+                    "3. Get full data in JSON format\n"
+                    "4. Get database id\n"
+                    "5. Get all players' nicknames in the DB\n"
+                    "6. Get all zombie accounts nicknames in the DB\n"
+                    "7. Get back to previous stage\n"
                 ).strip()
                 try:
                     match inp:
@@ -268,7 +254,7 @@ while True:
                                                     inp.split()[
                                                         inp.split().index("--indent")
                                                         + 1
-                                                    ]
+                                                        ]
                                                 )
                                             except IndexError:
                                                 indent = None
@@ -300,7 +286,7 @@ while True:
                                             indent = int(
                                                 inp.split()[
                                                     inp.split().index("--indent") + 1
-                                                ]
+                                                    ]
                                             )
                                         except IndexError:
                                             indent = None
@@ -319,7 +305,7 @@ while True:
                                                     inp.split()[
                                                         inp.split().index("--indent")
                                                         + 1
-                                                    ]
+                                                        ]
                                                 )
                                             except IndexError:
                                                 indent = None
@@ -409,7 +395,10 @@ while True:
         case "2":
             while True:
                 mode = input(
-                    "1. URL\n2. Name\n3. HTML model\n4. Get back to previous stage.\n"
+                    "1. URL\n"
+                    "2. Name\n"
+                    "3. HTML model\n"
+                    "4. Get back to previous stage.\n"
                 )
                 data = cvdbdata.load()
                 if mode == "1":
@@ -438,8 +427,8 @@ while True:
                             response = requests.get(url=url)
                             name = data[i]["name"]
                             with open(
-                                (rf"{foldername}\{name}.png"),
-                                "wb",
+                                    (rf"{foldername}\{name}.png"),
+                                    "wb",
                             ) as file:
                                 file.write(response.content)
                             print(f"{Fore.GREEN}Saved {name}.png")
@@ -466,7 +455,10 @@ while True:
         case "3":
             while True:
                 a = input(
-                    "1. By nicknames\n2. With /list\n3. Everyone's data (last time seen won't be touched)\n4. Get back to previous stage.\n"
+                    "1. By nicknames\n"
+                    "2. With /list\n"
+                    "3. Everyone's data (last time seen won't be touched)\n"
+                    "4. Get back to previous stage.\n"
                 )
                 match a:
                     case "1":
@@ -479,32 +471,11 @@ while True:
                         count = len(nicknames)
                         for nickname in nicknames:
                             try:
-                                uuid = mapi.get_uuid(nickname)
+                                uuid: str = mapi.get_uuid(nickname)
                                 profile = mapi.get_profile(uuid)
-                                data = cvdbdata.load()
-                                data[uuid] = {
-                                    "id": profile.id,
-                                    "name": profile.name,
-                                    "last_seen": round(float(profile.timestamp) / 1000),
-                                    "first_time_seen": (
-                                        round(float(profile.timestamp) / 1000)
-                                        if uuid not in data
-                                        else data[uuid]["first_time_seen"]
-                                    ),
-                                    "skin_variant": profile.skin_variant,
-                                    "cape_url": profile.cape_url,
-                                    "skin_url": profile.skin_url,
-                                    "db_id": (
-                                        len(data)
-                                        if uuid not in data
-                                        else data[uuid]["db_id"]
-                                    ),
-                                    "does_exist": True,
-                                }
-                                cvdbdata.dump(data)
-                                print(
-                                    f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
-                                )
+                                data: dict = cvdbdata.load()
+                                updateviauuid(uuid)
+                                print(json.dumps(data[uuid], indent=2))
                                 sleep(0.1)
                             except errors.NotFound:
                                 count -= 1
