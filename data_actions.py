@@ -5,9 +5,7 @@ import keyboard
 from __data__ import *
 from datetime import datetime, timedelta
 from time import time
-from mojang import API, errors
-
-mapi = API()
+from mojang import errors
 
 
 def followupdatewithlist(file):
