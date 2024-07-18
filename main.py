@@ -36,8 +36,6 @@ def getusernamearg(__line: str) -> tuple[str, str]:
 
 mapi = API()
 
-startday = datetime.now().day
-
 CHATBOTACTIVE = False
 HOST = "blurry16"
 BANNED = []

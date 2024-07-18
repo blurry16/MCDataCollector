@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from mojang import API
 from colorama import init, Back, Fore
 from os.path import exists, isfile, splitext
@@ -6,12 +7,12 @@ from os import system
 from typing import Union
 from time import sleep
 
-LOGPATH = r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log"
-DATAPATH = r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json"
-STATSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\stats.json"
-MODELSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\models"
-SKINSPATH = r"C:\Users\Blurry\PycharmProjects\playersData\skins"
-SKINSURLPATH = r"C:\Users\Blurry\PycharmProjects\playersData\skins_url"
+LOGPATH = Path(r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log")
+DATAPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json")
+STATSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\stats.json")
+MODELSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\models")
+SKINSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins")
+SKINSURLPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins_url")
 
 # LOGPATH = ""
 # DATAPATH = ""
@@ -24,8 +25,8 @@ init(autoreset=True)
 
 mapi = API()
 
-paths = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSURLPATH]
-files = [LOGPATH, DATAPATH, STATSPATH]
+paths: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSURLPATH]  # All paths
+files: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files paths
 
 for i in paths:
     if i == "":
@@ -51,9 +52,9 @@ if splitext(STATSPATH)[1] != ".json" and exists(STATSPATH):
 
 
 class JsonFile:
-    """__data__ class contained load and dump methods to work with JSON files more comfy"""
+    """JsonFile class contains required methods to work with .json files"""
 
-    def __init__(self, file_path: str) -> None:
+    def __init__(self, file_path: Path) -> None:
         self.file_path = file_path
 
     def load(self) -> Union[dict, list]:
