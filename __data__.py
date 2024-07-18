@@ -2,14 +2,17 @@ import json
 from pathlib import Path
 from mojang import API
 from colorama import init, Back, Fore
-from os.path import exists, isfile, splitext
+from os.path import exists, isfile, isdir, splitext
 from os import system
 from typing import Union
 from time import sleep
 
+# Files
 LOGPATH = Path(r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log")
 DATAPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json")
 STATSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\stats.json")
+
+# Directories
 MODELSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\models")
 SKINSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins")
 SKINSURLPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins_url")
@@ -25,10 +28,11 @@ init(autoreset=True)
 
 mapi = API()
 
-paths: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSURLPATH]  # All paths
-files: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files paths
+__paths__: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSPATH, SKINSURLPATH]  # All paths
+__files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files paths
+__dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directories paths
 
-for i in paths:
+for i in __paths__:
     if i == "":
         print(f"{Back.RED}Empty string was given as path. Exceptions may be raised.")
         print(f"{Back.RED}Please change the value at __data__.py file")
@@ -37,10 +41,10 @@ for i in paths:
         print(f"{Back.RED}{i} doesn't exist. Exceptions may be raised.")
         print(f"{Back.RED}Please change the value at __data__.py file")
         system("pause")
-    elif i not in files and isfile(i):
+    elif i in __dirs__ and isfile(i):
         print(f"{Back.RED}{i} is a file, while it has to be a directory.")
         system("pause")
-    elif i in files and not isfile(i):
+    elif i in __files__ and isdir(i):
         print(f"{Back.RED}{i} is a directory, while it has to be a file.")
         system("pause")
 if splitext(DATAPATH)[1] != ".json" and exists(DATAPATH):
