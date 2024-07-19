@@ -292,6 +292,8 @@ def collectdata():
                             except Exception as e:
                                 print(f"Exception {e} occurred at {int(time())}.")
                             print("\n")
+        if not is_collecting_active:
+            return
 
 
 while True:
