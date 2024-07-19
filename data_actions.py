@@ -2,7 +2,7 @@ import requests
 import os
 import threading
 import keyboard
-from __data__ import *
+from mcdatacollector import *
 from datetime import datetime, timedelta
 from time import time
 from mojang import errors

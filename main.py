@@ -5,7 +5,7 @@ import keyboard
 from datetime import datetime
 from colorama import Fore
 from mojang import API, errors
-from __data__ import cvdbdata, LOGPATH, follow, updateviauuid
+from mcdatacollector import cvdbdata, LOGPATH, follow, updateviauuid
 
 
 def mcprint(text: str) -> None:
