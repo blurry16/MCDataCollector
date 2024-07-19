@@ -14,7 +14,7 @@ Good luck in collecting data!
 
 ### Meaning of collected points
 - "id" - Mojang UUID. Usually used to identify your account.
-- "name" - Mojang account nickname. E.g my is blurry16.
+- "name" - Mojang account nickname. E.g. my is blurry16.
 - "last_seen" - Time in Unix timestamp when the player was seen for the last time.
 - "first_time_seen" - Time in Unix timestamp when the player was seen for the first time.
 - "skin_variant" - Variant of player's skin. Can be "classic" or "slim".
@@ -24,7 +24,7 @@ Good luck in collecting data!
 - "does_exist" - This thing is there since people like AddictiveOracle exist. Those who have their name faked or accounts cracked.
 
 ### Example of collected data
-Well, if you read this it means you still care about your privacy and you probably don't trust me (or you just wonder what I collect lol). I don't really care about your trust but here is an example of collected data.  
+Well, if you read this it means you still care about your privacy, and you probably don't trust me (or you just wonder what I collect lol). I don't really care about your trust but here is an example of collected data.  
 Points meaning can be found at "Meaning of collected points" paragraph.
 ```json
 {
