@@ -1,4 +1,4 @@
-# MCDataCollector
+# MCDataCollector ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/main?style=for-the-badge&label=last%20commit%20to%20main) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev?style=for-the-badge&label=last%20commit%20to%20dev)
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were last on.
 
 ### Requirements
