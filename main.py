@@ -3,27 +3,38 @@ import os
 import keyboard
 import random
 import threading
-import time
-from colorama import Fore
-from __data__ import *
+from time import time
+from mcdatacollector import *
 from datetime import datetime, timedelta
 from mojang import API, errors
 
 mapi = API()
 
 
-def mcprint(text: str):
+def mcprint(text: str) -> None:
     """prints given text on the keyboard and sends it to minecraft chat"""
     keyboard.press_and_release("t")
-    time.sleep(0.1)
+    sleep(0.1)
     keyboard.write(text, delay=0)
-    time.sleep(0.5)
+    sleep(0.5)
     keyboard.press_and_release("enter")
 
 
 def generatepasscode() -> str:
     __PASSCODE__ = str(random.randint(0, 9999))
     return "0" * (4 - len(__PASSCODE__)) + __PASSCODE__
+
+
+def getusernamearg(__line: str) -> tuple[str, str]:
+    print(f"{Fore.MAGENTA}{__line}".replace("\n", ""))
+    __command = __line.split()[5]
+    __username = __line.split()[4].split("<")[1].split(">")[0]
+    __arg = (
+        __line.replace("\n", "")
+        .split(f"{__command} ", 1)[1]
+        .split()[0]
+    )
+    return __username, __arg
 
 
 is_collecting_active = False
@@ -38,7 +49,7 @@ def follow(file):
             break
         li = file.readline()
         if not li:
-            time.sleep(0.1)
+            sleep(0.1)
             continue
         yield li
 
@@ -52,7 +63,7 @@ def followupdatewithlist(file):
             return
         li = file.readline()
         if not li:
-            time.sleep(0.1)
+            sleep(0.1)
             continue
         yield li
 
@@ -60,12 +71,12 @@ def followupdatewithlist(file):
 def updatewithlist():
     global return_updatewithlist
 
-    LOGFILE = open(
+    logfile = open(
         LOGPATH,
         "r",
         encoding="UTF-8",
     )
-    loglines = followupdatewithlist(LOGFILE)
+    loglines = followupdatewithlist(logfile)
     print(f"{Fore.MAGENTA}Waiting for /list...")
     for line in loglines:
         if "[CHAT]" in line:
@@ -78,37 +89,16 @@ def updatewithlist():
                     nickname = nickname.strip()
                     data = cvdbdata.load()
                     try:
-                        uuid = mapi.get_uuid(nickname)
-                        profile = mapi.get_profile(uuid)
-                        data[uuid] = {
-                            "id": profile.id,
-                            "name": profile.name,
-                            "last_seen": round(float(profile.timestamp) / 1000),
-                            "first_time_seen": (
-                                round(float(profile.timestamp) / 1000)
-                                if uuid not in data
-                                else data[uuid]["first_time_seen"]
-                            ),
-                            "skin_variant": profile.skin_variant,
-                            "cape_url": profile.cape_url,
-                            "skin_url": profile.skin_url,
-                            "db_id": (
-                                len(data) if uuid not in data else data[uuid]["db_id"]
-                            ),
-                            "does_exist": True,
-                        }
-                        cvdbdata.dump(data)
-                        print(
-                            f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
-                        )
+                        uuid: str = mapi.get_uuid(nickname)
+                        updateviauuid(uuid)
                         print(json.dumps(data[uuid], indent=2))
                     except errors.NotFound:
                         data[nickname.lower()] = {
                             "id": None,
                             "name": nickname,
-                            "last_seen": int(time.time()),
+                            "last_seen": int(time()),
                             "first_time_seen": (
-                                int(time.time())
+                                int(time())
                                 if nickname not in data
                                 else data[nickname]["first_time_seen"]
                             ),
@@ -131,28 +121,26 @@ def updatewithlist():
                             )
                         )
                         continue
-                    time.sleep(0.25)
+                    sleep(0.25)
                 print(f"Updated {count} players.")
                 return_updatewithlist = True
                 return
 
 
 def collectdata():
-    PASSCODE = generatepasscode()
-    CHATBOTACTIVE = False
-    HOST = "blurry16"
-    BANNED = []
+    passcode = generatepasscode()
+    chatbotactive = False
+    host = "blurry16"
+    banned = []
     global is_collecting_active
-    print(f"{Fore.MAGENTA}Chatbot passcode for this session is: {PASSCODE}")
+    print(f"{Fore.MAGENTA}Chatbot passcode for this session is: {passcode}")
     while True:
-        LOGFILE = open(
+        logfile = open(
             LOGPATH,
             "r",
             encoding="UTF-8",
         )
-        lines = follow(LOGFILE)
-        if not is_collecting_active:
-            return
+        lines = follow(logfile)
         for line in lines:
             if "[CHAT]" in line:
                 if line[40] == "<":
@@ -161,32 +149,23 @@ def collectdata():
                         username = line.split()[4].split("<")[1].split(">")[0]
                         try:
                             arg = (
-                                line.replace("\n", "")
-                                .split(f"{command} ", 1)[1]
-                                .split()[0]
+                                line.replace("\n", "").split(f"{command} ", 1)[1].split()[0]
                             )
-                            if username == HOST and arg == PASSCODE:
-                                CHATBOTACTIVE = not CHATBOTACTIVE
+                            if username == host and arg == passcode:
+                                chatbotactive = not chatbotactive
                                 print(
                                     f"{Fore.GREEN}Chatbot activated."
-                                    if CHATBOTACTIVE
+                                    if chatbotactive
                                     else f"{Fore.RED}Chatbot unactivated."
                                 )
                         except IndexError:
-                            if username == HOST:
+                            if username == host:
                                 print(f"{Fore.MAGENTA}Not enough arguments!")
-                    elif CHATBOTACTIVE:
+                    elif chatbotactive:
                         match line.lower().split()[5]:
                             case "#lastseen":
-                                print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
-                                command = line.split()[5]
-                                username = line.split()[4].split("<")[1].split(">")[0]
-                                arg = (
-                                    line.replace("\n", "")
-                                    .split(f"{command} ", 1)[1]
-                                    .split()[0]
-                                )
-                                if username.lower() not in BANNED:
+                                username, arg = getusernamearg(line)
+                                if username.lower() not in banned:
                                     data = cvdbdata.load()
                                     try:
                                         uuid = mapi.get_uuid(arg)
@@ -194,7 +173,9 @@ def collectdata():
                                             mcprint(f"The bot has never seen {arg}.")
                                         else:
                                             mcprint(
-                                                f"{data[uuid]['name']} was seen for the last time at {datetime.fromtimestamp(data[uuid]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
+                                                f"{data[uuid]['name']} was seen for the last time at "
+                                                f"{datetime.fromtimestamp(data[uuid]['last_seen'])} UTC+3. "
+                                                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
                                             )
                                     except errors.NotFound:
                                         arg = arg.lower()
@@ -202,18 +183,13 @@ def collectdata():
                                             mcprint("This player doesn't exist.")
                                         else:
                                             mcprint(
-                                                f"{data[arg]['name']} was seen for the last time at {datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
+                                                f"{data[arg]['name']} was seen for the last time at "
+                                                f"{datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. "
+                                                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
                                             )
                             case "#firsttimeseen":
-                                print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
-                                command = line.split()[5]
-                                username = line.split()[4].split("<")[1].split(">")[0]
-                                arg = (
-                                    line.replace("\n", "")
-                                    .split(f"{command} ", 1)[1]
-                                    .split()[0]
-                                )
-                                if username.lower() not in BANNED:
+                                username, arg = getusernamearg(line)
+                                if username.lower() not in banned:
                                     data = cvdbdata.load()
                                     try:
                                         uuid = mapi.get_uuid(arg)
@@ -221,7 +197,9 @@ def collectdata():
                                             mcprint(f"The bot has never seen {arg}.")
                                         else:
                                             mcprint(
-                                                f"{data[uuid]['name']} was seen for the first time at {datetime.fromtimestamp(data[uuid]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
+                                                f"{data[uuid]['name']} was seen for the first time at "
+                                                f"{datetime.fromtimestamp(data[uuid]['first_time_seen'])} UTC+3. "
+                                                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
                                             )
                                     except errors.NotFound:
                                         arg = arg.lower()
@@ -229,17 +207,17 @@ def collectdata():
                                             mcprint("This player doesn't exist.")
                                         else:
                                             mcprint(
-                                                f"{data[arg]['name']} was seen for the first time at {datetime.fromtimestamp(data[arg]['first_time_seen'])} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
+                                                f"{data[arg]['name']} was seen for the first time at "
+                                                f"{datetime.fromtimestamp(data[arg]['first_time_seen'])} UTC+3. "
+                                                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
                                             )
 
                             case "#count":
                                 print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
                                 username = line.split()[4].split("<")[1].split(">")[0]
-                                if username.lower() not in BANNED:
+                                if username.lower() not in banned:
                                     data = cvdbdata.load()
-                                    mcprint(
-                                        f"{len(data)} players are currently in the db."
-                                    )
+                                    mcprint(f"{len(data)} players are currently in the db.")
                             case "#getdbid":
                                 print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
                                 username = line.split()[4].split("<")[1].split(">")[0]
@@ -249,15 +227,13 @@ def collectdata():
                                     .split(f"{command} ")[1]
                                     .split()[0]
                                 )
-                                if username.lower() not in BANNED:
+                                if username.lower() not in banned:
                                     data = cvdbdata.load()
                                     try:
                                         uuid = mapi.get_uuid(arg)
                                         nickname = data[uuid]["name"]
                                         if uuid not in data:
-                                            mcprint(
-                                                f"{nickname} is not in the database."
-                                            )
+                                            mcprint(f"{nickname} is not in the database.")
                                         else:
                                             mcprint(
                                                 f"{nickname}'s database ID is {data[uuid]['db_id']}"
@@ -277,47 +253,26 @@ def collectdata():
                     split = line_upd.split()
                     if len(split) > 2:
                         if (
-                            "<" not in line_upd
-                            and "[" not in line_upd
-                            and ("joined" == split[2] or "left" == split[2])
-                            and "the" == split[3]
-                            and "game." == split[4]
+                                "<" not in line_upd
+                                and "[" not in line_upd
+                                and ("joined" == split[2] or "left" == split[2])
+                                and "the" == split[3]
+                                and "game." == split[4]
                         ):
                             data = cvdbdata.load()
                             nickname = line.split("[CHAT]")[1].split()[0]
                             try:
                                 uuid = mapi.get_uuid(nickname)
-                                profile = mapi.get_profile(uuid)
-                                data[uuid] = {
-                                    "id": profile.id,
-                                    "name": profile.name,
-                                    "last_seen": round(float(profile.timestamp) / 1000),
-                                    "first_time_seen": (
-                                        round(float(profile.timestamp) / 1000)
-                                        if uuid not in data
-                                        else data[uuid]["first_time_seen"]
-                                    ),
-                                    "skin_variant": profile.skin_variant,
-                                    "cape_url": profile.cape_url,
-                                    "skin_url": profile.skin_url,
-                                    "db_id": (
-                                        len(data)
-                                        if uuid not in data
-                                        else data[uuid]["db_id"]
-                                    ),
-                                    "does_exist": True,
-                                }
-                                cvdbdata.dump(data)
-                                print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
+                                updateviauuid(uuid)
                                 print(json.dumps(data[uuid], indent=2))
                             except errors.NotFound:
                                 if nickname != "*":
                                     data[nickname.lower()] = {
                                         "id": None,
                                         "name": nickname,
-                                        "last_seen": int(time.time()),
+                                        "last_seen": int(time()),
                                         "first_time_seen": (
-                                            int(time.time())
+                                            int(time())
                                             if nickname not in data
                                             else data[nickname]["first_time_seen"]
                                         ),
@@ -332,24 +287,35 @@ def collectdata():
                                         "does_exist": False,
                                     }
                                     cvdbdata.dump(data)
-                                    print(
-                                        f"{Fore.GREEN}{nickname}'s dictionary updated."
-                                    )
+                                    print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
                                     print(json.dumps(data[nickname.lower()], indent=2))
                             except Exception as e:
-                                print(f"Exception {e} occurred at {int(time.time())}.")
+                                print(f"Exception {e} occurred at {int(time())}.")
                             print("\n")
+        if not is_collecting_active:
+            return
 
 
 while True:
     inp = input(
-        f"1. Get data.\n2. Save skins.\n3. Update data.\n4. Add stats\n5. {'Start' if not is_collecting_active else 'Stop'} collecting data & chatbot\n6. Quit\n"
+        f"1. Get data.\n"
+        f"2. Save skins.\n"
+        f"3. Update data.\n"
+        f"4. Add stats\n"
+        f"5. {'Start' if not is_collecting_active else 'Stop'} collecting data & chatbot\n"
+        f"6. Quit\n"
     )
     match inp:
         case "1":
             while True:
                 inp = input(
-                    "1. Get last seen time\n2. Get first seen time\n3. Get full data in JSON format\n4. Get database id\n5. Get all players' nicknames in the DB\n6. Get all zombie accounts nicknames in the DB\n7. Get back to previous stage\n"
+                    "1. Get last seen time\n"
+                    "2. Get first seen time\n"
+                    "3. Get full data in JSON format\n"
+                    "4. Get database id\n"
+                    "5. Get all players' nicknames in the DB\n"
+                    "6. Get all zombie accounts nicknames in the DB\n"
+                    "7. Get back to previous stage\n"
                 ).strip()
                 try:
                     match inp:
@@ -369,7 +335,8 @@ while True:
                                                 local_data["last_seen"]
                                             )
                                             print(
-                                                f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
+                                                f"{local_data['name']} was seen at {dt_obj}. "
+                                                f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                             )
                                         else:
                                             print(f"The bot has never seen {nickname}.")
@@ -380,7 +347,8 @@ while True:
                                                 local_data["last_seen"]
                                             )
                                             print(
-                                                f"{local_data['name']} was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
+                                                f"{local_data['name']} was seen at {dt_obj}. "
+                                                f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                             )
                                         else:
                                             print("This player doesn't exist.")
@@ -397,7 +365,8 @@ while True:
                                             local_data["last_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj}. "
+                                            f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                         )
                                     else:
                                         print(f"The bot has never seen {local_uuid}.")
@@ -409,7 +378,8 @@ while True:
                                             local_data["last_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj}. "
+                                            f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                         )
 
                                     except ValueError:
@@ -436,7 +406,9 @@ while True:
                                             local_data = data[local_uuid]
                                             timestamp = local_data["first_time_seen"]
                                             print(
-                                                f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                                f"{local_data['name']} was seen for the first time at "
+                                                f"{datetime.fromtimestamp(timestamp)}. "
+                                                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                             )
                                         else:
                                             print(f"The bot has never seen {nickname}.")
@@ -445,7 +417,9 @@ while True:
                                             local_data = data[nickname]
                                             timestamp = local_data["first_time_seen"]
                                             print(
-                                                f"{local_data['name']} was seen for the first time at {datetime.fromtimestamp(timestamp)} UTC+3. ({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                                f"{local_data['name']} was seen for the first time at "
+                                                f"{datetime.fromtimestamp(timestamp)}. "
+                                                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                             )
                                         else:
                                             print("This player doesn't exist.")
@@ -462,7 +436,8 @@ while True:
                                             local_data["first_time_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['id']}) was seen at {dt_obj}. "
+                                            f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                         )
                                     else:
                                         print(f"The bot has never seen {local_uuid}.")
@@ -474,7 +449,8 @@ while True:
                                             local_data["first_time_seen"]
                                         )
                                         print(
-                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj} UTC+3. ({datetime.fromtimestamp(round(time.time())) - dt_obj} ago)"
+                                            f"{local_data['name']} ({local_data['db_id']}) was seen at {dt_obj}. "
+                                            f"({datetime.fromtimestamp(round(time())) - dt_obj} ago)"
                                         )
 
                                     except ValueError:
@@ -504,7 +480,7 @@ while True:
                                                     inp.split()[
                                                         inp.split().index("--indent")
                                                         + 1
-                                                    ]
+                                                        ]
                                                 )
                                             except IndexError:
                                                 indent = None
@@ -536,7 +512,7 @@ while True:
                                             indent = int(
                                                 inp.split()[
                                                     inp.split().index("--indent") + 1
-                                                ]
+                                                    ]
                                             )
                                         except IndexError:
                                             indent = None
@@ -555,7 +531,7 @@ while True:
                                                     inp.split()[
                                                         inp.split().index("--indent")
                                                         + 1
-                                                    ]
+                                                        ]
                                                 )
                                             except IndexError:
                                                 indent = None
@@ -612,7 +588,8 @@ while True:
                                     )
                                     if local_uuid in data:
                                         print(
-                                            f"{local_uuid}'s ({data[local_uuid]['name']}) database id is {data[local_uuid]['db_id']}"
+                                            f"{local_uuid}'s ({data[local_uuid]['name']}) database id is "
+                                            f"{data[local_uuid]['db_id']}"
                                         )
                                     else:
                                         print(f"The bot has never seen {nickname}.")
@@ -645,7 +622,10 @@ while True:
         case "2":
             while True:
                 mode = input(
-                    "1. URL\n2. Name\n3. HTML model\n4. Get back to previous stage.\n"
+                    "1. URL\n"
+                    "2. Name\n"
+                    "3. HTML model\n"
+                    "4. Get back to previous stage.\n"
                 )
                 data = cvdbdata.load()
                 if mode == "1":
@@ -661,7 +641,7 @@ while True:
                             with open(rf"{SKINSURLPATH}\{url[38:]}.png", "wb") as file:
                                 file.write(response.content)
                             print(f"{Fore.GREEN}Saved {url[38:]}.png")
-                        time.sleep(0.5)
+                        sleep(0.5)
                 elif mode == "2":
                     foldername = rf"{SKINSPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}"
                     print(f"{Fore.GREEN}Creating new folder... ({foldername})")
@@ -674,12 +654,12 @@ while True:
                             response = requests.get(url=url)
                             name = data[i]["name"]
                             with open(
-                                (rf"{foldername}\{name}.png"),
-                                "wb",
+                                    rf"{foldername}\{name}.png",
+                                    "wb",
                             ) as file:
                                 file.write(response.content)
                             print(f"{Fore.GREEN}Saved {name}.png")
-                        time.sleep(0.5)
+                        sleep(0.5)
                     del foldername
 
                 elif mode == "3":
@@ -690,7 +670,8 @@ while True:
                     print(f"{Fore.GREEN}Saving new files...")
                     for i in data:
                         name = data[i]["name"]
-                        to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" frameborder="0" width="1920px" height="972px"></iframe>'
+                        to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" \
+                                frameborder="0" width="1920px" height="972px"></iframe>'
                         with open(rf"{foldername}\{name}.html", "x") as file:
                             file.write(to_save)
                         print(f"{Fore.GREEN}Saved {name}.html")
@@ -702,7 +683,10 @@ while True:
         case "3":
             while True:
                 a = input(
-                    "1. By nicknames\n2. With /list\n3. Everyone's data (last time seen won't be touched)\n4. Get back to previous stage.\n"
+                    "1. By nicknames\n"
+                    "2. With /list\n"
+                    "3. Everyone's data (last time seen won't be touched)\n"
+                    "4. Get back to previous stage.\n"
                 )
                 match a:
                     case "1":
@@ -715,45 +699,24 @@ while True:
                         count = len(nicknames)
                         for nickname in nicknames:
                             try:
-                                uuid = mapi.get_uuid(nickname)
+                                uuid: str = mapi.get_uuid(nickname)
                                 profile = mapi.get_profile(uuid)
-                                data = cvdbdata.load()
-                                data[uuid] = {
-                                    "id": profile.id,
-                                    "name": profile.name,
-                                    "last_seen": round(float(profile.timestamp) / 1000),
-                                    "first_time_seen": (
-                                        round(float(profile.timestamp) / 1000)
-                                        if uuid not in data
-                                        else data[uuid]["first_time_seen"]
-                                    ),
-                                    "skin_variant": profile.skin_variant,
-                                    "cape_url": profile.cape_url,
-                                    "skin_url": profile.skin_url,
-                                    "db_id": (
-                                        len(data)
-                                        if uuid not in data
-                                        else data[uuid]["db_id"]
-                                    ),
-                                    "does_exist": True,
-                                }
-                                cvdbdata.dump(data)
-                                print(
-                                    f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
-                                )
-                                time.sleep(0.1)
+                                data: dict = cvdbdata.load()
+                                updateviauuid(uuid)
+                                print(json.dumps(data[uuid], indent=2))
+                                sleep(0.1)
                             except errors.NotFound:
                                 count -= 1
                                 print(f"{Fore.RED}{nickname} doesn't exist.")
                                 continue
-                            time.sleep(0.25)
+                            sleep(0.25)
                         print(f"Updated {count} players.")
 
                     case "2":
                         return_updatewithlist = False
                         updatewithlistthread = threading.Thread(target=updatewithlist)
                         updatewithlistthread.start()
-                        time.sleep(0.01)
+                        sleep(0.01)
                         print(f"{Fore.MAGENTA}Press escape to break updating")
                         while True:
                             if keyboard.is_pressed("escape"):
@@ -781,7 +744,7 @@ while True:
                                 }
                                 print(f"{Fore.GREEN}Updated {profile.name}")
                                 print(json.dumps(data[uuid], indent=2))
-                                time.sleep(0.25)
+                                sleep(0.25)
 
                     case "4":
                         break

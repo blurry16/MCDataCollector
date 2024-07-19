@@ -1,8 +1,9 @@
-# This branch is an experiment.
-If you want to checkout main branch please head to https://github.com/blurry16/MCDataCollector/blob/main.  
+# This branch is an experiment. 
+If you want to check out main branch please head to https://github.com/blurry16/MCDataCollector/blob/main.  
 Code at this branch can be unstable.
 
-# MCDataCollector
+# MCDataCollector ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/experiment?label=last%20commit%20to%20experiment) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev-experiment?label=last%20commit%20to%20dev-experiment)
+
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were last on.
 
 ### Requirements
@@ -10,7 +11,7 @@ Just clone the repo and use `pip install -r requirements.txt`. If I missed anyth
 
 ### How do I run it?
 Install requirements ofc :p  
-So first of all replace `LOGPATH` constant in `__data__.py` with your latest.log path (don't mind those I have already left :p) with your values.  
+So first of all replace `LOGPATH` constant in `mcdatacollector.py` with your latest.log path (don't mind those I have already left :p) with your values.  
 Then create a .json file at `DATAPATH` (you should replace it with your value) and run `main.py` script.  
 It will write Mojang API data and last&first (in unix timestamp) time seen date in the file you gave it.  
 If you want to have my main data.json file please contact me in Discord (blurry16) or in [![Telegram Badge](https://img.shields.io/badge/Telegram-blue?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/blurry16) (clickable).  
