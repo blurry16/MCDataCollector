@@ -26,7 +26,7 @@ Good luck in collecting data!
 - "cape_url" - URL to player's cape. If the player doesn't have a cape it's null.
 - "skin_url" - URL to player's skin.
 - "db_id" - ID of a player in .json file. Pretty useless but cool at the same time.
-- "does_exist" - This thing is there since people like AddictiveOracle exist. Those who have their name faked or accounts cracked.
+- "does_exist" - This thing is there since people like AddictiveOracle exist. Those who have their name faked or accounts cracked.  
 Please mind that you can't update cracked account data with "update with nicknames" tool. _Just buy license lol._
 ### Example of collected data
 Well, if you read this it means you still care about your privacy, and you probably don't trust me (or you just wonder what I collect lol). I don't really care about your trust but here is an example of collected data.  
