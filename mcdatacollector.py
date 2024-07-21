@@ -1,11 +1,12 @@
 import json
-from pathlib import Path
-from mojang import API
-from colorama import init, Back, Fore
-from os.path import exists, isfile, isdir, splitext
 from os import system
-from typing import Union
+from os.path import exists, isfile, isdir, splitext
+from pathlib import Path
 from time import sleep
+from typing import Union
+
+from colorama import init, Back, Fore
+from mojang import API
 
 LOGPATH = Path("")
 DATAPATH = Path("")

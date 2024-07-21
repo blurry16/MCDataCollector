@@ -1,12 +1,14 @@
-import requests
 import os
-import keyboard
 import random
 import threading
-from time import time
-from mcdatacollector import *
 from datetime import datetime, timedelta
+from time import time
+
+import keyboard
+import requests
 from mojang import API, errors
+
+from mcdatacollector import *
 
 mapi = API()
 
