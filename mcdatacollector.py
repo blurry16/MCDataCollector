@@ -8,12 +8,21 @@ from typing import Union
 from colorama import init, Back, Fore
 from mojang import API
 
-LOGPATH = Path("")
-DATAPATH = Path("")
-STATSPATH = Path("")
-MODELSPATH = Path("")
-SKINSPATH = Path("")
-SKINSURLPATH = Path("")
+# LOGPATH = Path("")
+# DATAPATH = Path("")
+# STATSPATH = Path("")
+# MODELSPATH = Path("")
+# SKINSPATH = Path("")
+# SKINSURLPATH = Path("")
+# Files
+LOGPATH = Path(r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log")
+DATAPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json")
+STATSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\stats.json")
+
+# Directories
+MODELSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\models")
+SKINSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins")
+SKINSURLPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins_url")
 
 init(autoreset=True)
 
@@ -81,6 +90,7 @@ statsdataobj = JsonFile(STATSPATH)
 
 
 def updateviauuid(uuid: str) -> None:
+    global cvdbdata
     profile = mapi.get_profile(uuid)
     data = cvdbdata.load()
     data[uuid] = {

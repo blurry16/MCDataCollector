@@ -47,7 +47,6 @@ def updatewithlist():
                     try:
                         uuid: str = mapi.get_uuid(nickname)
                         updateviauuid(uuid)
-                        cvdbdata.dump(data)
                         print(json.dumps(data[uuid], indent=2))
                     except errors.NotFound:
                         data[nickname.lower()] = {
