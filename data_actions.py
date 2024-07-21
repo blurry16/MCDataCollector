@@ -10,7 +10,7 @@ from mojang import errors
 from mcdatacollector import *
 
 
-def followupdatewithlist(file):
+def followupdatewithlist(file: TextIO) -> Generator[str, None, None]:
     global return_updatewithlist
     """follows selected file, used only in update with /list"""
     file.seek(0, 2)
@@ -24,7 +24,7 @@ def followupdatewithlist(file):
         yield li
 
 
-def updatewithlist():
+def updatewithlist() -> None:
     global return_updatewithlist
 
     logfile = open(

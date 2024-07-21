@@ -3,7 +3,7 @@ from os import system
 from os.path import exists, isfile, isdir, splitext
 from pathlib import Path
 from time import sleep
-from typing import Union
+from typing import Union, Generator, TextIO
 
 from colorama import init, Back, Fore
 from mojang import API
@@ -65,7 +65,7 @@ class JsonFile:
             json.dump(data, data_file, indent=indent)
 
 
-def follow(file):
+def follow(file: TextIO) -> Generator[str, None, None]:
     """follows selected file"""
     file.seek(0, 2)
     while True:
