@@ -3,7 +3,7 @@
 If you want to check out main branch please head to https://github.com/blurry16/MCDataCollector/blob/main.  
 Code at this branch can be unstable.
 
-# MCDataCollector ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/main?label=last%20commit%20to%20main) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev?label=last%20commit%20to%20dev)
+# MCDataCollector ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/experiment?label=last%20commit%20to%20experiment) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev-experiment?label=last%20commit%20to%20dev-experiment)
 
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were
 last on.
