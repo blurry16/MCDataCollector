@@ -1,9 +1,11 @@
-import disnake
 import json
-from time import time
 from datetime import datetime
-from mojang import API, errors
+from time import time
+
+import disnake
 from disnake.ext import commands
+from mojang import API, errors
+
 from mcdatacollector import cvdbdata
 
 mapi = API()

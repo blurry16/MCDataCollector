@@ -1,10 +1,12 @@
-import time
 import json
 import random
-import keyboard
+import time
 from datetime import datetime
+
+import keyboard
 from colorama import Fore
 from mojang import API, errors
+
 from mcdatacollector import cvdbdata, LOGPATH, follow, updateviauuid
 
 

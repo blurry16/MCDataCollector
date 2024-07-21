@@ -1,11 +1,13 @@
-import requests
 import os
 import threading
-import keyboard
-from mcdatacollector import *
 from datetime import datetime, timedelta
 from time import time
+
+import keyboard
+import requests
 from mojang import errors
+
+from mcdatacollector import *
 
 
 def followupdatewithlist(file):
