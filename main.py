@@ -6,7 +6,7 @@ from time import time
 
 import keyboard
 import requests
-from mojang import API, errors
+from mojang import errors
 
 from mcdatacollector import *
 
@@ -93,6 +93,7 @@ def updatewithlist():
                     try:
                         uuid: str = mapi.get_uuid(nickname)
                         updateviauuid(uuid)
+                        cvdbdata.dump(data)
                         print(json.dumps(data[uuid], indent=2))
                     except errors.NotFound:
                         data[nickname.lower()] = {
