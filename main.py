@@ -2,7 +2,8 @@ import os
 import random
 import threading
 from datetime import datetime, timedelta
-from time import time
+from time import time, sleep
+from typing import Generator, TextIO
 
 import keyboard
 import requests
@@ -42,9 +43,9 @@ def getusernamearg(__line: str) -> tuple[str, str]:
 is_collecting_active = False
 
 
-def follow(file):
-    """follows selected file, used in data collecting not updating via /list"""
+def follow(file: TextIO) -> Generator[str, None, None]:
     global is_collecting_active
+    """follows selected file, used in data collecting not updating via /list"""
     file.seek(0, 2)
     while True:
         if not is_collecting_active:
@@ -56,7 +57,7 @@ def follow(file):
         yield li
 
 
-def followupdatewithlist(file):
+def followupdatewithlist(file: TextIO) -> Generator[str, None, None]:
     global return_updatewithlist
     """follows selected file, used only in update with /list"""
     file.seek(0, 2)
@@ -70,14 +71,10 @@ def followupdatewithlist(file):
         yield li
 
 
-def updatewithlist():
+def updatewithlist() -> None:
     global return_updatewithlist
 
-    logfile = open(
-        LOGPATH,
-        "r",
-        encoding="UTF-8",
-    )
+    logfile = open(LOGPATH, "r", encoding="UTF-8", )
     loglines = followupdatewithlist(logfile)
     print(f"{Fore.MAGENTA}Waiting for /list...")
     for line in loglines:
@@ -128,7 +125,7 @@ def updatewithlist():
                 return
 
 
-def collectdata():
+def collectdata() -> None:
     passcode = generatepasscode()
     chatbotactive = False
     host = "blurry16"
@@ -776,7 +773,9 @@ while True:
                 print(f"{Fore.RED}Stopping collecting data...")
                 collectdatathread.join()
         case "6":
-            break
+            is_collecting_active = False
+            collectdatathread.join()
+            exit()
 
         case _:
             print(f"{Fore.RED}Unknown command.")

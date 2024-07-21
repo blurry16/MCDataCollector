@@ -2,7 +2,6 @@ import json
 from os import system
 from os.path import exists, isfile, isdir, splitext
 from pathlib import Path
-from time import sleep
 from typing import Union
 
 from colorama import init, Back, Fore
@@ -14,7 +13,6 @@ STATSPATH = Path("")
 MODELSPATH = Path("")
 SKINSPATH = Path("")
 SKINSURLPATH = Path("")
-
 init(autoreset=True)
 
 mapi = API()
@@ -63,17 +61,6 @@ class JsonFile:
         """dumps selected data to the file"""
         with open(self.file_path, "w", encoding="UTF-8") as data_file:
             json.dump(data, data_file, indent=indent)
-
-
-def follow(file):
-    """follows selected file"""
-    file.seek(0, 2)
-    while True:
-        li = file.readline()
-        if not li:
-            sleep(0.1)
-            continue
-        yield li
 
 
 cvdbdata = JsonFile(DATAPATH)
