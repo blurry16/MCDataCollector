@@ -3,7 +3,7 @@
 If you want to check out main branch please head to https://github.com/blurry16/MCDataCollector/blob/main.  
 Code at this branch can be unstable.
 
-# MCDataCollector ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/experiment?label=last%20commit%20to%20experiment) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev-experiment?label=last%20commit%20to%20dev-experiment)
+# MCDataCollector ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/main?label=last%20commit%20to%20main) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev?label=last%20commit%20to%20dev)
 
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were
 last on.
@@ -16,8 +16,7 @@ fixed version or open an issue.
 ### How do I run it?
 
 Install requirements ofc :p  
-So first of all replace `LOGPATH` constant in `mcdatacollector.py` with your latest.log path (don't mind those I have
-already left :p) with your values.  
+So first of all replace `LOGPATH` constant in `mcdatacollector.py` with your latest.log path with your values.  
 Then create a .json file at `DATAPATH` (you should replace it with your value) and run `main.py` script.  
 It will write Mojang API data and last&first (in unix timestamp) time seen date in the file you gave it.  
 If you want to have my main data.json file please contact me in Discord (blurry16) or
