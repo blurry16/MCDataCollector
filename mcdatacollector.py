@@ -81,6 +81,7 @@ statsdataobj = JsonFile(STATSPATH)
 
 
 def updateviauuid(uuid: str) -> None:
+    global cvdbdata
     profile = mapi.get_profile(uuid)
     data = cvdbdata.load()
     data[uuid] = {
