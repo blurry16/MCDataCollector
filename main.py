@@ -174,7 +174,6 @@ while True:
                         try:
                             uuid = mapi.get_uuid(nickname)
                             updateviauuid(uuid)
-                            print(json.dumps(data[uuid], indent=2))
                         except errors.NotFound:
                             if nickname != "*":
                                 data[nickname.lower()] = {

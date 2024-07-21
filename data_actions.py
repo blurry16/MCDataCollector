@@ -47,7 +47,6 @@ def updatewithlist():
                     try:
                         uuid: str = mapi.get_uuid(nickname)
                         updateviauuid(uuid)
-                        print(json.dumps(data[uuid], indent=2))
                     except errors.NotFound:
                         data[nickname.lower()] = {
                             "id": None,
@@ -489,7 +488,6 @@ while True:
                                 profile = mapi.get_profile(uuid)
                                 data: dict = cvdbdata.load()
                                 updateviauuid(uuid)
-                                print(json.dumps(data[uuid], indent=2))
                                 sleep(0.1)
                             except errors.NotFound:
                                 count -= 1
