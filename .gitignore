@@ -160,7 +160,6 @@ cython_debug/
 .idea/
 .vscode/
 
-bat/
 data/
 models/
 skins/
