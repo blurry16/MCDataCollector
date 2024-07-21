@@ -81,6 +81,7 @@ statsdataobj = JsonFile(STATSPATH)
 
 
 def updateviauuid(uuid: str) -> None:
+    global cvdbdata
     profile = mapi.get_profile(uuid)
     data = cvdbdata.load()
     data[uuid] = {
@@ -106,3 +107,4 @@ def updateviauuid(uuid: str) -> None:
     print(
         f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
     )
+    print(json.dumps(data[uuid], indent=2))

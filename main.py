@@ -93,8 +93,6 @@ def updatewithlist():
                     try:
                         uuid: str = mapi.get_uuid(nickname)
                         updateviauuid(uuid)
-                        cvdbdata.dump(data)
-                        print(json.dumps(data[uuid], indent=2))
                     except errors.NotFound:
                         data[nickname.lower()] = {
                             "id": None,
@@ -267,7 +265,6 @@ def collectdata():
                             try:
                                 uuid = mapi.get_uuid(nickname)
                                 updateviauuid(uuid)
-                                print(json.dumps(data[uuid], indent=2))
                             except errors.NotFound:
                                 if nickname != "*":
                                     data[nickname.lower()] = {
@@ -704,9 +701,7 @@ while True:
                             try:
                                 uuid: str = mapi.get_uuid(nickname)
                                 profile = mapi.get_profile(uuid)
-                                data: dict = cvdbdata.load()
                                 updateviauuid(uuid)
-                                print(json.dumps(data[uuid], indent=2))
                                 sleep(0.1)
                             except errors.NotFound:
                                 count -= 1
