@@ -21,7 +21,7 @@ mapi = API()
 
 __paths__: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSPATH, SKINSURLPATH]  # All paths
 __files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files paths
-__dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directories paths
+__dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directory paths
 
 for i in __paths__:
     if i == "":
@@ -59,7 +59,7 @@ class JsonFile:
         with open(self.file_path, "r", encoding="UTF-8") as data_file:
             return json.load(data_file)
 
-    def dump(self, data: Union[dict, list], indent: int = 4) -> None:
+    def dump(self, data: Union[dict, list], indent: int = 2) -> None:
         """dumps selected data to the file"""
         with open(self.file_path, "w", encoding="UTF-8") as data_file:
             json.dump(data, data_file, indent=indent)
@@ -74,10 +74,6 @@ def follow(file: TextIO) -> Generator[str, None, None]:
             sleep(0.1)
             continue
         yield li
-
-
-cvdbdata = JsonFile(DATAPATH)
-statsdataobj = JsonFile(STATSPATH)
 
 
 def updateviauuid(uuid: str) -> None:
@@ -108,3 +104,7 @@ def updateviauuid(uuid: str) -> None:
         f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
     )
     print(json.dumps(data[uuid], indent=2))
+
+
+cvdbdata = JsonFile(DATAPATH)
+statsdataobj = JsonFile(STATSPATH)
