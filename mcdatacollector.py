@@ -3,7 +3,7 @@ from os import system
 from os.path import exists, isfile, isdir, splitext
 from pathlib import Path
 from time import sleep
-from typing import Union, Generator, TextIO
+from typing import Generator, TextIO
 
 from colorama import init, Back, Fore
 from mojang import API
@@ -54,12 +54,12 @@ class JsonFile:
     def __init__(self, file_path: Path) -> None:
         self.file_path: Path = file_path
 
-    def load(self) -> Union[dict, list]:
+    def load(self) -> dict | list:
         """loads data from json file"""
         with open(self.file_path, "r", encoding="UTF-8") as data_file:
             return json.load(data_file)
 
-    def dump(self, data: Union[dict, list], indent: int = 2) -> None:
+    def dump(self, data: dict | list, indent: int = 2) -> None:
         """dumps selected data to the file"""
         with open(self.file_path, "w", encoding="UTF-8") as data_file:
             json.dump(data, data_file, indent=indent)
