@@ -8,15 +8,12 @@ from typing import Generator, TextIO
 from colorama import init, Back, Fore
 from mojang import API
 
-# Files
-LOGPATH = Path(r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log")
-DATAPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json")
-STATSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\stats.json")
-
-# Directories
-MODELSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\models")
-SKINSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins")
-SKINSURLPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins_url")
+LOGPATH = Path("")
+DATAPATH = Path("")
+STATSPATH = Path("")
+MODELSPATH = Path("")
+SKINSPATH = Path("")
+SKINSURLPATH = Path("")
 
 init(autoreset=True)
 
