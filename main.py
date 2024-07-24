@@ -773,8 +773,9 @@ while True:
                 print(f"{Fore.RED}Stopping collecting data...")
                 collectdatathread.join()
         case "6":
-            is_collecting_active = False
-            collectdatathread.join()
+            if is_collecting_active:
+                is_collecting_active = False
+                collectdatathread.join()
             exit()
 
         case _:
