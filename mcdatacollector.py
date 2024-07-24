@@ -12,6 +12,7 @@ STATSPATH = Path("")
 MODELSPATH = Path("")
 SKINSPATH = Path("")
 SKINSURLPATH = Path("")
+
 init(autoreset=True)
 
 mapi = API()
