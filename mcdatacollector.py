@@ -23,8 +23,8 @@ init(autoreset=True)
 mapi = API()
 
 __paths__: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSPATH, SKINSURLPATH]  # All paths
-__files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files paths
-__dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directory paths
+__files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files' paths
+__dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directories' paths
 
 for i in __paths__:
     if i == "":
