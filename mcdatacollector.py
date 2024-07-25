@@ -8,9 +8,12 @@ from typing import Generator, TextIO
 from colorama import init, Back, Fore
 from mojang import API
 
+# Files
 LOGPATH = Path("")
 DATAPATH = Path("")
 STATSPATH = Path("")
+
+# Directories
 MODELSPATH = Path("")
 SKINSPATH = Path("")
 SKINSURLPATH = Path("")
