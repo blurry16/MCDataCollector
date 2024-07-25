@@ -666,12 +666,13 @@ while True:
                     print(f"{Fore.GREEN}Folder {foldername} created successfully.")
                     print(f"{Fore.GREEN}Saving new files...")
                     for i in data:
-                        name = data[i]["name"]
-                        to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" \
-                                frameborder="0" width="1920px" height="972px"></iframe>'
-                        with open(rf"{foldername}\{name}.html", "x") as file:
-                            file.write(to_save)
-                        print(f"{Fore.GREEN}Saved {name}.html")
+                        if data[i]["does_exist"]:
+                            name = data[i]["name"]
+                            to_save = rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" \
+                            frameborder="0" width="1920px" height="972px"></iframe>'
+                            with open(rf"{foldername}\{name}.html", "x") as file:
+                                file.write(to_save)
+                            print(f"{Fore.GREEN}Saved {name}.html")
                     del foldername
                 elif mode == "4":
                     break
