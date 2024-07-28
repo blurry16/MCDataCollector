@@ -6,7 +6,6 @@ last on.
 ### Requirements
 
 Clone the repo and use `pip install -r requirements.txt`.
-If I missed anything in that file, please pull-request fixed version or open an issue.
 
 ### How do I run it?
 
