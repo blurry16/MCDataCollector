@@ -25,24 +25,24 @@ __files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files' paths
 __dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directories' paths
 
 for i in __paths__:
-    if i == "":
+    if i == Path(""):
         print(f"{Back.RED}Empty string was given as path. Exceptions may be raised.")
-        print(f"{Back.RED}Please change the value at __data__.py file")
+        print(f"{Back.RED}Please change the value at {__file__} file")
         system("pause")
     elif not exists(i):
         print(f"{Back.RED}{i} doesn't exist. Exceptions may be raised.")
-        print(f"{Back.RED}Please change the value at __data__.py file")
+        print(f"{Back.RED}Please change the value at {__file__} file")
         system("pause")
     elif i in __dirs__ and isfile(i):
-        print(f"{Back.RED}{i} is a file, while it has to be a directory.")
+        print(f"{Back.RED}{i} is a file, while it has to be a directory. Exceptions may be raised.")
         system("pause")
     elif i in __files__ and isdir(i):
-        print(f"{Back.RED}{i} is a directory, while it has to be a file.")
+        print(f"{Back.RED}{i} is a directory, while it has to be a file. Exceptions may be raised.")
         system("pause")
-if splitext(DATAPATH)[1] != ".json" and exists(DATAPATH):
+if splitext(DATAPATH)[1] != ".json" and exists(DATAPATH) and DATAPATH != Path(""):
     print(f"{Back.RED}{DATAPATH} has not .json extension.")
     system("pause")
-if splitext(STATSPATH)[1] != ".json" and exists(STATSPATH):
+if splitext(STATSPATH)[1] != ".json" and exists(STATSPATH) and STATSPATH != Path(""):
     print(f"{Back.RED}{STATSPATH} has not .json extension.")
     system("pause")
 
