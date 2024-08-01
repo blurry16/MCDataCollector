@@ -1,4 +1,4 @@
-from json import dump, load, dumps
+from json import load, dump, dumps
 from os import system
 from os.path import exists, isfile, isdir, splitext
 from pathlib import Path
