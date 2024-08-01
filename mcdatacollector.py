@@ -54,8 +54,8 @@ del i
 class JsonFile:
     """JsonFile class contains required methods to work with .json files"""
 
-    def __init__(self, file_path: Path) -> None:
-        self.file_path: Path = file_path
+    def __init__(self, file_path: Path | str) -> None:
+        self.file_path: Path = Path(file_path)
 
     def load(self) -> dict | list:
         """loads data from json file"""
