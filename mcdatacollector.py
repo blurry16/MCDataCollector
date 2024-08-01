@@ -1,4 +1,4 @@
-import json
+from json import dump, load, dumps
 from os import system
 from os.path import exists, isfile, isdir, splitext
 from pathlib import Path
@@ -60,12 +60,12 @@ class JsonFile:
     def load(self) -> dict | list:
         """loads data from json file"""
         with open(self.file_path, "r", encoding="UTF-8") as data_file:
-            return json.load(data_file)
+            return load(data_file)
 
     def dump(self, data: dict | list, indent: int = 2) -> None:
         """dumps selected data to the file"""
         with open(self.file_path, "w", encoding="UTF-8") as data_file:
-            json.dump(data, data_file, indent=indent)
+            dump(data, data_file, indent=indent)
 
 
 def follow(file: TextIO) -> Generator[str, None, None]:
@@ -106,7 +106,7 @@ def updateviauuid(uuid: str) -> None:
     print(
         f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
     )
-    print(json.dumps(data[uuid], indent=2))
+    print(dumps(data[uuid], indent=2))
 
 
 cvdbdata = JsonFile(DATAPATH)
