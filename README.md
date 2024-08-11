@@ -1,12 +1,8 @@
-<div align="center">
-<a href="https://github.com/blurry16/MCDataCollector/blob/main"> 
-<h1> MAIN BRANCH HERE, EXPERIMENT IS DISCARDED SINCE 12/08/2024 </h1> </a>
-<a href="https://github.com/blurry16/MCDataCollector/blob/main"> 
-<h1> MAIN BRANCH HERE, EXPERIMENT IS DISCARDED SINCE 12/08/2024 </h1> </a>
+# MAIN BRANCH IS [HERE](https://github.com/blurry16/MCDataCollector/branch/main), EXPERIMENT IS DISCARDED SINCE 12/08/2024
 
-<a href="https://github.com/blurry16/MCDataCollector/blob/main"> 
-<h1> MAIN BRANCH HERE, EXPERIMENT IS DISCARDED SINCE 12/08/2024 </h1> </a>
-</div>
+# MAIN BRANCH IS [HERE](https://github.com/blurry16/MCDataCollector/branch/main), EXPERIMENT IS DISCARDED SINCE 12/08/2024
+
+# MAIN BRANCH IS [HERE](https://github.com/blurry16/MCDataCollector/branch/main), EXPERIMENT IS DISCARDED SINCE 12/08/2024
 
 # This branch is discarded since 12/08/2024
 
