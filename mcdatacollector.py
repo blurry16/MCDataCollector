@@ -2,7 +2,7 @@ from json import load, dump, dumps
 from os import system
 from os.path import exists, isfile, isdir, splitext
 from pathlib import Path
-from time import sleep
+from time import sleep, time
 from typing import Generator, TextIO
 
 from colorama import init, Back, Fore
@@ -103,10 +103,35 @@ def updateviauuid(uuid: str) -> None:
         "does_exist": True,
     }
     cvdbdata.dump(data)
-    print(
-        f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
-    )
+    print(f"{Fore.GREEN}{profile.name}'s dictionary was updated/added.")
     print(dumps(data[uuid], indent=2))
+
+
+def updatevianickname(nickname: str) -> None:
+    if nickname != "*":
+        data = cvdbdata.load()
+        data[nickname.lower()] = {
+            "id": None,
+            "name": nickname,
+            "last_seen": int(time()),
+            "first_time_seen": (
+                int(time())
+                if nickname not in data
+                else data[nickname]["first_time_seen"]
+            ),
+            "skin_variant": None,
+            "cape_url": None,
+            "skin_url": None,
+            "db_id": (
+                len(data)
+                if nickname not in data
+                else data[nickname]["db_id"]
+            ),
+            "does_exist": False,
+        }
+        cvdbdata.dump(data)
+        print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
+        print(dumps(data[nickname.lower()], indent=2))
 
 
 cvdbdata = JsonFile(DATAPATH)

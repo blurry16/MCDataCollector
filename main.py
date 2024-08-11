@@ -1,4 +1,3 @@
-import json
 import random
 import time
 from datetime import datetime
@@ -7,7 +6,7 @@ import keyboard
 from colorama import Fore
 from mojang import API, errors
 
-from mcdatacollector import cvdbdata, LOGPATH, follow, updateviauuid
+from mcdatacollector import cvdbdata, LOGPATH, follow, updateviauuid, updatevianickname
 
 
 def mcprint(text: str) -> None:
@@ -85,7 +84,8 @@ while True:
                                         mcprint(
                                             f"{data[uuid]['name']} was seen for the last time at "
                                             f"{datetime.fromtimestamp(data[uuid]['last_seen'])} UTC+3. "
-                                            f"({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
+                                            f"({datetime.fromtimestamp(round(time.time())) -
+                                                datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
                                         )
                                 except errors.NotFound:
                                     arg = arg.lower()
@@ -95,7 +95,8 @@ while True:
                                         mcprint(
                                             f"{data[arg]['name']} was seen for the last time at "
                                             f"{datetime.fromtimestamp(data[arg]['last_seen'])} UTC+3. "
-                                            f"({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['last_seen'])})"
+                                            f"({datetime.fromtimestamp(round(time.time())) -
+                                                datetime.fromtimestamp(data[arg]['last_seen'])})"
                                         )
                         case "#firsttimeseen":
                             username, arg = getusernamearg(line)
@@ -109,7 +110,8 @@ while True:
                                         mcprint(
                                             f"{data[uuid]['name']} was seen for the first time at "
                                             f"{datetime.fromtimestamp(data[uuid]['first_time_seen'])} UTC+3. "
-                                            f"({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
+                                            f"({datetime.fromtimestamp(round(time.time())) -
+                                                datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
                                         )
                                 except errors.NotFound:
                                     arg = arg.lower()
@@ -119,7 +121,8 @@ while True:
                                         mcprint(
                                             f"{data[arg]['name']} was seen for the first time at "
                                             f"{datetime.fromtimestamp(data[arg]['first_time_seen'])} UTC+3. "
-                                            f"({datetime.fromtimestamp(round(time.time())) - datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
+                                            f"({datetime.fromtimestamp(round(time.time())) -
+                                                datetime.fromtimestamp(data[arg]['first_time_seen'])} ago)"
                                         )
 
                         case "#count":
@@ -175,29 +178,5 @@ while True:
                             uuid = mapi.get_uuid(nickname)
                             updateviauuid(uuid)
                         except errors.NotFound:
-                            if nickname != "*":
-                                data[nickname.lower()] = {
-                                    "id": None,
-                                    "name": nickname,
-                                    "last_seen": int(time.time()),
-                                    "first_time_seen": (
-                                        int(time.time())
-                                        if nickname not in data
-                                        else data[nickname]["first_time_seen"]
-                                    ),
-                                    "skin_variant": None,
-                                    "cape_url": None,
-                                    "skin_url": None,
-                                    "db_id": (
-                                        len(data)
-                                        if nickname not in data
-                                        else data[nickname]["db_id"]
-                                    ),
-                                    "does_exist": False,
-                                }
-                                cvdbdata.dump(data)
-                                print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
-                                print(json.dumps(data[nickname.lower()], indent=2))
-                        except Exception as e:
-                            print(f"Exception {e} occurred at {int(time.time())}.")
+                            updatevianickname(nickname)
                         print("\n")

@@ -2,7 +2,6 @@ import json
 import os
 import threading
 from datetime import datetime, timedelta
-from time import time
 
 import keyboard
 import requests
@@ -44,38 +43,11 @@ def updatewithlist() -> None:
                 count = len(nicknames)
                 for nickname in nicknames:
                     nickname = nickname.strip()
-                    data = cvdbdata.load()
                     try:
                         uuid: str = mapi.get_uuid(nickname)
                         updateviauuid(uuid)
                     except errors.NotFound:
-                        data[nickname.lower()] = {
-                            "id": None,
-                            "name": nickname,
-                            "last_seen": int(time()),
-                            "first_time_seen": (
-                                int(time())
-                                if nickname not in data
-                                else data[nickname]["first_time_seen"]
-                            ),
-                            "skin_variant": None,
-                            "cape_url": None,
-                            "skin_url": None,
-                            "db_id": (
-                                len(data)
-                                if nickname not in data
-                                else data[nickname]["db_id"]
-                            ),
-                            "does_exist": False,
-                        }
-                        cvdbdata.dump(data)
-                        print(f"{Fore.GREEN}{nickname}'s dictionary was updated/added.")
-                        print(
-                            json.dumps(
-                                data[nickname.lower()],
-                                indent=2,
-                            )
-                        )
+                        updatevianickname(nickname)
                         continue
                     sleep(0.25)
                 print(f"Updated {count} players.")
@@ -194,7 +166,8 @@ while True:
                                             print(
                                                 f"{local_data['name']} was seen for the first time at "
                                                 f"{datetime.fromtimestamp(timestamp)}. "
-                                                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                                f"({datetime.fromtimestamp(round(time())) - 
+                                                    datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                             )
                                         else:
                                             print(f"The bot has never seen {nickname}.")
@@ -205,7 +178,8 @@ while True:
                                             print(
                                                 f"{local_data['name']} was seen for the first time at "
                                                 f"{datetime.fromtimestamp(timestamp)}. "
-                                                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
+                                                f"({datetime.fromtimestamp(round(time())) - 
+                                                    datetime.fromtimestamp(local_data['first_time_seen'])} ago)"
                                             )
                                         else:
                                             print("This player doesn't exist.")
