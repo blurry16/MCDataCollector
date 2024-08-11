@@ -1,7 +1,19 @@
-# This branch is an experiment.
+<div align="center">
+<a href="https://github.com/blurry16/MCDataCollector/blob/main"> 
+<h1> MAIN BRANCH HERE, EXPERIMENT IS DISCARDED SINCE 12/08/2024 </h1> </a>
+<a href="https://github.com/blurry16/MCDataCollector/blob/main"> 
+<h1> MAIN BRANCH HERE, EXPERIMENT IS DISCARDED SINCE 12/08/2024 </h1> </a>
 
-If you want to check out main branch please head to https://github.com/blurry16/MCDataCollector/blob/main.  
-Code at this branch can be unstable.
+<a href="https://github.com/blurry16/MCDataCollector/blob/main"> 
+<h1> MAIN BRANCH HERE, EXPERIMENT IS DISCARDED SINCE 12/08/2024 </h1> </a>
+</div>
+
+# This branch is discarded since 12/08/2024
+
+I'm tired of developing this thing for nothing. Code of main branch is much more readable and does the thing it's
+supposed to do (also, it's much more convenient to use 3+ scripts lol).  
+There's no problem in your help, if you'd like to contribute, I'll review all the pull requests. You can become the
+supporter of the experiment branch.
 
 # MCDataCollector ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/experiment?label=last%20commit%20to%20experiment) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev-experiment?label=last%20commit%20to%20dev-experiment)
 
