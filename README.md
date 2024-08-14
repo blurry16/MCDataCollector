@@ -7,7 +7,7 @@ supporter of the experiment branch.
 
 ### The main branch is [here](https://github.com/blurry16/MCDataCollector/tree/main), this branch is discarded.
 
-# MCDataCollector ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/experiment?label=last%20commit%20to%20experiment)<!--- ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev-experiment?label=last%20commit%20to%20dev-experiment) --> 
+# MCDataCollector experiment.1.0.0 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/experiment?label=last%20commit%20to%20experiment)<!--- ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev-experiment?label=last%20commit%20to%20dev-experiment) --> 
 
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were
 last on.

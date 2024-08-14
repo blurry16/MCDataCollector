@@ -6,6 +6,8 @@ from pathlib import Path
 from colorama import init, Back, Fore
 from mojang import API
 
+__version__ = "experiment.1.0.0"
+
 # Files
 LOGPATH = Path("")
 DATAPATH = Path("")
@@ -66,14 +68,10 @@ class JsonFile:
             dump(data, data_file, indent=indent)
 
 
-cvdbdata = JsonFile(DATAPATH)
-statsdataobj = JsonFile(STATSPATH)
-
-
 def updateviauuid(uuid: str) -> None:
-    global cvdbdata
+    global datafile
     profile = mapi.get_profile(uuid)
-    data = cvdbdata.load()
+    data = datafile.load()
     data[uuid] = {
         "id": profile.id,
         "name": profile.name,
@@ -93,8 +91,12 @@ def updateviauuid(uuid: str) -> None:
         ),
         "does_exist": True,
     }
-    cvdbdata.dump(data)
+    datafile.dump(data)
     print(
         f"{Fore.GREEN}{profile.name}'s dictionary was updated/added."
     )
     print(dumps(data[uuid], indent=2))
+
+
+datafile = JsonFile(DATAPATH)
+statsdataobj = JsonFile(STATSPATH)

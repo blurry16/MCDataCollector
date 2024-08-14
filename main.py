@@ -87,7 +87,7 @@ def updatewithlist() -> None:
                 count = len(nicknames)
                 for nickname in nicknames:
                     nickname = nickname.strip()
-                    data = cvdbdata.load()
+                    data = datafile.load()
                     try:
                         uuid: str = mapi.get_uuid(nickname)
                         updateviauuid(uuid)
@@ -111,7 +111,7 @@ def updatewithlist() -> None:
                             ),
                             "does_exist": False,
                         }
-                        cvdbdata.dump(data)
+                        datafile.dump(data)
                         print(f"{Fore.GREEN}{nickname}'s dictionary was updated/added.")
                         print(
                             json.dumps(
@@ -165,7 +165,7 @@ def collectdata() -> None:
                             case "#lastseen":
                                 username, arg = getusernamearg(line)
                                 if username.lower() not in banned:
-                                    data = cvdbdata.load()
+                                    data = datafile.load()
                                     try:
                                         uuid = mapi.get_uuid(arg)
                                         if uuid not in data:
@@ -189,7 +189,7 @@ def collectdata() -> None:
                             case "#firsttimeseen":
                                 username, arg = getusernamearg(line)
                                 if username.lower() not in banned:
-                                    data = cvdbdata.load()
+                                    data = datafile.load()
                                     try:
                                         uuid = mapi.get_uuid(arg)
                                         if uuid not in data:
@@ -215,7 +215,7 @@ def collectdata() -> None:
                                 print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
                                 username = line.split()[4].split("<")[1].split(">")[0]
                                 if username.lower() not in banned:
-                                    data = cvdbdata.load()
+                                    data = datafile.load()
                                     mcprint(f"{len(data)} players are currently in the db.")
                             case "#getdbid":
                                 print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
@@ -227,7 +227,7 @@ def collectdata() -> None:
                                     .split()[0]
                                 )
                                 if username.lower() not in banned:
-                                    data = cvdbdata.load()
+                                    data = datafile.load()
                                     try:
                                         uuid = mapi.get_uuid(arg)
                                         nickname = data[uuid]["name"]
@@ -258,7 +258,7 @@ def collectdata() -> None:
                                 and "the" == split[3]
                                 and "game." == split[4]
                         ):
-                            data = cvdbdata.load()
+                            data = datafile.load()
                             nickname = line.split("[CHAT]")[1].split()[0]
                             try:
                                 uuid = mapi.get_uuid(nickname)
@@ -284,7 +284,7 @@ def collectdata() -> None:
                                         ),
                                         "does_exist": False,
                                     }
-                                    cvdbdata.dump(data)
+                                    datafile.dump(data)
                                     print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
                                     print(json.dumps(data[nickname.lower()], indent=2))
                             except Exception as e:
@@ -321,7 +321,7 @@ while True:
                             arg = input(
                                 "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
                             ).strip()
-                            data = cvdbdata.load()
+                            data = datafile.load()
                             try:
                                 if arg == "1":
                                     nickname = input("Nickname: ").strip().split()[0]
@@ -394,7 +394,7 @@ while True:
                             arg = input(
                                 "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
                             ).strip()
-                            data = cvdbdata.load()
+                            data = datafile.load()
                             try:
                                 if arg == "1":
                                     nickname = input("Nickname: ").strip().split()[0]
@@ -466,7 +466,7 @@ while True:
                                 "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
                             ).strip()
                             indent = 2
-                            data = cvdbdata.load()
+                            data = datafile.load()
                             try:
                                 if arg == "1":
                                     inp = input("Nickname: ").strip().split()[0]
@@ -558,7 +558,7 @@ while True:
                             arg = input(
                                 "Lookup via [1] Nickname, [2] Mojang UUID: "
                             ).strip()
-                            data = cvdbdata.load()
+                            data = datafile.load()
                             try:
                                 if arg == "1":
                                     inp = input("Nickname: ").lower().strip().split()[0]
@@ -595,13 +595,13 @@ while True:
                                 print(f"{Fore.RED}Not enough arguments!")
 
                         case "5":
-                            data = cvdbdata.load()
+                            data = datafile.load()
                             for i in data:
                                 print(data[i]["name"])
                             print(f"{len(data)} players in DB")
 
                         case "6":
-                            data = cvdbdata.load()
+                            data = datafile.load()
                             count = 0
                             for i in data:
                                 if i == data[i]["name"].lower():
@@ -625,7 +625,7 @@ while True:
                     "3. HTML model\n"
                     "4. Get back to previous stage.\n"
                 )
-                data = cvdbdata.load()
+                data = datafile.load()
                 if mode == "1":
                     foldername = rf"{SKINSURLPATH}\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}"
                     print(f"{Fore.GREEN}Creating new folder... ({foldername})")
@@ -724,7 +724,7 @@ while True:
                                 break
 
                     case "3":
-                        data = cvdbdata.load()
+                        data = datafile.load()
                         for uuid in data:
                             if data[uuid]["id"] is not None:
                                 profile = mapi.get_profile(uuid)
@@ -749,7 +749,7 @@ while True:
                         print(f"{Fore.RED}Unknown command.")
 
         case "4":
-            data_len = len(cvdbdata.load())
+            data_len = len(datafile.load())
             statsdata = statsdataobj.load()
             # prev_date = (datetime.now().date() - timedelta(days=2)).strftime("%Y-%m-%d")
             last_date = list(statsdata)[-1]
