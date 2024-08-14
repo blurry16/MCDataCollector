@@ -6,7 +6,7 @@ import disnake
 from disnake.ext import commands
 from mojang import API, errors
 
-from mcdatacollector import cvdbdata
+from mcdatacollector import datafile
 
 mapi = API()
 
@@ -23,7 +23,7 @@ TOKEN = ""
 async def dbidcheck(db_id: int, inter: disnake.ApplicationCommandInteraction) -> str | None:
     if db_id < 0:
         return await inter.send("Database ID must be greater or equal 0.", ephemeral=True)
-    data = cvdbdata.load()
+    data = datafile.load()
     if db_id > len(data):
         return await inter.send("There's no such player with this Database ID.", ephemeral=True)
 
@@ -42,7 +42,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
                    db_id: int = None) -> None:
     if nickname is not None and uuid is None and db_id is None:
         print(f"{inter.author} used /lastseen nickname={nickname}")
-        data = cvdbdata.load()
+        data = datafile.load()
         try:
             uuid = mapi.get_uuid(nickname)
             if uuid in data:
@@ -66,7 +66,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
     elif uuid is not None and nickname is None and db_id is None:
         print(f"{inter.author} used /lastseen uuid={uuid}")
         uuid = uuid.replace("-", "")
-        data = cvdbdata.load()
+        data = datafile.load()
         if uuid in data:
             last_seen = data[uuid]["last_seen"]
             await inter.send(
@@ -81,7 +81,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
         uuid = await dbidcheck(db_id, inter)
         if uuid is None:
             return
-        data = cvdbdata.load()
+        data = datafile.load()
         last_seen = data[uuid]["last_seen"]
         await inter.send(
             f"{data[uuid]['name']} ({db_id}) was last seen at <t:{last_seen}:f>. "
@@ -100,7 +100,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
                         db_id: int = None) -> None:
     if nickname is not None and uuid is None and db_id is None:
         print(f"{inter.author} used /firsttimeseen nickname={nickname}")
-        data = cvdbdata.load()
+        data = datafile.load()
         try:
             uuid = mapi.get_uuid(nickname)
             if uuid in data:
@@ -124,7 +124,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
     elif uuid is not None and nickname is None and db_id is None:
         print(f"{inter.author} used /firsttimeseen uuid={uuid}")
         uuid = uuid.replace("-", "")
-        data = cvdbdata.load()
+        data = datafile.load()
         if uuid in data:
             first_time_seen = data[uuid]["first_time_seen"]
             await inter.send(
@@ -139,7 +139,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
         uuid = await dbidcheck(db_id, inter)
         if uuid is None:
             return
-        data = cvdbdata.load()
+        data = datafile.load()
         first_time_seen = data[uuid]["first_time_seen"]
         await inter.send(
             f"{data[uuid]['name']} ({db_id}) was seen for the first time at <t:{first_time_seen}:f>. "
@@ -155,7 +155,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
 async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = None, uuid: str = None) -> None:
     if nickname is not None and uuid is None:
         print(f"{inter.author} used /getdbid nickname={nickname}")
-        data = cvdbdata.load()
+        data = datafile.load()
         try:
             uuid = mapi.get_uuid(nickname)
             if uuid in data:
@@ -175,7 +175,7 @@ async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = 
     elif uuid is not None and nickname is None:
         print(f"{inter.author} used /getdbid uuid={uuid}")
         uuid = uuid.replace("-", "")
-        data = cvdbdata.load()
+        data = datafile.load()
         if uuid in data:
             await inter.send(
                 f"{data[uuid]['name']}'s ({uuid}) database ID is {data[uuid]['db_id']}."
@@ -197,7 +197,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
     if nickname is not None and uuid is None and db_id is None:
         print(f"{inter.author} used /getdata nickname={nickname}")
         indent = 2 if (0 > indent) or (indent > 20) else indent
-        data = cvdbdata.load()
+        data = datafile.load()
         try:
             uuid = mapi.get_uuid(nickname)
             if uuid in data:
@@ -213,7 +213,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
     elif uuid is not None and nickname is None and db_id is None:
         print(f"{inter.author} used /getdata uuid={uuid}")
         uuid = uuid.replace("-", "")
-        data = cvdbdata.load()
+        data = datafile.load()
         if uuid in data:
             await inter.send(f"```json\n{json.dumps(data[uuid], indent=indent)}```")
         else:
@@ -223,7 +223,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
         uuid = await dbidcheck(db_id, inter)
         if uuid is None:
             return
-        data = cvdbdata.load()
+        data = datafile.load()
         if uuid in data:
             await inter.send(f"```json\n{json.dumps(data[uuid], indent=indent)}```")
         else:
@@ -237,7 +237,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
 @bot.slash_command(description="Check the count of players in the database.")
 async def count(inter: disnake.ApplicationCommandInteraction) -> None:
     print(f"{inter.author} used /count")
-    data = cvdbdata.load()
+    data = datafile.load()
     await inter.send(f"There are {len(data)} players in the database.")
 
 

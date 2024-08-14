@@ -6,7 +6,7 @@ import keyboard
 from colorama import Fore
 from mojang import API, errors
 
-from mcdatacollector import cvdbdata, LOGPATH, follow, updateviauuid, updatevianickname
+from mcdatacollector import datafile, LOGPATH, follow, updateviauuid, updatevianickname
 
 
 def mcprint(text: str) -> None:
@@ -75,7 +75,7 @@ while True:
                         case "#lastseen":
                             username, arg = getusernamearg(line)
                             if username.lower() not in BANNED:
-                                data = cvdbdata.load()
+                                data = datafile.load()
                                 try:
                                     uuid = mapi.get_uuid(arg)
                                     if uuid not in data:
@@ -101,7 +101,7 @@ while True:
                         case "#firsttimeseen":
                             username, arg = getusernamearg(line)
                             if username.lower() not in BANNED:
-                                data = cvdbdata.load()
+                                data = datafile.load()
                                 try:
                                     uuid = mapi.get_uuid(arg)
                                     if uuid not in data:
@@ -129,7 +129,7 @@ while True:
                             print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
                             username = line.split()[4].split("<")[1].split(">")[0]
                             if username.lower() not in BANNED:
-                                data = cvdbdata.load()
+                                data = datafile.load()
                                 mcprint(f"{len(data)} players are currently in the db.")
                         case "#getdbid":
                             print(f"{Fore.MAGENTA}{line}".replace("\n", ""))
@@ -141,7 +141,7 @@ while True:
                                 .split()[0]
                             )
                             if username.lower() not in BANNED:
-                                data = cvdbdata.load()
+                                data = datafile.load()
                                 try:
                                     uuid = mapi.get_uuid(arg)
                                     nickname = data[uuid]["name"]
@@ -172,7 +172,7 @@ while True:
                             and "the" == split[3]
                             and "game." == split[4]
                     ):
-                        data = cvdbdata.load()
+                        data = datafile.load()
                         nickname = line.split("[CHAT]")[1].split()[0]
                         try:
                             uuid = mapi.get_uuid(nickname)

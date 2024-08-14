@@ -20,14 +20,15 @@ MODELSPATH = Path("")
 SKINSPATH = Path("")
 SKINSURLPATH = Path("")
 
-init(autoreset=True)
+init(autoreset=True)  # Colorama init
 
-mapi = API()
+mapi = API()  # Mojang API init
 
 __paths__: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSPATH, SKINSURLPATH]  # All paths
 __files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files' paths
 __dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directories' paths
 
+# warnings
 for i in __paths__:
     if i == Path(""):
         print(f"{Back.RED}Empty string was given as path. Exceptions may be raised.")
@@ -82,9 +83,9 @@ def follow(file: TextIO) -> Generator[str, None, None]:
 
 
 def updateviauuid(uuid: str) -> None:
-    global cvdbdata
+    global datafile
     profile = mapi.get_profile(uuid)
-    data = cvdbdata.load()
+    data = datafile.load()
     data[uuid] = {
         "id": profile.id,
         "name": profile.name,
@@ -104,14 +105,14 @@ def updateviauuid(uuid: str) -> None:
         ),
         "does_exist": True,
     }
-    cvdbdata.dump(data)
+    datafile.dump(data)
     print(f"{Fore.GREEN}{profile.name}'s dictionary was updated/added.")
     print(dumps(data[uuid], indent=2))
 
 
 def updatevianickname(nickname: str) -> None:
     if nickname != "*":
-        data = cvdbdata.load()
+        data = datafile.load()
         data[nickname.lower()] = {
             "id": None,
             "name": nickname,
@@ -131,10 +132,10 @@ def updatevianickname(nickname: str) -> None:
             ),
             "does_exist": False,
         }
-        cvdbdata.dump(data)
+        datafile.dump(data)
         print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
         print(dumps(data[nickname.lower()], indent=2))
 
 
-cvdbdata = JsonFile(DATAPATH)
+datafile = JsonFile(DATAPATH)
 statsdataobj = JsonFile(STATSPATH)
