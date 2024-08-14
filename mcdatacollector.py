@@ -8,6 +8,8 @@ from typing import Generator, TextIO
 from colorama import init, Back, Fore
 from mojang import API
 
+__version__ = "1.0.0"
+
 # Files
 LOGPATH = Path("")
 DATAPATH = Path("")
