@@ -73,7 +73,8 @@ while True:
                     "4. Get database id\n"
                     "5. Get all players' nicknames in the DB\n"
                     "6. Get all zombie accounts nicknames in the DB\n"
-                    "7. Get back to previous stage\n"
+                    "7. Get all not-zombie accounts nicknames in the DB\n"
+                    "8. Get back to previous stage\n"
                 ).strip()
                 try:
                     match inp:
@@ -360,7 +361,7 @@ while True:
                             data = datafile.load()
                             for i in data:
                                 print(data[i]["name"])
-                            print(f"{len(data)} players in DB")
+                            print(f"{len(data)} players in DB.")
 
                         case "6":
                             data = datafile.load()
@@ -369,9 +370,18 @@ while True:
                                 if i == data[i]["name"].lower():
                                     count += 1
                                     print(data[i]["name"])
-                            print(f"{count} zombies in the DB")
+                            print(f"{count} zombies in the DB.")
 
                         case "7":
+                            data = datafile.load()
+                            not_zombies = 0
+                            for i in data:
+                                if data[i]["does_exist"]:
+                                    not_zombies += 1
+                                    print(data[i]["name"])
+
+                            print(f"{not_zombies} not zombies in the DB.")
+                        case "8":
                             break
 
                         case _:
