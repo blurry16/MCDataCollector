@@ -1,3 +1,7 @@
+if __name__ == "__main__":
+    raise Exception("Please don't run mcdatacollector package files.")
+
+from datetime import datetime, timedelta
 from json import load, dump, dumps
 from os import system
 from os.path import exists, isfile, isdir, splitext
@@ -8,7 +12,7 @@ from typing import Generator, TextIO
 from colorama import init, Back, Fore
 from mojang import API
 
-__version__ = "1.0.1"
+__version__ = "dev1.1.0"
 
 # Files
 LOGPATH = Path("")
@@ -135,6 +139,24 @@ def updatevianickname(nickname: str) -> None:
         datafile.dump(data)
         print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
         print(dumps(data[nickname.lower()], indent=2))
+
+
+def savestats():
+    data_len = len(datafile.load())
+    statsdata: dict = statsdataobj.load()
+    # prev_date = (datetime.now().date() - timedelta(days=2)).strftime("%Y-%m-%d")
+    last_date = list(statsdata)[-1]
+    now_date = (datetime.now().date() - timedelta(days=1)).strftime("%Y-%m-%d")
+    statsdata[now_date] = {
+        "count": data_len,
+        "delta": data_len - int(statsdata[last_date]["count"]),
+    }
+
+    print(dumps(statsdata, indent=4))
+    a = input(f"{Fore.MAGENTA}Proceed? y/n: ")
+    if a.lower() == "y" or a == "":
+        statsdataobj.dump(statsdata)
+    print(Fore.RESET)
 
 
 datafile = JsonFile(DATAPATH)

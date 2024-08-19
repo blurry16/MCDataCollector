@@ -1,4 +1,4 @@
-# MCDataCollector 1.0.1 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/main?label=last%20commit%20to%20main) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev?label=last%20commit%20to%20dev)
+# MCDataCollector dev1.1.0 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/main?label=last%20commit%20to%20main) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev?label=last%20commit%20to%20dev)
 
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were
 last on.
@@ -10,7 +10,8 @@ Clone the repo and use `pip install -r requirements.txt`.
 ### How do I run it?
 
 Install requirements ofc :p  
-First of all replace `LOGPATH` constant in `mcdatacollector.py` with your latest.log path with your values.  
+First of all replace `LOGPATH` constant in `mcdatacollector/mcdatacollector.py` with your latest.log path with your
+values.  
 Then create a .json file at `DATAPATH` (you should replace it with your value) and run `main.py` script.  
 It will write Mojang API data and last&first (in unix timestamp) time seen date in the file you gave it.  
 If you want to have my main data.json file, please contact me in Discord (blurry16) or

@@ -1,0 +1,99 @@
+if __name__ == "__main__":
+    raise Exception("Please don't run mcdatacollector package files.")
+
+import json
+
+from mojang import errors
+
+from mcdatacollector.mcdatacollector import *
+
+
+def updatebynicknames():
+    nicknames = list(
+        map(
+            str,
+            input("Nicknames (split by space): ").split(),
+        )
+    )
+    count = len(nicknames)
+    for nickname in nicknames:
+        try:
+            uuid: str = mapi.get_uuid(nickname)
+
+            updateviauuid(uuid)
+            sleep(0.1)
+        except errors.NotFound:
+            count -= 1
+            print(f"{Fore.RED}{nickname} doesn't exist.")
+            continue
+        sleep(0.25)
+    print(f"Updated {count} players.")
+
+
+return_updatewithlist = False
+
+
+def followupdatewithlist(file: TextIO) -> Generator[str, None, None]:
+    global return_updatewithlist
+    """follows selected file, used only in update with /list"""
+    file.seek(0, 2)
+    while True:
+        if return_updatewithlist:
+            return
+        li = file.readline()
+        if not li:
+            sleep(0.1)
+            continue
+        yield li
+
+
+def updatewithlist() -> None:
+    global return_updatewithlist
+
+    logfile = open(
+        LOGPATH,
+        "r",
+        encoding="UTF-8",
+    )
+    loglines = followupdatewithlist(logfile)
+    print(f"{Fore.MAGENTA}Waiting for /list...")
+    for line in loglines:
+        if "[CHAT]" in line:
+            line_upd = line.split("[CHAT] ")[1]
+            if line_upd.split()[0] == "Cubeville":
+                nicknames = line_upd.split("): ")[1].split(", ")
+                print(f"Updating: {', '.join(nicknames)}.".replace("\n", ""))
+                count = len(nicknames)
+                for nickname in nicknames:
+                    nickname = nickname.strip()
+                    try:
+                        uuid: str = mapi.get_uuid(nickname)
+                        updateviauuid(uuid)
+                    except errors.NotFound:
+                        updatevianickname(nickname)
+                        continue
+                    sleep(0.25)
+                print(f"Updated {count} players.")
+                return_updatewithlist = True
+                return
+
+
+def updateeveryonesdata():
+    data = datafile.load()
+    for uuid in data:
+        if data[uuid]["id"] is not None:
+            profile = mapi.get_profile(uuid)
+            data[uuid] = {
+                "id": profile.id,
+                "name": profile.name,
+                "last_seen": data[uuid]["last_seen"],
+                "first_time_seen": data[uuid]["first_time_seen"],
+                "skin_variant": profile.skin_variant,
+                "cape_url": profile.cape_url,
+                "skin_url": profile.skin_url,
+                "db_id": data[uuid]["db_id"],
+                "does_exist": True,
+            }
+            print(f"{Fore.GREEN}Updated {profile.name}")
+            print(json.dumps(data[uuid], indent=2))
+            sleep(0.25)
