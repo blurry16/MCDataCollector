@@ -30,25 +30,27 @@ def updatebynicknames():
     print(f"Updated {count} players.")
 
 
-return_updatewithlist = False
+returnupdatewithlist = False
 
 
 def followupdatewithlist(file: TextIO) -> Generator[str, None, None]:
-    global return_updatewithlist
+    global returnupdatewithlist
     """follows selected file, used only in update with /list"""
     file.seek(0, 2)
     while True:
-        if return_updatewithlist:
+        try:
+            li = file.readline()
+            if not li:
+                sleep(0.1)
+                continue
+            yield li
+        except KeyboardInterrupt:
+            returnupdatewithlist = True
             return
-        li = file.readline()
-        if not li:
-            sleep(0.1)
-            continue
-        yield li
 
 
 def updatewithlist() -> None:
-    global return_updatewithlist
+    global returnupdatewithlist
 
     logfile = open(
         LOGPATH,
@@ -56,8 +58,10 @@ def updatewithlist() -> None:
         encoding="UTF-8",
     )
     loglines = followupdatewithlist(logfile)
-    print(f"{Fore.MAGENTA}Waiting for /list...")
+    print(f"{Fore.MAGENTA}Waiting for /list...\nDo CTRL+C do break updating.")
     for line in loglines:
+        if returnupdatewithlist:
+            return
         if "[CHAT]" in line:
             line_upd = line.split("[CHAT] ")[1]
             if line_upd.split()[0] == "Cubeville":

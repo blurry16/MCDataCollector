@@ -111,7 +111,7 @@ if __name__ == "__main__":
                             updatebynicknames()
 
                         case "2":
-                            return_updatewithlist = False
+
                             updatewithlist()
 
                         case "3":

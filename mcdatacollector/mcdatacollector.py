@@ -12,7 +12,7 @@ from typing import Generator, TextIO
 from colorama import init, Back, Fore
 from mojang import API
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 # Files
 LOGPATH = Path("")
