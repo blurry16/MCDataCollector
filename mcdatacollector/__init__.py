@@ -30,14 +30,14 @@ from mojang import API
 __version__ = "1.2.0"
 
 # Files
-LOGPATH = Path(r"C:\MultiMC\instances\1.20.2 copy 1\.minecraft\logs\latest.log")
-DATAPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\data\data.json")
-STATSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\stats.json")
+LOGPATH = Path("")
+DATAPATH = Path("")
+STATSPATH = Path("")
 
 # Directories
-MODELSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\models")
-SKINSPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins")
-SKINSURLPATH = Path(r"C:\Users\Blurry\PycharmProjects\playersData\skins_url")
+MODELSPATH = Path("")
+SKINSPATH = Path("")
+SKINSURLPATH = Path("")
 
 init(autoreset=True)  # Colorama init
 
