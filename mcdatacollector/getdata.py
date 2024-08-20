@@ -2,10 +2,13 @@ if __name__ == "__main__":
     raise Exception("Please don't run mcdatacollector package files.")
 
 import json
+from datetime import datetime
+from time import time
 
+from colorama import Fore
 from mojang import errors
 
-from mcdatacollector.mcdatacollector import *
+from mcdatacollector import datafile, mapi
 
 
 def getlastseentime(arg: str):
@@ -296,9 +299,9 @@ def listallzombies():
 
     count = 0
     for profile in data:
-        if i == data[profile]["name"].lower():
+        if not data[profile]["does_exist"]:
             count += 1
-            print(data[i]["name"])
+            print(data[profile]["name"])
     print(f"{count} zombies in the DB.")
 
 
@@ -309,6 +312,6 @@ def listallnonzombies():
     for profile in data:
         if data[profile]["does_exist"]:
             not_zombies += 1
-            print(data[i]["name"])
+            print(data[profile]["name"])
 
     print(f"{not_zombies} not zombies in the DB.")

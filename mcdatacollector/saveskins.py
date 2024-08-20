@@ -2,18 +2,21 @@ if __name__ == "__main__":
     raise Exception("Please don't run mcdatacollector package files.")
 
 import os
+from datetime import datetime
+from time import sleep
 
 import requests
+from colorama import Fore
 
-from mcdatacollector.mcdatacollector import *
+from mcdatacollector import datafile, MODELSPATH, SKINSPATH, SKINSURLPATH
 
 
 def initsaving(__type: str):
     data = datafile.load()
     foldername = f"{MODELSPATH if __type == 'models'
-                    else SKINSURLPATH if __type == 'urls'
-                    else SKINSPATH if __type == 'skins'
-                    else os.curdir}\\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}"
+    else SKINSURLPATH if __type == 'urls'
+    else SKINSPATH if __type == 'skins'
+    else os.curdir}\\{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}"
     print(f"{Fore.GREEN}Creating new folder... ({foldername})")
     os.mkdir(foldername)
     print(f"{Fore.GREEN}Folder {foldername} created successfully.")

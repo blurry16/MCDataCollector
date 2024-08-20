@@ -6,7 +6,7 @@ import disnake
 from disnake.ext import commands
 from mojang import API, errors
 
-from mcdatacollector.mcdatacollector import datafile
+from mcdatacollector import datafile
 
 mapi = API()
 

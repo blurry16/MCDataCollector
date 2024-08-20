@@ -2,10 +2,13 @@ if __name__ == "__main__":
     raise Exception("Please don't run mcdatacollector package files.")
 
 import json
+from time import sleep
+from typing import TextIO, Generator
 
+from colorama import Fore
 from mojang import errors
 
-from mcdatacollector.mcdatacollector import *
+from mcdatacollector import datafile, mapi, updateviauuid, updatevianickname, LOGPATH
 
 
 def updatebynicknames():
@@ -78,7 +81,6 @@ def updatewithlist() -> None:
                         continue
                     sleep(0.25)
                 print(f"Updated {count} players.")
-                return_updatewithlist = True
                 return
 
 
@@ -101,3 +103,15 @@ def updateeveryonesdata():
             print(f"{Fore.GREEN}Updated {profile.name}")
             print(json.dumps(data[uuid], indent=2))
             sleep(0.25)
+
+
+def __httptohttps__():
+    data = datafile.load()
+
+    for uuid in data:
+        if data[uuid]["id"] is not None:
+            if data[uuid]["cape_url"] is not None:
+                data[uuid]["cape_url"] = data[uuid]["cape_url"].replace("http://", "https://")
+            data[uuid]["skin_url"] = data[uuid]["skin_url"].replace("http://", "https://")
+
+    datafile.dump(data)

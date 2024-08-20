@@ -1,3 +1,4 @@
+from mcdatacollector import savestats
 from mcdatacollector.getdata import *
 from mcdatacollector.saveskins import *
 from mcdatacollector.updatedata import *

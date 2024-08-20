@@ -1,4 +1,4 @@
-# MCDataCollector 1.1.1 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/main?label=last%20commit%20to%20main) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev?label=last%20commit%20to%20dev)
+# MCDataCollector 1.2.0 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/main?label=last%20commit%20to%20main) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev?label=last%20commit%20to%20dev)
 
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were
 last on.
@@ -10,7 +10,7 @@ Clone the repo and use `pip install -r requirements.txt`.
 ### How do I run it?
 
 Install requirements ofc :p  
-First of all replace `LOGPATH` constant in `mcdatacollector/mcdatacollector.py` with your latest.log path with your
+First of all replace `LOGPATH` constant in `mcdatacollector/__init__.py` with your latest.log path with your
 values.  
 Then create a .json file at `DATAPATH` (you should replace it with your value) and run `main.py` script.  
 It will write Mojang API data and last&first (in unix timestamp) time seen date in the file you gave it.  
@@ -45,11 +45,11 @@ Points meaning can be found at "Meaning of collected points" paragraph.
 {
   "id": "ef2b9013f4ca4749b3bfaf83146c538e",
   "name": "blurry16",
-  "last_seen": 1718031633,
+  "last_seen": 1724104859,
   "first_time_seen": 1708259854,
   "skin_variant": "slim",
   "cape_url": null,
-  "skin_url": "http://textures.minecraft.net/texture/bc77f0eb5be2e69d320144242a29dcbeedfe2fc42df48638d86bac470fdab786",
+  "skin_url": "https://textures.minecraft.net/texture/98a8dfc4ce0181897c225584cd0f3c1fef486a80ce957347cea3c38e74cbac6a",
   "db_id": 0,
   "does_exist": true
 }

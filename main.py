@@ -6,7 +6,7 @@ import keyboard
 from colorama import Fore
 from mojang import API, errors
 
-from mcdatacollector.mcdatacollector import datafile, LOGPATH, follow, updateviauuid, updatevianickname
+from mcdatacollector import datafile, LOGPATH, follow, updateviauuid, updatevianickname
 
 
 def mcprint(text: str) -> None:
