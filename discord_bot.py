@@ -1,6 +1,4 @@
 import json
-from datetime import datetime
-from time import time
 
 import disnake
 from disnake.ext import commands
@@ -49,7 +47,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
                 last_seen = data[uuid]["last_seen"]
                 await inter.send(
                     f"{data[uuid]['name']} was last seen at <t:{last_seen}:f>. "
-                    f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(last_seen)} ago.)"
+                    f"(<t:{last_seen}:R> ago.)"
                 )
             else:
                 await inter.send("The bot has never seen this player.", ephemeral=True)
@@ -59,7 +57,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
                 last_seen = data[nickname]["last_seen"]
                 await inter.send(
                     f"{data[nickname]['name']} was last seen at <t:{last_seen}:f>. "
-                    f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(last_seen)} ago.)"
+                    f"(<t:{last_seen}:R> ago.)"
                 )
             else:
                 await inter.send(f"Player {nickname} doesn't exist.", ephemeral=True)
@@ -71,7 +69,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
             last_seen = data[uuid]["last_seen"]
             await inter.send(
                 f"{data[uuid]['name']} ({uuid}) was last seen at <t:{last_seen}:f>. "
-                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(last_seen)} ago.)"
+                f"(<t:{last_seen}:R> ago.)"
             )
         else:
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
@@ -85,7 +83,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
         last_seen = data[uuid]["last_seen"]
         await inter.send(
             f"{data[uuid]['name']} ({db_id}) was last seen at <t:{last_seen}:f>. "
-            f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(last_seen)} ago.)"
+            f"(<t:{last_seen}:R> ago.)"
         )
     elif nickname is None and uuid is None and db_id is None:
         await inter.send("Too few arguments!", ephemeral=True)
@@ -107,7 +105,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
                 first_time_seen = data[uuid]["first_time_seen"]
                 await inter.send(
                     f"{data[uuid]['name']} was seen for the first time at <t:{first_time_seen}:f>. "
-                    f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(first_time_seen)} ago.)"
+                    f"(<t:{first_time_seen}:R> ago.)"
                 )
             else:
                 await inter.send("The bot has never seen this player.", ephemeral=True)
@@ -117,7 +115,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
                 first_time_seen = data[nickname]["first_time_seen"]
                 await inter.send(
                     f"{data[nickname]['name']} was seen for the first time at <t:{first_time_seen}:f>. "
-                    f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(first_time_seen)} ago.)"
+                    f"(<t:{first_time_seen}:R> ago.))"
                 )
             else:
                 await inter.send(f"Player {nickname} doesn't exist.", ephemeral=True)
@@ -129,7 +127,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
             first_time_seen = data[uuid]["first_time_seen"]
             await inter.send(
                 f"{data[uuid]['name']} ({uuid}) was seen for the first time at <t:{first_time_seen}:f>. "
-                f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(first_time_seen)} ago.)"
+                f"(<t:{first_time_seen}:R> ago.)"
             )
         else:
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
@@ -143,7 +141,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
         first_time_seen = data[uuid]["first_time_seen"]
         await inter.send(
             f"{data[uuid]['name']} ({db_id}) was seen for the first time at <t:{first_time_seen}:f>. "
-            f"({datetime.fromtimestamp(round(time())) - datetime.fromtimestamp(first_time_seen)} ago.)"
+            f"(<t:{first_time_seen}:R> ago.)"
         )
     elif nickname is None and uuid is None and db_id is None:
         await inter.send("Too few arguments!", ephemeral=True)
