@@ -79,7 +79,8 @@ if __name__ == "__main__":
                         "1. URL\n"
                         "2. Name\n"
                         "3. HTML model\n"
-                        "4. Get back to previous stage.\n"
+                        "4. Everything above\n"
+                        "5. Get back to previous stage.\n"
                     )
                     data = datafile.load()
                     if mode == "1":
@@ -95,6 +96,11 @@ if __name__ == "__main__":
                         savehtml()
 
                     elif mode == "4":
+
+                        saveeverything()
+
+                    elif mode == "5":
+
                         break
                     else:
                         print(f"{Fore.RED}Unknown command.")

@@ -8,7 +8,7 @@ from time import sleep
 import requests
 from colorama import Fore
 
-from mcdatacollector import datafile, MODELSPATH, SKINSPATH, SKINSURLPATH
+from mcdatacollector import datafile, MODELSPATH, SKINSPATH, SKINSURLPATH, __dirs__
 
 __allowed_types__ = ["models", "urls", "skins"]
 
@@ -74,3 +74,28 @@ def savehtml():
                 file.write(to_save)
             print(f"{Fore.GREEN}Saved {name}.html")
     del foldername
+
+
+def saveeverything():
+    data = datafile.load()
+    foldername = datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')
+    for i in __dirs__:
+        os.mkdir(rf"{i}/{foldername}")
+        print(f"{Fore.GREEN}Folder {rf'{i}/{foldername}'} was created.")
+
+    for i in data:
+        if data[i]["does_exist"]:
+            name = data[i]["name"]
+            skin_url = data[i]["skin_url"]
+
+            response = requests.get(url=skin_url)
+
+            with open(rf"{SKINSPATH}\{foldername}\{name}.png", "wb") as file:
+                file.write(response.content)
+            with open(rf"{SKINSURLPATH}\{foldername}\{skin_url[39:]}.png", "wb") as file:
+                file.write(response.content)
+            with open(rf"{MODELSPATH}\{foldername}\{name}.html", "x") as file:
+                file.write(rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" \
+                                frameborder="0" width="1920px" height="972px"></iframe>')
+            sleep(0.5)
+            print(f"{Fore.GREEN}Saved {name} ({skin_url})")
