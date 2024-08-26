@@ -56,7 +56,7 @@ for i in __paths__:
     if i == Path(""):
         print(f"{Back.RED}Empty string was given as path. Exceptions may be raised.")
         print(f"{Back.RED}Please change the value at {__file__} file")
-        system("pause")
+        pause()
     elif not exists(i):
         print(f"{Back.RED}{i} doesn't exist. Exceptions may be raised.")
         print(f"{Back.RED}Please change the value at {__file__} file")
