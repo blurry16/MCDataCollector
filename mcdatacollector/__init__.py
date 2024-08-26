@@ -28,7 +28,7 @@ from typing import Generator, TextIO
 from colorama import init, Back, Fore
 from mojang import API
 
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 # Files
 LOGPATH = Path("")
