@@ -11,7 +11,8 @@
 #  ' `-' ;   | |   ' `-'  /   | |         | |          ___ | |    | |  . `-'  ;
 #   `.__.   (___)   '.__.'   (___)       (___)        (   )' |   (___)  '.__.'
 #                                                      ; `-' '
-#
+#                                                       .__.'
+
 
 if __name__ == "__main__":
     raise Exception("Please don't run mcdatacollector package files.")
