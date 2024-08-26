@@ -13,11 +13,11 @@ from mcdatacollector import datafile, MODELSPATH, SKINSPATH, SKINSURLPATH, __dir
 __allowed_types__ = ["models", "urls", "skins"]
 
 
-def initsaving(__type: str):
-    data = datafile.load()
+def initsave(__type: str) -> tuple[str, dict]:
+    data: dict = datafile.load()
 
     if __type not in __allowed_types__:
-        return os.curdir,
+        return os.curdir, data
 
     foldername = (f"{MODELSPATH if __type == 'models' else SKINSURLPATH if __type == 'urls' else SKINSPATH}\\"
 
@@ -34,7 +34,7 @@ def initsaving(__type: str):
 
 
 def saveurls():
-    foldername, data = initsaving("urls")
+    foldername, data = initsave("urls")
 
     for i in data:
         url = data[i]["skin_url"]
@@ -47,7 +47,7 @@ def saveurls():
 
 
 def savenames():
-    foldername, data = initsaving("skins")
+    foldername, data = initsave("skins")
     for i in data:
         url = data[i]["skin_url"]
         if url is not None:
@@ -64,7 +64,7 @@ def savenames():
 
 
 def savehtml():
-    foldername, data = initsaving("models")
+    foldername, data = initsave("models")
     for i in data:
         if data[i]["does_exist"]:
             name = data[i]["name"]
