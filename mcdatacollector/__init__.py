@@ -19,11 +19,12 @@ if __name__ == "__main__":
 
 from datetime import datetime, timedelta
 from json import load, dump, dumps
+from os import name as osname
 from os import system
 from os.path import exists, isfile, isdir, splitext
 from pathlib import Path
 from time import sleep, time
-from typing import Generator, TextIO
+from typing import Generator, TextIO, Callable
 
 from colorama import init, Back, Fore
 from mojang import API
@@ -48,6 +49,8 @@ __paths__: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSPATH, SKINSURL
 __files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files' paths
 __dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directories' paths
 
+pause: Callable[[], int] = lambda: system("pause" if osname == "nt" else "")
+
 # warnings
 for i in __paths__:
     if i == Path(""):
@@ -57,19 +60,19 @@ for i in __paths__:
     elif not exists(i):
         print(f"{Back.RED}{i} doesn't exist. Exceptions may be raised.")
         print(f"{Back.RED}Please change the value at {__file__} file")
-        system("pause")
+        pause()
     elif i in __dirs__ and isfile(i):
         print(f"{Back.RED}{i} is a file, while it has to be a directory. Exceptions may be raised.")
-        system("pause")
+        pause()
     elif i in __files__ and isdir(i):
         print(f"{Back.RED}{i} is a directory, while it has to be a file. Exceptions may be raised.")
-        system("pause")
+        pause()
 if splitext(DATAPATH)[1] != ".json" and exists(DATAPATH) and DATAPATH != Path(""):
     print(f"{Back.RED}{DATAPATH} has not .json extension.")
-    system("pause")
+    pause()
 if splitext(STATSPATH)[1] != ".json" and exists(STATSPATH) and STATSPATH != Path(""):
     print(f"{Back.RED}{STATSPATH} has not .json extension.")
-    system("pause")
+    pause()
 
 del i
 
