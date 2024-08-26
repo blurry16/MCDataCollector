@@ -11,7 +11,7 @@
 #  ' `-' ;   | |   ' `-'  /   | |         | |          ___ | |    | |  . `-'  ;
 #   `.__.   (___)   '.__.'   (___)       (___)        (   )' |   (___)  '.__.'
 #                                                      ; `-' '
-#                                                       .__.'
+#
 
 if __name__ == "__main__":
     raise Exception("Please don't run mcdatacollector package files.")
@@ -169,7 +169,7 @@ def savestats():
 
     print(dumps(statsdata, indent=4))
     a = input(f"{Fore.MAGENTA}Proceed? y/n: ")
-    if a.lower() == "y" or a == "":
+    if a.lower() in ["y", ""]:
         statsdataobj.dump(statsdata)
     print(Fore.RESET)
 
