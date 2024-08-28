@@ -1,6 +1,7 @@
 import json
 
 import disnake
+from colorama import Fore
 from disnake.ext import commands
 from mojang import API, errors
 
@@ -30,7 +31,7 @@ async def dbidcheck(db_id: int, inter: disnake.ApplicationCommandInteraction) ->
 
 @bot.event
 async def on_ready() -> None:
-    print(f"Bot {bot.user} is ready!")
+    print(f"{Fore.GREEN}Bot {bot.user} is ready!")
 
 
 @bot.slash_command(
@@ -68,7 +69,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
         if uuid in data:
             last_seen = data[uuid]["last_seen"]
             await inter.send(
-                f"{data[uuid]['name']} ({uuid}) was last seen at <t:{last_seen}:f>. "
+                f"{data[uuid]['name']} ({uuid=}) was last seen at <t:{last_seen}:f>. "
                 f"(<t:{last_seen}:R>)"
             )
         else:
@@ -82,7 +83,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
         data = datafile.load()
         last_seen = data[uuid]["last_seen"]
         await inter.send(
-            f"{data[uuid]['name']} ({db_id}) was last seen at <t:{last_seen}:f>. "
+            f"{data[uuid]['name']} ({db_id=}) was last seen at <t:{last_seen}:f>. "
             f"(<t:{last_seen}:R>)"
         )
     elif nickname is None and uuid is None and db_id is None:
@@ -126,7 +127,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
         if uuid in data:
             first_time_seen = data[uuid]["first_time_seen"]
             await inter.send(
-                f"{data[uuid]['name']} ({uuid}) was seen for the first time at <t:{first_time_seen}:f>. "
+                f"{data[uuid]['name']} ({uuid=}) was seen for the first time at <t:{first_time_seen}:f>. "
                 f"(<t:{first_time_seen}:R>)"
             )
         else:
@@ -140,7 +141,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
         data = datafile.load()
         first_time_seen = data[uuid]["first_time_seen"]
         await inter.send(
-            f"{data[uuid]['name']} ({db_id}) was seen for the first time at <t:{first_time_seen}:f>. "
+            f"{data[uuid]['name']} ({db_id=}) was seen for the first time at <t:{first_time_seen}:f>. "
             f"(<t:{first_time_seen}:R>)"
         )
     elif nickname is None and uuid is None and db_id is None:
@@ -176,7 +177,7 @@ async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = 
         data = datafile.load()
         if uuid in data:
             await inter.send(
-                f"{data[uuid]['name']}'s ({uuid}) database ID is {data[uuid]['db_id']}."
+                f"{data[uuid]['name']}'s ({uuid=}) database ID is {data[uuid]['db_id']}."
             )
         else:
             await inter.send("There's no such player in the Database with this UUID", ephemeral=True)
@@ -244,9 +245,9 @@ async def description(inter: disnake.ApplicationCommandInteraction) -> None:
     print(f"{inter.author} used /description")
     await inter.send(
         f"# This project is NOT run by Cubeville staff. Everything is done by blurry16.\n"
-        f"Your personal data is not collected, your account is completely safe "
-        f"||(only Mojang API data, last/first time joined/left the server are collected)||."
-        f"\nSource code can be gotten [here](https://github.com/blurry16/MCDataCollector).\n"
+        f"Your personal data is not collected, your account is completely safe. "
+        f"Only Mojang API data, last/first time joined/left the server are collected."
+        f"\nSource code can be obtained [here](https://github.com/blurry16/MCDataCollector).\n"
         f"\n"
         f"*Licensed under MIT License, Copyright (c) 2024 blurry16*",
         ephemeral=True,
