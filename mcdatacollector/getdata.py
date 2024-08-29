@@ -1,7 +1,6 @@
 if __name__ == "__main__":
     raise Exception("Please don't run mcdatacollector package files.")
 
-import json
 from datetime import datetime
 from time import time
 
@@ -178,20 +177,14 @@ def getdatajson(arg: str):
                         pass
                 local_uuid = mapi.get_uuid(nickname)
                 if local_uuid in data:
-                    print(
-                        json.dumps(
-                            data[local_uuid], indent=indent
-                        )
-                    )
+                    print(datafile.dumps(local_uuid, indent))
                 else:
                     print(f"The bot has never seen {nickname}.")
             except errors.NotFound:
                 if nickname in data:
-                    print(
-                        json.dumps(
-                            data[nickname], indent=indent
-                        )
-                    )
+
+                    print(datafile.dumps(nickname, indent))
+
                 else:
                     print("This player doesn't exist.")
         elif arg == "2":
@@ -209,7 +202,7 @@ def getdatajson(arg: str):
                 except ValueError:
                     pass
             if uuid in data:
-                print(json.dumps(data[uuid], indent=indent))
+                print(datafile.dumps(uuid, indent))
             else:
                 print(f"The bot has never seen {uuid}.")
         elif arg == "3":
@@ -229,11 +222,8 @@ def getdatajson(arg: str):
                         pass
                 db_id = int(inp.split()[0])
 
-                print(
-                    json.dumps(
-                        data[list(data)[db_id]], indent=indent
-                    )
-                )
+                print(datafile.dumps(list(data)[db_id], indent))
+
             except ValueError:
                 print(f"{Fore.RED}Wrong value!")
             except IndexError:

@@ -93,6 +93,10 @@ class JsonFile:
         with open(self.file_path, "w", encoding="UTF-8") as data_file:
             dump(data, data_file, indent=indent)
 
+    def dumps(self, key: str | int | None = None, indent: int = 2) -> str:
+        data = self.load()
+        return dumps(data, indent=indent) if key is None else dumps(data[key], indent=indent)
+
 
 def follow(file: TextIO) -> Generator[str, None, None]:
     """follows selected file"""
@@ -103,6 +107,28 @@ def follow(file: TextIO) -> Generator[str, None, None]:
             sleep(0.1)
             continue
         yield li
+
+
+datafile = JsonFile(DATAPATH)
+statsdataobj = JsonFile(STATSPATH)
+
+
+def savestats():
+    data_len = len(datafile.load())
+    statsdata: dict = statsdataobj.load()
+    # prev_date = (datetime.now().date() - timedelta(days=2)).strftime("%Y-%m-%d")
+    last_date = list(statsdata)[-1]
+    now_date = (datetime.now().date() - timedelta(days=1)).strftime("%Y-%m-%d")
+    statsdata[now_date] = {
+        "count": data_len,
+        "delta": data_len - int(statsdata[last_date]["count"]),
+    }
+
+    statsdataobj.dumps()
+    a = input(f"{Fore.MAGENTA}Proceed? y/n: ")
+    if a.lower() in ["y", ""]:
+        statsdataobj.dump(statsdata)
+    print(Fore.RESET)
 
 
 def updateviauuid(uuid: str) -> None:
@@ -119,7 +145,7 @@ def updateviauuid(uuid: str) -> None:
             else data[uuid]["first_time_seen"]
         ),
         "skin_variant": profile.skin_variant,
-        "cape_url": profile.cape_url.replace("http://", "https://"),
+        "cape_url": None if profile.cape_url is None else profile.cape_url.replace("http://", "https://"),
         "skin_url": profile.skin_url.replace("http://", "https://"),
         "db_id": (
             len(data)
@@ -130,7 +156,7 @@ def updateviauuid(uuid: str) -> None:
     }
     datafile.dump(data)
     print(f"{Fore.GREEN}{profile.name}'s dictionary was updated/added.")
-    print(dumps(data[uuid], indent=2))
+    print(datafile.dumps(uuid))
 
 
 def updatevianickname(nickname: str) -> None:
@@ -157,26 +183,4 @@ def updatevianickname(nickname: str) -> None:
         }
         datafile.dump(data)
         print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
-        print(dumps(data[nickname.lower()], indent=2))
-
-
-def savestats():
-    data_len = len(datafile.load())
-    statsdata: dict = statsdataobj.load()
-    # prev_date = (datetime.now().date() - timedelta(days=2)).strftime("%Y-%m-%d")
-    last_date = list(statsdata)[-1]
-    now_date = (datetime.now().date() - timedelta(days=1)).strftime("%Y-%m-%d")
-    statsdata[now_date] = {
-        "count": data_len,
-        "delta": data_len - int(statsdata[last_date]["count"]),
-    }
-
-    print(dumps(statsdata, indent=4))
-    a = input(f"{Fore.MAGENTA}Proceed? y/n: ")
-    if a.lower() in ["y", ""]:
-        statsdataobj.dump(statsdata)
-    print(Fore.RESET)
-
-
-datafile = JsonFile(DATAPATH)
-statsdataobj = JsonFile(STATSPATH)
+        print(datafile.dumps(nickname.lower()))

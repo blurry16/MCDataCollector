@@ -1,5 +1,3 @@
-import json
-
 import disnake
 from colorama import Fore
 from disnake.ext import commands
@@ -200,13 +198,13 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
         try:
             uuid = mapi.get_uuid(nickname)
             if uuid in data:
-                await inter.send(f"```json\n{json.dumps(data[uuid], indent=indent)}```")
+                await inter.send(f"```json\n{datafile.dumps(uuid, indent=indent)}```")
             else:
                 await inter.send("The bot has never seen this player.", ephemeral=True)
         except errors.NotFound:
             nickname = nickname.lower()
             if nickname in data:
-                await inter.send(f"```json\n{json.dumps(data[nickname], indent=indent)}```")
+                await inter.send(f"```json\n{datafile.dumps(nickname, indent=indent)}```")
             else:
                 await inter.send(f"Player {nickname} doesn't exist.", ephemeral=True)
     elif uuid is not None and nickname is None and db_id is None:
@@ -214,7 +212,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
         uuid = uuid.replace("-", "")
         data = datafile.load()
         if uuid in data:
-            await inter.send(f"```json\n{json.dumps(data[uuid], indent=indent)}```")
+            await inter.send(f"```json\n{datafile.dumps(uuid, indent=indent)}```")
         else:
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
     elif db_id is not None and nickname is None and uuid is None:
@@ -224,7 +222,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
             return
         data = datafile.load()
         if uuid in data:
-            await inter.send(f"```json\n{json.dumps(data[uuid], indent=indent)}```")
+            await inter.send(f"```json\n{datafile.dumps(uuid, indent=indent)}```")
         else:
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
     elif nickname is None and uuid is None and db_id is None:

@@ -1,7 +1,6 @@
 if __name__ == "__main__":
     raise Exception("Please don't run mcdatacollector package files.")
 
-import json
 from time import sleep
 from typing import TextIO, Generator
 
@@ -101,7 +100,7 @@ def updateeveryonesdata():
                 "does_exist": True,
             }
             print(f"{Fore.GREEN}Updated {profile.name}")
-            print(json.dumps(data[uuid], indent=2))
+            print(datafile.dumps(uuid))
             sleep(0.25)
 
 
