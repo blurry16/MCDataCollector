@@ -1,3 +1,5 @@
+__version__ = "1.2.2"
+
 #
 #  ___       ___
 # (   )     (   )
@@ -13,7 +15,6 @@
 #                                                      ; `-' '
 #                                                       .__.'
 
-
 if __name__ == "__main__":
     raise Exception("Please don't run mcdatacollector package files.")
 
@@ -28,8 +29,6 @@ from typing import Generator, TextIO, Callable
 
 from colorama import init, Back, Fore
 from mojang import API
-
-__version__ = "1.2.2"
 
 # Files
 LOGPATH = Path("")
