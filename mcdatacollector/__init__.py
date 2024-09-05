@@ -1,4 +1,4 @@
-__version__ = "dev"
+__version__ = "archive.1.2.2"
 
 #
 #  ___       ___

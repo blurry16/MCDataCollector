@@ -1,4 +1,11 @@
-# MCDataCollector dev ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/main?label=last%20commit%20to%20main) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev?label=last%20commit%20to%20dev)
+# Activation notice
+
+I have no idea in which direction should I develop this software.
+Recently I thought about making LoLRiTTeRBot clone, which I will probably make sometime in the future, but right now I
+want to make a new bot independent of this one.
+If you need to reach me, you know where it's possible :D
+
+# MCDataCollector archive.1.2.2 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/main?label=last%20commit%20to%20main) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/blurry16/MCDataCollector/dev?label=last%20commit%20to%20dev)
 
 Well, remember I was trolling CV staff by saying people's last online time? This is what I used to know when you were
 last on.
