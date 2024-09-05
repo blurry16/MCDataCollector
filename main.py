@@ -15,7 +15,6 @@ mapi = API()
 
 CHATBOTACTIVE = False
 HOST = "blurry16"
-BANNED = []
 PASSCODE = generatepasscode()
 print(f"{Fore.MAGENTA}Chatbot passcode for this session is: {PASSCODE}")
 
