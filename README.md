@@ -1,4 +1,4 @@
-# Activation notice
+# Archive notice
 
 I have no idea in which direction should I develop this software.
 Recently I thought about making LoLRiTTeRBot clone, which I will probably make sometime in the future, but right now I
