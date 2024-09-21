@@ -183,4 +183,4 @@ def updatevianickname(nickname: str) -> None:
 
 
 if __name__ == "__main__":
-    print(Fore.GREEN + "No errors found.")
+    print(f"{Fore.GREEN}No errors found in {__file__}.")
