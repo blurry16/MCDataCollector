@@ -99,3 +99,7 @@ def saveeverything():
                                 frameborder="0" width="1920px" height="972px"></iframe>')
             sleep(0.5)
             print(f"{Fore.GREEN}Saved {name} ({skin_url})")
+
+
+if __name__ == "__main__":
+    print(Fore.GREEN + "No errors found.")

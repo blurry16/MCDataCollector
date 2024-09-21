@@ -1,6 +1,3 @@
-if __name__ == "__main__":
-    raise Exception("Please don't run mcdatacollector package files.")
-
 from datetime import datetime
 from time import time
 
@@ -305,3 +302,7 @@ def listallnonzombies():
             print(data[profile]["name"])
 
     print(f"{not_zombies} not zombies in the DB.")
+
+
+if __name__ == "__main__":
+    print(Fore.GREEN + "No errors found.")

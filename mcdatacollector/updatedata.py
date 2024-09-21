@@ -114,3 +114,7 @@ def __httptohttps__():
             data[uuid]["skin_url"] = data[uuid]["skin_url"].replace("http://", "https://")
 
     datafile.dump(data)
+
+
+if __name__ == "__main__":
+    print(Fore.GREEN + "No errors found.")

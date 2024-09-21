@@ -1,7 +1,6 @@
-from mcdatacollector import savestats
-from mcdatacollector.getdata import *
-from mcdatacollector.saveskins import *
-from mcdatacollector.updatedata import *
+from colorama import Fore
+
+from mcdatacollector import getdata, saveskins, updatedata, savestats
 
 if __name__ == "__main__":
     while True:
@@ -32,38 +31,38 @@ if __name__ == "__main__":
                                     "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
                                 ).strip()
 
-                                getlastseentime(arg)
+                                getdata.getlastseentime(arg)
 
                             case "2":
                                 arg = input(
                                     "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
                                 ).strip()
 
-                                getfirstseentime(arg)
+                                getdata.getfirstseentime(arg)
 
                             case "3":
                                 arg = input(
                                     "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
                                 ).strip()
 
-                                getdatajson(arg)
+                                getdata.getdatajson(arg)
                             case "4":
                                 arg = input(
                                     "Lookup via [1] Nickname, [2] Mojang UUID: "
                                 ).strip()
 
-                                getdbid(arg)
+                                getdata.getdbid(arg)
                             case "5":
 
-                                listallplayers()
+                                getdata.listallplayers()
 
                             case "6":
 
-                                listallzombies()
+                                getdata.listallzombies()
 
                             case "7":
 
-                                listallnonzombies()
+                                getdata.listallnonzombies()
 
                             case "8":
                                 break
@@ -82,22 +81,21 @@ if __name__ == "__main__":
                         "4. Everything above\n"
                         "5. Get back to previous stage.\n"
                     )
-                    data = datafile.load()
                     if mode == "1":
 
-                        saveurls()
+                        saveskins.saveurls()
 
                     elif mode == "2":
 
-                        savenames()
+                        saveskins.savenames()
 
                     elif mode == "3":
 
-                        savehtml()
+                        saveskins.savehtml()
 
                     elif mode == "4":
 
-                        saveeverything()
+                        saveskins.saveeverything()
 
                     elif mode == "5":
 
@@ -115,15 +113,15 @@ if __name__ == "__main__":
                     match a:
                         case "1":
 
-                            updatebynicknames()
+                            updatedata.updatebynicknames()
 
                         case "2":
 
-                            updatewithlist()
+                            updatedata.updatewithlist()
 
                         case "3":
 
-                            updateeveryonesdata()
+                            updatedata.updateeveryonesdata()
 
                         case "4":
                             break

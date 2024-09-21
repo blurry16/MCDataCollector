@@ -127,3 +127,7 @@ def getdbid(line: str):
                 mcprint(
                     f"{nickname}'s database ID is {data[arg]['db_id']}"
                 )
+
+
+if __name__ == "__main__":
+    print(Fore.GREEN + "No errors found.")
