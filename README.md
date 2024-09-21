@@ -1,16 +1,3 @@
-<div align="center">
-
-# Archiving notice
-
-I have no idea in which direction should I develop this software.
-Recently I thought about making LoLRiTTeRBot clone, which I will probably make sometime in the future, but right now I
-want to make a new bot independent of this one.
-If you need to reach me, you know where it's possible :D
-
-### _t.me/blurry16, <roma.reznik@gmail.com> Archived 2024_
-
-</div>
-
 # This branch is discarded since 12/08/2024
 
 I'm tired of developing this thing for nothing. Code of main branch is much more readable and does the thing it's
