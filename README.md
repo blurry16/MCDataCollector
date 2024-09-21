@@ -32,7 +32,7 @@ Good luck in collecting data!
 - "does_exist" — This thing is there since people like AddictiveOracle exist.
   Those who have their name faked or accounts cracked.  
   Please mind that you can't update cracked account data with "update with nicknames" tool.
-  Just buy license lol._
+  _Just buy license lol._
 
 ### Example of collected data
 
