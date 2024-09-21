@@ -123,7 +123,7 @@ def savestats():
         "delta": data_len - int(statsdata[last_date]["count"]),
     }
 
-    statsdataobj.dumps()
+    print(statsdataobj.dumps())
     a = input(f"{Fore.MAGENTA}Proceed? y/n: ")
     if a.lower() in ["y", ""]:
         statsdataobj.dump(statsdata)
