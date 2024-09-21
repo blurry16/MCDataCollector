@@ -15,9 +15,6 @@ __version__ = "1.2.2.1"
 #                                                      ; `-' '
 #                                                       .__.'
 
-if __name__ == "__main__":
-    raise Exception("Please don't run mcdatacollector package files.")
-
 from datetime import datetime, timedelta
 from json import load, dump, dumps
 from os import name as osname
@@ -183,3 +180,7 @@ def updatevianickname(nickname: str) -> None:
         datafile.dump(data)
         print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
         print(datafile.dumps(nickname.lower()))
+
+
+if __name__ == "__main__":
+    print(Fore.GREEN + "No errors found.")

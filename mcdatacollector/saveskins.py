@@ -1,6 +1,3 @@
-if __name__ == "__main__":
-    raise Exception("Please don't run mcdatacollector package files.")
-
 import os
 from datetime import datetime
 from time import sleep

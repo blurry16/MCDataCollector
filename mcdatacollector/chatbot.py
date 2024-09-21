@@ -1,6 +1,3 @@
-if __name__ == "__main__":
-    raise Exception("Please don't run mcdatacollector package files.")
-
 import time
 from datetime import datetime
 
