@@ -1,9 +1,10 @@
 import random
 
-from mojang import API
+from mojang import API, errors
+from colorama import Fore
 
-from mcdatacollector import LOGPATH, follow, updateviauuid, updatevianickname
-from mcdatacollector.chatbot import *
+from mcdatacollector import LOGPATH, follow, updateviauuid, updatevianickname, datafile
+from mcdatacollector import chatbot
 
 
 def generatepasscode() -> str:
@@ -51,19 +52,19 @@ if __name__ == "__main__":
 
                             case "#lastseen":
 
-                                lastseen(line)
+                                chatbot.lastseen(line)
 
                             case "#firsttimeseen":
 
-                                firsttimeseen(line)
+                                chatbot.firsttimeseen(line)
 
                             case "#count":
 
-                                count(line)
+                                chatbot.count(line)
 
                             case "#getdbid":
 
-                                getdbid(line)
+                                chatbot.getdbid(line)
 
                 else:
                     line_upd = line.split("CHAT")[1]
