@@ -80,7 +80,7 @@ if __name__ == "__main__":
                         "3. HTML model\n"
                         "4. Everything above\n"
                         "5. Get back to previous stage.\n"
-                    )
+                    ).strip()
                     if mode == "1":
 
                         saveskins.saveurls()
@@ -109,7 +109,7 @@ if __name__ == "__main__":
                         "2. With /list\n"
                         "3. Everyone's data (last time seen won't be touched)\n"
                         "4. Get back to previous stage.\n"
-                    )
+                    ).strip()
                     match a:
                         case "1":
 

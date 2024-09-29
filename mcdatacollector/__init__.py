@@ -121,7 +121,7 @@ def savestats():
     }
 
     print(statsdataobj.dumps() + "\n")
-    a = input(f"{Fore.MAGENTA}Proceed? y/n: ")
+    a = input(f"{Fore.MAGENTA}Proceed? y/n: ").strip()
     if a.lower() in ["y", ""]:
         statsdataobj.dump(statsdata)
     print(Fore.RESET)
