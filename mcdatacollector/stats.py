@@ -18,10 +18,9 @@ def savestats():
     }
 
     print(dumps(statsdata, indent=2) + "\n")
-    a = input(f"{Fore.MAGENTA}Proceed? y/n: ").strip()
+    a = input(f"{Fore.GREEN}Proceed? {Fore.RESET}y/n: ").strip()
     if a.lower() in ["y", ""]:
         statsdataobj.dump(statsdata)
-    print(Fore.RESET)
 
 
 def parsestats():
