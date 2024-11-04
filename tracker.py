@@ -85,7 +85,7 @@ if __name__ == "__main__":
                                 and "[" not in line_upd
                                 and ("joined" == split[2] or "left" == split[2])
                                 and "the" == split[3]
-                                and "game." == split[4]
+                                and "game" == split[4]
                         ):
                             data = datafile.load()
                             nickname = line.split("[CHAT]")[1].split()[0]
