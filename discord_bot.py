@@ -253,11 +253,18 @@ async def description(inter: disnake.ApplicationCommandInteraction) -> None:
     )
 
 
+def main():
+    print("Starting up the bot...")
+
+    bot.run(TOKEN)
+
+
 if __name__ == "__main__":
     datawarn()
 
     print(logo)
 
-    print("Starting up the bot...")
-
-    bot.run(TOKEN)
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit(0)

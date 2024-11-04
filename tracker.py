@@ -4,7 +4,7 @@ import random
 from colorama import Fore
 from mojang import API, errors
 
-from mcdatacollector import Data, follow, updateviauuid, updatevianickname, datafile, chatbot, datawarn, warn, logo
+from mcdatacollector import Data, follow, updateviauuid, updatevianickname, chatbot, datawarn, warn, logo
 
 
 def generatepasscode() -> str:
@@ -15,15 +15,7 @@ def generatepasscode() -> str:
     return "0" * (4 - len(__PASSCODE__)) + __PASSCODE__
 
 
-if __name__ == "__main__":
-
-    warn(Data.__tracker__)
-    datawarn()
-
-    print(logo)
-
-    mapi = API()  # Init Mojang API
-
+def main():
     CHATBOTACTIVE = False  # Init chatbot activity flag
     HOST = "blurry16"  # Host player name
     PASSCODE = generatepasscode()  # generating passcode
@@ -87,7 +79,6 @@ if __name__ == "__main__":
                                 and "the" == split[3]
                                 and "game" == split[4]
                         ):
-                            data = datafile.load()
                             nickname = line.split("[CHAT]")[1].split()[0]
                             try:
                                 uuid = mapi.get_uuid(nickname)
@@ -95,3 +86,18 @@ if __name__ == "__main__":
                             except errors.NotFound:
                                 updatevianickname(nickname)
                             print("\n")
+
+
+if __name__ == "__main__":
+
+    warn(Data.__tracker__)
+    datawarn()
+
+    print(logo)
+
+    mapi = API()  # Init Mojang API
+
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit(0)

@@ -2,13 +2,8 @@ from colorama import Fore
 
 from mcdatacollector import getdata, saveskins, updatedata, Data, warn, datawarn, statswarn, stats, logo
 
-if __name__ == "__main__":
-    warn(Data.__client__)
-    datawarn()
-    statswarn()
 
-    print(logo)
-
+def main():
     while True:
         inp = input(
             "1. Get data.\n"
@@ -156,3 +151,16 @@ if __name__ == "__main__":
 
             case _:
                 print(f"{Fore.RED}Unknown command.")
+
+
+if __name__ == "__main__":
+    warn(Data.__client__)
+    datawarn()
+    statswarn()
+
+    print(logo)
+
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit(0)
