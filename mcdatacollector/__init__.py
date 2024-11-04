@@ -1,4 +1,4 @@
-__version__ = "1.2.2.1"
+__version__ = "1.3.0"
 
 #
 #  ___       ___
@@ -15,7 +15,6 @@ __version__ = "1.2.2.1"
 #                                                      ; `-' '
 #                                                       .__.'
 
-from datetime import datetime, timedelta
 from json import load, dump, dumps
 from os import name as osname
 from os import system
@@ -25,52 +24,66 @@ from time import sleep, time
 from typing import Generator, TextIO, Callable
 
 from colorama import init, Back, Fore
+from dotenv import dotenv_values
 from mojang import API
 
-# Files
-LOGPATH = Path("")
-DATAPATH = Path("")
-STATSPATH = Path("")
+__dotenv__ = dotenv_values(".env")
 
-# Directories
-MODELSPATH = Path("")
-SKINSPATH = Path("")
-SKINSURLPATH = Path("")
+
+class Data:
+    # Files
+    LOGPATH = Path(__dotenv__["LOGPATH"])
+    DATAPATH = Path(__dotenv__["DATAPATH"])
+    STATSPATH = Path(__dotenv__["STATSPATH"])
+
+    # Directories
+    MODELSPATH = Path(__dotenv__["MODELSPATH"])
+    SKINSPATH = Path(__dotenv__["SKINSPATH"])
+    SKINSURLPATH = Path(__dotenv__["SKINSURLPATH"])
+
+    __paths__: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSPATH,
+                       SKINSURLPATH]  # All paths
+    __files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files' paths
+    __dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directories' paths
+    __tracker__: list = [LOGPATH, DATAPATH]
+    __client__: list = [STATSPATH, MODELSPATH, SKINSPATH, SKINSURLPATH]
+
+
+def warn(paths: list[Path]):
+    for i in paths:
+        if i == Path(""):
+            print(f"{Back.RED}Empty string was given as path. Exceptions may be raised.")
+            print(f"{Back.RED}Please change the value at {__file__} file")
+            pause()
+        elif not exists(i):
+            print(f"{Back.RED}{i} doesn't exist. Exceptions may be raised.")
+            print(f"{Back.RED}Please change the value at {__file__} file")
+            pause()
+        elif i in Data.__dirs__ and isfile(i):
+            print(f"{Back.RED}{i} is a file, while it has to be a directory. Exceptions may be raised.")
+            pause()
+        elif i in Data.__files__ and isdir(i):
+            print(f"{Back.RED}{i} is a directory, while it has to be a file. Exceptions may be raised.")
+            pause()
+
+
+def datawarn():
+    if splitext(Data.DATAPATH)[1] != ".json" and exists(Data.DATAPATH) and Data.DATAPATH != Path(""):
+        print(f"{Back.RED}{Data.DATAPATH} has not .json extension.")
+        pause()
+
+
+def statswarn():
+    if splitext(Data.STATSPATH)[1] != ".json" and exists(Data.STATSPATH) and Data.STATSPATH != Path(""):
+        print(f"{Back.RED}{Data.STATSPATH} has not .json extension.")
+        pause()
+
 
 init(autoreset=True)  # Colorama init
 
 mapi = API()  # Mojang API init
 
-__paths__: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSPATH, SKINSURLPATH]  # All paths
-__files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files' paths
-__dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directories' paths
-
 pause: Callable[[], int] = lambda: system("pause" if osname == "nt" else "")
-
-# warnings
-for i in __paths__:
-    if i == Path(""):
-        print(f"{Back.RED}Empty string was given as path. Exceptions may be raised.")
-        print(f"{Back.RED}Please change the value at {__file__} file")
-        pause()
-    elif not exists(i):
-        print(f"{Back.RED}{i} doesn't exist. Exceptions may be raised.")
-        print(f"{Back.RED}Please change the value at {__file__} file")
-        pause()
-    elif i in __dirs__ and isfile(i):
-        print(f"{Back.RED}{i} is a file, while it has to be a directory. Exceptions may be raised.")
-        pause()
-    elif i in __files__ and isdir(i):
-        print(f"{Back.RED}{i} is a directory, while it has to be a file. Exceptions may be raised.")
-        pause()
-if splitext(DATAPATH)[1] != ".json" and exists(DATAPATH) and DATAPATH != Path(""):
-    print(f"{Back.RED}{DATAPATH} has not .json extension.")
-    pause()
-if splitext(STATSPATH)[1] != ".json" and exists(STATSPATH) and STATSPATH != Path(""):
-    print(f"{Back.RED}{STATSPATH} has not .json extension.")
-    pause()
-
-del i
 
 
 class JsonFile:
@@ -105,26 +118,8 @@ def follow(file: TextIO) -> Generator[str, None, None]:
         yield li
 
 
-datafile = JsonFile(DATAPATH)
-statsdataobj = JsonFile(STATSPATH)
-
-
-def savestats():
-    data_len = len(datafile.load())
-    statsdata: dict = statsdataobj.load()
-    # prev_date = (datetime.now().date() - timedelta(days=2)).strftime("%Y-%m-%d")
-    last_date = list(statsdata)[-1]
-    now_date = (datetime.now().date() - timedelta(days=1)).strftime("%Y-%m-%d")
-    statsdata[now_date] = {
-        "count": data_len,
-        "delta": data_len - int(statsdata[last_date]["count"]),
-    }
-
-    print(statsdataobj.dumps() + "\n")
-    a = input(f"{Fore.MAGENTA}Proceed? y/n: ").strip()
-    if a.lower() in ["y", ""]:
-        statsdataobj.dump(statsdata)
-    print(Fore.RESET)
+datafile = JsonFile(Data.DATAPATH)
+statsdataobj = JsonFile(Data.STATSPATH)
 
 
 def updateviauuid(uuid: str) -> None:

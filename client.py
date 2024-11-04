@@ -1,14 +1,18 @@
 from colorama import Fore
 
-from mcdatacollector import getdata, saveskins, updatedata, savestats
+from mcdatacollector import getdata, saveskins, updatedata, Data, warn, datawarn, statswarn, stats
 
 if __name__ == "__main__":
+    warn(Data.__client__)
+    datawarn()
+    statswarn()
+
     while True:
         inp = input(
             "1. Get data.\n"
             "2. Save skins.\n"
             "3. Update data.\n"
-            "4. Add stats\n"
+            "4. Statistics\n"
             "5. Quit\n"
         ).strip()
         match inp:
@@ -81,27 +85,30 @@ if __name__ == "__main__":
                         "4. Everything above\n"
                         "5. Get back to previous stage.\n"
                     ).strip()
-                    if mode == "1":
+                    match mode:
+                        case "1":
 
-                        saveskins.saveurls()
+                            saveskins.saveurls()
 
-                    elif mode == "2":
+                        case "2":
 
-                        saveskins.savenames()
+                            saveskins.savenames()
 
-                    elif mode == "3":
+                        case "3":
 
-                        saveskins.savehtml()
+                            saveskins.savehtml()
 
-                    elif mode == "4":
+                        case "4":
 
-                        saveskins.saveeverything()
+                            saveskins.saveeverything()
 
-                    elif mode == "5":
+                        case "5":
 
-                        break
-                    else:
-                        print(f"{Fore.RED}Unknown command.")
+                            break
+
+                        case _:
+                            print(f"{Fore.RED}Unknown command.")
+
             case "3":
                 while True:
                     a = input(
@@ -129,7 +136,18 @@ if __name__ == "__main__":
                             print(f"{Fore.RED}Unknown command.")
 
             case "4":
-                savestats()
+                while True:
+                    a = input(
+                        "1. Add stats\n"
+                        "2. Parse stats\n"
+                    ).strip()
+                    match a:
+                        case "1":
+                            stats.savestats()
+                        case "2":
+                            stats.parsestats()
+                        case _:
+                            print(f"{Fore.RED}Unknown command.")
 
             case "5":
                 break

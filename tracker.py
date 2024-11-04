@@ -1,28 +1,34 @@
+# Imports
 import random
 
-from mojang import API, errors
 from colorama import Fore
+from mojang import API, errors
 
-from mcdatacollector import LOGPATH, follow, updateviauuid, updatevianickname, datafile
-from mcdatacollector import chatbot
+from mcdatacollector import Data, follow, updateviauuid, updatevianickname, datafile, chatbot, datawarn, warn
 
 
 def generatepasscode() -> str:
+    """Generates and returns a random passcode"""
+
     __PASSCODE__ = str(random.randint(0, 9999))
+    # Pretty simple, right?
     return "0" * (4 - len(__PASSCODE__)) + __PASSCODE__
 
 
-mapi = API()
+warn(Data.__tracker__)
+datawarn()
 
-CHATBOTACTIVE = False
-HOST = "blurry16"
-PASSCODE = generatepasscode()
-print(f"{Fore.MAGENTA}Chatbot passcode for this session is: {PASSCODE}")
+mapi = API()  # Init Mojang API
+
+CHATBOTACTIVE = False  # Init chatbot activity flag
+HOST = "blurry16"  # Host player name
+PASSCODE = generatepasscode()  # generating passcode
+print(f"{Fore.MAGENTA}Chatbot passcode for this session is: {PASSCODE}")  # logging
 
 if __name__ == "__main__":
     while True:
         LOGFILE = open(
-            LOGPATH,
+            Data.LOGPATH,
             "r",
             encoding="UTF-8",
         )

@@ -4,16 +4,11 @@ from typing import TextIO, Generator
 from colorama import Fore
 from mojang import errors
 
-from mcdatacollector import datafile, mapi, updateviauuid, updatevianickname, LOGPATH
+from mcdatacollector import datafile, mapi, updateviauuid, updatevianickname, Data
 
 
 def updatebynicknames():
-    nicknames = list(
-        map(
-            str,
-            input("Nicknames (split by space): ").split(),
-        )
-    )
+    nicknames = input("Nicknames (split by space): ").split()
     count = len(nicknames)
     for nickname in nicknames:
         try:
@@ -51,11 +46,7 @@ def followupdatewithlist(file: TextIO) -> Generator[str, None, None]:
 def updatewithlist() -> None:
     global returnupdatewithlist
 
-    logfile = open(
-        LOGPATH,
-        "r",
-        encoding="UTF-8",
-    )
+    logfile = open(Data.LOGPATH, "r", encoding="UTF-8")
     loglines = followupdatewithlist(logfile)
     print(f"{Fore.MAGENTA}Waiting for /list...\nDo CTRL+C do break updating.")
     for line in loglines:

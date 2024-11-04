@@ -1,9 +1,10 @@
 import disnake
 from colorama import Fore
 from disnake.ext import commands
+from dotenv import dotenv_values
 from mojang import API, errors
 
-from mcdatacollector import datafile
+from mcdatacollector import datafile, datawarn
 
 mapi = API()
 
@@ -14,7 +15,7 @@ bot = commands.Bot(
     activity=activity,
     status=disnake.Status.offline,
 )
-TOKEN = ""
+TOKEN = dotenv_values(".env")["DISCORD_BOT_TOKEN"]
 
 
 async def dbidcheck(db_id: int, inter: disnake.ApplicationCommandInteraction) -> str | None:
@@ -252,4 +253,6 @@ async def description(inter: disnake.ApplicationCommandInteraction) -> None:
     )
 
 
-bot.run(TOKEN)
+if __name__ == "__main__":
+    datawarn()
+    bot.run(TOKEN)

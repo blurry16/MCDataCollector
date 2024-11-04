@@ -5,7 +5,7 @@ from time import sleep
 import requests
 from colorama import Fore
 
-from mcdatacollector import datafile, MODELSPATH, SKINSPATH, SKINSURLPATH, __dirs__
+from mcdatacollector import datafile, Data
 
 __allowed_types__ = ["models", "urls", "skins"]
 
@@ -16,9 +16,10 @@ def initsave(__type: str) -> tuple[str, dict]:
     if __type not in __allowed_types__:
         return os.curdir, data
 
-    foldername = (f"{MODELSPATH if __type == 'models' else SKINSURLPATH if __type == 'urls' else SKINSPATH}\\"
+    foldername = (
+        f"{Data.MODELSPATH if __type == 'models' else Data.SKINSURLPATH if __type == 'urls' else Data.SKINSPATH}\\"
 
-                  f"{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}")
+        f"{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}")
 
     print(f"{Fore.GREEN}Creating new folder... ({foldername})")
 
@@ -87,11 +88,11 @@ def saveeverything():
 
             response = requests.get(url=skin_url)
 
-            with open(rf"{SKINSPATH}\{foldername}\{name}.png", "wb") as file:
+            with open(rf"{Data.SKINSPATH}\{foldername}\{name}.png", "wb") as file:
                 file.write(response.content)
-            with open(rf"{SKINSURLPATH}\{foldername}\{skin_url[39:]}.png", "wb") as file:
+            with open(rf"{Data.SKINSURLPATH}\{foldername}\{skin_url[39:]}.png", "wb") as file:
                 file.write(response.content)
-            with open(rf"{MODELSPATH}\{foldername}\{name}.html", "x") as file:
+            with open(rf"{Data.MODELSPATH}\{foldername}\{name}.html", "x") as file:
                 file.write(rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" \
                                 frameborder="0" width="1920px" height="972px"></iframe>')
             sleep(0.5)

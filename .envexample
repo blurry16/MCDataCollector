@@ -1,0 +1,12 @@
+# Discord bot token
+DISCORD_BOT_TOKEN=""
+
+# Files
+LOGPATH=""
+DATAPATH=""
+STATSPATH=""
+
+# Directories
+SKINSPATH=""
+MODELSPATH=""
+SKINSURLPATH=""
