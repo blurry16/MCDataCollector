@@ -1,11 +1,13 @@
 from colorama import Fore
 
-from mcdatacollector import getdata, saveskins, updatedata, Data, warn, datawarn, statswarn, stats
+from mcdatacollector import getdata, saveskins, updatedata, Data, warn, datawarn, statswarn, stats, logo
 
 if __name__ == "__main__":
     warn(Data.__client__)
     datawarn()
     statswarn()
+
+    print(logo)
 
     while True:
         inp = input(

@@ -4,7 +4,7 @@ from disnake.ext import commands
 from dotenv import dotenv_values
 from mojang import API, errors
 
-from mcdatacollector import datafile, datawarn
+from mcdatacollector import datafile, datawarn, logo
 
 mapi = API()
 
@@ -255,4 +255,9 @@ async def description(inter: disnake.ApplicationCommandInteraction) -> None:
 
 if __name__ == "__main__":
     datawarn()
+
+    print(logo)
+
+    print("Starting up the bot...")
+
     bot.run(TOKEN)

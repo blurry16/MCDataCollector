@@ -4,7 +4,7 @@ import random
 from colorama import Fore
 from mojang import API, errors
 
-from mcdatacollector import Data, follow, updateviauuid, updatevianickname, datafile, chatbot, datawarn, warn
+from mcdatacollector import Data, follow, updateviauuid, updatevianickname, datafile, chatbot, datawarn, warn, logo
 
 
 def generatepasscode() -> str:
@@ -15,17 +15,21 @@ def generatepasscode() -> str:
     return "0" * (4 - len(__PASSCODE__)) + __PASSCODE__
 
 
-warn(Data.__tracker__)
-datawarn()
-
-mapi = API()  # Init Mojang API
-
-CHATBOTACTIVE = False  # Init chatbot activity flag
-HOST = "blurry16"  # Host player name
-PASSCODE = generatepasscode()  # generating passcode
-print(f"{Fore.MAGENTA}Chatbot passcode for this session is: {PASSCODE}")  # logging
-
 if __name__ == "__main__":
+
+    warn(Data.__tracker__)
+    datawarn()
+
+    print(logo)
+
+    mapi = API()  # Init Mojang API
+
+    CHATBOTACTIVE = False  # Init chatbot activity flag
+    HOST = "blurry16"  # Host player name
+    PASSCODE = generatepasscode()  # generating passcode
+
+    print(f"Chatbot passcode for this session is: {PASSCODE}")  # logging
+
     while True:
         LOGFILE = open(
             Data.LOGPATH,
