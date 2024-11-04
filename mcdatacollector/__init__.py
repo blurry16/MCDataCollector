@@ -177,8 +177,6 @@ def updatevianickname(nickname: str) -> None:
         print(datafile.dumps(nickname.lower()))
 
 
-
-
 logo = rf"""
 {Fore.MAGENTA}____    ____   ______  ______           _            ______         __   __                _                   
 {Fore.MAGENTA}|_   \  /   _|.' ___  ||_   _ `.        / |_        .' ___  |       [  | [  |              / |_                 
@@ -187,7 +185,6 @@ logo = rf"""
 {Fore.MAGENTA} _| |_\/_| |_\ `.___.'\ _| |_.' /// | |,| |,// | |,\ `.___.'\| \__. || |  | || \__.,| \__. | |,| \__. | | |     
 {Fore.MAGENTA}|_____||_____|`.____ .'|______.' \'-;__/\__/\'-;__/ `.____ .' '.__.'[___][___]'.__.''.___.'\__/ '.__.' [___]    
 """
-
 
 if __name__ == "__main__":
     print(f"{Fore.GREEN}No errors found in {__file__}.")
