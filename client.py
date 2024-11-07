@@ -23,7 +23,7 @@ def main():
                         "5. Get all players' nicknames in the DB\n"
                         "6. Get all zombie accounts nicknames in the DB\n"
                         "7. Get all not-zombie accounts nicknames in the DB\n"
-                        "8. Get back to previous stage\n"
+                        "8. Back to previous stage\n"
                     ).strip()
                     try:
                         match inp:
@@ -80,7 +80,7 @@ def main():
                         "2. Name\n"
                         "3. HTML model\n"
                         "4. Everything above\n"
-                        "5. Get back to previous stage.\n"
+                        "5. Back to previous stage\n"
                     ).strip()
                     match mode:
                         case "1":
@@ -112,7 +112,7 @@ def main():
                         "1. By nicknames\n"
                         "2. With /list\n"
                         "3. Everyone's data (last time seen won't be touched)\n"
-                        "4. Get back to previous stage.\n"
+                        "4. Back to previous stage\n"
                     ).strip()
                     match a:
                         case "1":
@@ -137,12 +137,18 @@ def main():
                     a = input(
                         "1. Add stats\n"
                         "2. Parse stats\n"
+                        "3. Back to previous stage"
                     ).strip()
                     match a:
+                        
                         case "1":
                             stats.savestats()
+                        
                         case "2":
                             stats.parsestats()
+                        
+                        case"3":
+                            break
                         case _:
                             print(f"{Fore.RED}Unknown command.")
 
