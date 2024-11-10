@@ -140,14 +140,14 @@ def main():
                         "3. Back to previous stage"
                     ).strip()
                     match a:
-                        
+
                         case "1":
                             stats.savestats()
-                        
+
                         case "2":
                             stats.parsestats()
-                        
-                        case"3":
+
+                        case "3":
                             break
                         case _:
                             print(f"{Fore.RED}Unknown command.")

@@ -16,6 +16,7 @@ __version__ = "1.3.0"
 #                                                       .__.'
 
 from json import load, dump, dumps
+from math import ceil
 from os import name as osname
 from os import system
 from os.path import exists, isfile, isdir, splitext
@@ -129,9 +130,9 @@ def updateviauuid(uuid: str) -> None:
     data[uuid] = {
         "id": profile.id,
         "name": profile.name,
-        "last_seen": round(float(profile.timestamp) / 1000),
+        "last_seen": ceil(float(profile.timestamp) / 1000),
         "first_time_seen": (
-            round(float(profile.timestamp) / 1000)
+            ceil(float(profile.timestamp) / 1000)
             if uuid not in data
             else data[uuid]["first_time_seen"]
         ),
@@ -156,9 +157,9 @@ def updatevianickname(nickname: str) -> None:
         data[nickname.lower()] = {
             "id": None,
             "name": nickname,
-            "last_seen": int(time()),
+            "last_seen": ceil(time()),
             "first_time_seen": (
-                int(time())
+                ceil(time())
                 if nickname not in data
                 else data[nickname]["first_time_seen"]
             ),
