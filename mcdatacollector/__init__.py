@@ -33,15 +33,24 @@ __dotenv__ = dotenv_values(".env")
 
 class Data:
     # Files
-    LOGPATH = Path(__dotenv__["LOGPATH"])
-    DATAPATH = Path(__dotenv__["DATAPATH"])
-    STATSPATH = Path(__dotenv__["STATSPATH"])
+    try:
+        LOGPATH = Path(__dotenv__["LOGPATH"])
+        DATAPATH = Path(__dotenv__["DATAPATH"])
+        STATSPATH = Path(__dotenv__["STATSPATH"])
 
-    # Directories
-    MODELSPATH = Path(__dotenv__["MODELSPATH"])
-    SKINSPATH = Path(__dotenv__["SKINSPATH"])
-    SKINSURLPATH = Path(__dotenv__["SKINSURLPATH"])
+        # Directories
+        MODELSPATH = Path(__dotenv__["MODELSPATH"])
+        SKINSPATH = Path(__dotenv__["SKINSPATH"])
+        SKINSURLPATH = Path(__dotenv__["SKINSURLPATH"])
+    except KeyError:
+        LOGPATH = Path()
+        DATAPATH = Path()
+        STATSPATH = Path()
 
+        # Directories
+        MODELSPATH = Path()
+        SKINSPATH = Path()
+        SKINSURLPATH = Path()
     __paths__: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSPATH,
                        SKINSURLPATH]  # All paths
     __files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files' paths
