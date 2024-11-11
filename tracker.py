@@ -94,6 +94,7 @@ if __name__ == "__main__":
     datawarn()
 
     print(logo)
+    print(Fore.MAGENTA + f"{Fore.RESET + ' tracker ' + Fore.MAGENTA:=^121}\n")
 
     mapi = API()  # Init Mojang API
 

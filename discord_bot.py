@@ -263,6 +263,7 @@ if __name__ == "__main__":
     datawarn()
 
     print(logo)
+    print(Fore.MAGENTA + f"{Fore.RESET + ' discord bot ' + Fore.MAGENTA:=^121}\n")
 
     try:
         main()

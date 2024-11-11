@@ -165,6 +165,7 @@ if __name__ == "__main__":
     statswarn()
 
     print(logo)
+    print(Fore.MAGENTA + f"{Fore.RESET + ' client ' + Fore.MAGENTA:=^121}\n")
 
     try:
         main()
