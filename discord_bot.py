@@ -22,7 +22,7 @@ async def dbidcheck(db_id: int, inter: disnake.ApplicationCommandInteraction) ->
     if db_id < 0:
         return await inter.send("Database ID must be greater or equal 0.", ephemeral=True)
     data = datafile.load()
-    if db_id > len(data):
+    if db_id >= len(data):
         return await inter.send("There's no such player with this Database ID.", ephemeral=True)
 
     return list(data)[db_id]
