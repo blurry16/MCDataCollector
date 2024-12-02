@@ -28,6 +28,16 @@ async def dbidcheck(db_id: int, inter: disnake.ApplicationCommandInteraction) ->
     return list(data)[db_id]
 
 
+async def parsearguments(inter: disnake.ApplicationCommandInteraction, nickname: str | None, uuid: str | None,
+                         db_id: int | None = -1) -> bool:
+    if [nickname, uuid, db_id if db_id != -1 else None].count(None) != 2:
+        await inter.send("Too few arguments!" if [nickname, uuid, db_id if db_id != -1 else None].count(
+            None) > 2 else "Too many arguments!",
+                         ephemeral=True)
+        return False
+    return True
+
+
 @bot.event
 async def on_ready() -> None:
     print(f"{Fore.GREEN}Bot {bot.user} is ready!")
@@ -38,9 +48,11 @@ async def on_ready() -> None:
 )
 async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str = None, uuid: str = None,
                    db_id: int = None) -> None:
-    if nickname is not None and uuid is None and db_id is None:
-        print(f"{inter.author} used /lastseen nickname={nickname}")
-        data = datafile.load()
+    if not await parsearguments(inter, nickname, uuid, db_id):
+        return
+    data = datafile.load()
+    if nickname is not None:
+        print(f"{inter.author} used /lastseen {nickname=}")
         try:
             uuid = mapi.get_uuid(nickname)
             if uuid in data:
@@ -61,10 +73,9 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
                 )
             else:
                 await inter.send(f"Player {nickname} doesn't exist.", ephemeral=True)
-    elif uuid is not None and nickname is None and db_id is None:
+    elif uuid is not None:
         print(f"{inter.author} used /lastseen uuid={uuid}")
         uuid = uuid.replace("-", "")
-        data = datafile.load()
         if uuid in data:
             last_seen = data[uuid]["last_seen"]
             await inter.send(
@@ -74,21 +85,16 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
         else:
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
 
-    elif db_id is not None and nickname is None and uuid is None:
+    else:
         print(f"{inter.author} used /lastseen db_id={db_id}")
         uuid = await dbidcheck(db_id, inter)
         if uuid is None:
             return
-        data = datafile.load()
         last_seen = data[uuid]["last_seen"]
         await inter.send(
             f"{data[uuid]['name']} ({db_id=}) was last seen at <t:{last_seen}:f>. "
             f"(<t:{last_seen}:R>)"
         )
-    elif nickname is None and uuid is None and db_id is None:
-        await inter.send("Too few arguments!", ephemeral=True)
-    else:
-        await inter.send("Too many arguments!", ephemeral=True)
 
 
 @bot.slash_command(
@@ -96,7 +102,10 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
 )
 async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: str = None, uuid: str = None,
                         db_id: int = None) -> None:
-    if nickname is not None and uuid is None and db_id is None:
+    if not await parsearguments(inter, nickname, uuid, db_id):
+        return
+
+    if nickname is not None:
         print(f"{inter.author} used /firsttimeseen nickname={nickname}")
         data = datafile.load()
         try:
@@ -119,7 +128,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
                 )
             else:
                 await inter.send(f"Player {nickname} doesn't exist.", ephemeral=True)
-    elif uuid is not None and nickname is None and db_id is None:
+    elif uuid is not None:
         print(f"{inter.author} used /firsttimeseen uuid={uuid}")
         uuid = uuid.replace("-", "")
         data = datafile.load()
@@ -132,7 +141,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
         else:
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
 
-    elif db_id is not None and nickname is None and uuid is None:
+    else:
         print(f"{inter.author} used /firsttimeseen db_id={db_id}")
         uuid = await dbidcheck(db_id, inter)
         if uuid is None:
@@ -143,14 +152,12 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
             f"{data[uuid]['name']} ({db_id=}) was seen for the first time at <t:{first_time_seen}:f>. "
             f"(<t:{first_time_seen}:R>)"
         )
-    elif nickname is None and uuid is None and db_id is None:
-        await inter.send("Too few arguments!", ephemeral=True)
-    else:
-        await inter.send("Too many arguments!", ephemeral=True)
 
 
 @bot.slash_command(description="Get database player's id with their nickname.")
 async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = None, uuid: str = None) -> None:
+    if not await parsearguments(inter, nickname, uuid):
+        return
     if nickname is not None and uuid is None:
         print(f"{inter.author} used /getdbid nickname={nickname}")
         data = datafile.load()
@@ -180,10 +187,6 @@ async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = 
             )
         else:
             await inter.send("There's no such player in the Database with this UUID", ephemeral=True)
-    elif nickname is not None and uuid is not None:
-        await inter.send("Too few arguments!", ephemeral=True)
-    else:
-        await inter.send("Too many arguments!", ephemeral=True)
 
 
 @bot.slash_command(
@@ -192,7 +195,10 @@ async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = 
 async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = None, uuid: str = None,
                   db_id: int = None,
                   indent: int = 2) -> None:
-    if nickname is not None and uuid is None and db_id is None:
+    if not await parsearguments(inter, nickname, uuid, db_id):
+        return
+
+    if nickname is not None:
         print(f"{inter.author} used /getdata nickname={nickname}")
         indent = 2 if (0 > indent) or (indent > 20) else indent
         data = datafile.load()
@@ -208,7 +214,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
                 await inter.send(f"```json\n{datafile.dumps(nickname, indent=indent)}```")
             else:
                 await inter.send(f"Player {nickname} doesn't exist.", ephemeral=True)
-    elif uuid is not None and nickname is None and db_id is None:
+    elif uuid is not None:
         print(f"{inter.author} used /getdata uuid={uuid}")
         uuid = uuid.replace("-", "")
         data = datafile.load()
@@ -216,7 +222,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
             await inter.send(f"```json\n{datafile.dumps(uuid, indent=indent)}```")
         else:
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
-    elif db_id is not None and nickname is None and uuid is None:
+    else:
         print(f"{inter.author} used /getdata db_id={db_id}")
         uuid = await dbidcheck(db_id, inter)
         if uuid is None:
@@ -226,10 +232,6 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
             await inter.send(f"```json\n{datafile.dumps(uuid, indent=indent)}```")
         else:
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
-    elif nickname is None and uuid is None and db_id is None:
-        await inter.send("Too few arguments!", ephemeral=True)
-    else:
-        await inter.send("Too many arguments!", ephemeral=True)
 
 
 @bot.slash_command(description="Check the count of players in the database.")
