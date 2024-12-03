@@ -1,4 +1,4 @@
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 
 #
 #  ___       ___
@@ -103,22 +103,47 @@ class JsonFile:
         self.file_path: Path = Path(file_path)
 
     def load(self) -> dict | list:
-        """loads data from json file"""
+        """Loads data from the file.
+
+        Returns:
+            dict | list: _JSONable_
+        """
         with open(self.file_path, "r", encoding="UTF-8") as data_file:
             return load(data_file)
 
     def dump(self, data: dict | list, indent: int = 2) -> None:
-        """dumps selected data to the file"""
+        """Saves (dumps) data into file.
+
+        Args:
+            data (dict | list): _JSONable_
+            indent (int, optional): _indent for whole file_. Defaults to 2.
+        """
         with open(self.file_path, "w", encoding="UTF-8") as data_file:
             dump(data, data_file, indent=indent)
 
     def dumps(self, key: str | int | None = None, indent: int = 2) -> str:
+        """Loads data from file and returns it as string.
+
+        Args:
+            key (str | int | None, optional): _Simply file[key]; if key is None, the string of whole file will be returned_. Defaults to None.
+            indent (int, optional): _indent of json string_. Defaults to 2.
+
+        Returns:
+            str: _json string_
+        """
         data = self.load()
         return dumps(data, indent=indent) if key is None else dumps(data[key], indent=indent)
 
 
 def follow(file: TextIO) -> Generator[str, None, None]:
-    """follows selected file"""
+    """_summary_
+
+    Args:
+        file (TextIO): _description_
+
+    Yields:
+        Generator[str, None, None]: _description_
+    """
     file.seek(0, 2)
     while True:
         li = file.readline()
