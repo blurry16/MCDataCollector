@@ -1,3 +1,6 @@
+import logging
+from time import sleep
+
 import disnake
 from colorama import Fore
 from disnake.ext import commands
@@ -7,6 +10,7 @@ from mojang import API, errors
 from mcdatacollector import datafile, datawarn, logo
 
 mapi = API()
+# argv = [i.lower() for i in argv[1:]]
 
 activity = disnake.Activity(name="Forrest Gump", type=disnake.ActivityType.watching)
 bot = commands.Bot(
@@ -16,6 +20,10 @@ bot = commands.Bot(
     status=disnake.Status.offline,
 )
 TOKEN = dotenv_values(".env")["DISCORD_BOT_TOKEN"]
+
+logging.basicConfig()
+logger = logging.getLogger("mcdatacollector.discordbot")
+logger.setLevel(logging.INFO)
 
 
 async def dbidcheck(db_id: int, inter: disnake.ApplicationCommandInteraction) -> str | None:
@@ -40,7 +48,7 @@ async def parsearguments(inter: disnake.ApplicationCommandInteraction, nickname:
 
 @bot.event
 async def on_ready() -> None:
-    print(f"{Fore.GREEN}Bot {bot.user} is ready!")
+    logger.info(f"Bot {bot.user} is ready!")
 
 
 @bot.slash_command(
@@ -52,7 +60,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
         return
     data = datafile.load()
     if nickname is not None:
-        print(f"{inter.author} used /lastseen {nickname=}")
+        logger.info(f"{inter.author} used /lastseen {nickname=}")
         try:
             uuid = mapi.get_uuid(nickname)
             if uuid in data:
@@ -74,7 +82,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
             else:
                 await inter.send(f"Player {nickname} doesn't exist.", ephemeral=True)
     elif uuid is not None:
-        print(f"{inter.author} used /lastseen uuid={uuid}")
+        logger.info(f"{inter.author} used /lastseen uuid={uuid}")
         uuid = uuid.replace("-", "")
         if uuid in data:
             last_seen = data[uuid]["last_seen"]
@@ -86,7 +94,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
 
     else:
-        print(f"{inter.author} used /lastseen db_id={db_id}")
+        logger.info(f"{inter.author} used /lastseen db_id={db_id}")
         uuid = await dbidcheck(db_id, inter)
         if uuid is None:
             return
@@ -106,7 +114,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
         return
 
     if nickname is not None:
-        print(f"{inter.author} used /firsttimeseen nickname={nickname}")
+        logger.info(f"{inter.author} used /firsttimeseen nickname={nickname}")
         data = datafile.load()
         try:
             uuid = mapi.get_uuid(nickname)
@@ -129,7 +137,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
             else:
                 await inter.send(f"Player {nickname} doesn't exist.", ephemeral=True)
     elif uuid is not None:
-        print(f"{inter.author} used /firsttimeseen uuid={uuid}")
+        logger.info(f"{inter.author} used /firsttimeseen uuid={uuid}")
         uuid = uuid.replace("-", "")
         data = datafile.load()
         if uuid in data:
@@ -142,7 +150,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
 
     else:
-        print(f"{inter.author} used /firsttimeseen db_id={db_id}")
+        logger.info(f"{inter.author} used /firsttimeseen db_id={db_id}")
         uuid = await dbidcheck(db_id, inter)
         if uuid is None:
             return
@@ -159,7 +167,7 @@ async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = 
     if not await parsearguments(inter, nickname, uuid):
         return
     if nickname is not None and uuid is None:
-        print(f"{inter.author} used /getdbid nickname={nickname}")
+        logger.info(f"{inter.author} used /getdbid nickname={nickname}")
         data = datafile.load()
         try:
             uuid = mapi.get_uuid(nickname)
@@ -178,7 +186,7 @@ async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = 
             else:
                 await inter.send(f"Player {nickname} doesn't exist.", ephemeral=True)
     elif uuid is not None and nickname is None:
-        print(f"{inter.author} used /getdbid uuid={uuid}")
+        logger.info(f"{inter.author} used /getdbid uuid={uuid}")
         uuid = uuid.replace("-", "")
         data = datafile.load()
         if uuid in data:
@@ -199,7 +207,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
         return
 
     if nickname is not None:
-        print(f"{inter.author} used /getdata nickname={nickname}")
+        logger.info(f"{inter.author} used /getdata nickname={nickname}")
         indent = 2 if (0 > indent) or (indent > 20) else indent
         data = datafile.load()
         try:
@@ -215,7 +223,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
             else:
                 await inter.send(f"Player {nickname} doesn't exist.", ephemeral=True)
     elif uuid is not None:
-        print(f"{inter.author} used /getdata uuid={uuid}")
+        logger.info(f"{inter.author} used /getdata uuid={uuid}")
         uuid = uuid.replace("-", "")
         data = datafile.load()
         if uuid in data:
@@ -223,7 +231,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
         else:
             await inter.send("There's no such player in the Database with this UUID.", ephemeral=True)
     else:
-        print(f"{inter.author} used /getdata db_id={db_id}")
+        logger.info(f"{inter.author} used /getdata db_id={db_id}")
         uuid = await dbidcheck(db_id, inter)
         if uuid is None:
             return
@@ -236,14 +244,14 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
 
 @bot.slash_command(description="Check the count of players in the database.")
 async def count(inter: disnake.ApplicationCommandInteraction) -> None:
-    print(f"{inter.author} used /count")
+    logger.info(f"{inter.author} used /count")
     data = datafile.load()
     await inter.send(f"There are {len(data)} players in the database.")
 
 
 @bot.slash_command(description="Project in a nutshell")
 async def description(inter: disnake.ApplicationCommandInteraction) -> None:
-    print(f"{inter.author} used /description")
+    logger.info(f"{inter.author} used /description")
     await inter.send(
         f"# This project is NOT run by Cubeville staff. Everything is done by blurry16.\n"
         f"Your personal data is not collected, your account is completely safe. "
@@ -256,7 +264,9 @@ async def description(inter: disnake.ApplicationCommandInteraction) -> None:
 
 
 def main():
-    print("Starting up the bot...")
+    sleep(0.1)  # It's here because logger works faster than regular print, logo is printed after first log line.
+
+    logger.info("Starting up the bot...")
 
     bot.run(TOKEN)
 
@@ -264,10 +274,10 @@ def main():
 if __name__ == "__main__":
     datawarn()
 
-    print(logo)
-    print(Fore.MAGENTA + f"{Fore.RESET + ' discord bot ' + Fore.MAGENTA:=^121}\n")
-
     try:
+        print(logo)
+        print(Fore.MAGENTA + f"{Fore.RESET + ' discord bot ' + Fore.MAGENTA:=^121}\n")
+
         main()
     except KeyboardInterrupt:
         exit(0)
