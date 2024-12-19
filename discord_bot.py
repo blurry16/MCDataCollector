@@ -264,7 +264,7 @@ async def description(inter: disnake.ApplicationCommandInteraction) -> None:
 
 
 def main():
-    sleep(0.1)  # It's here because logger works faster than regular print, logo is printed after first log line.
+    sleep(0.1)  # It's here because logger works faster than regular print, logo is printed after the first log line.
 
     logger.info("Starting up the bot...")
 
