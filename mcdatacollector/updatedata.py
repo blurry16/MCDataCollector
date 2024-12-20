@@ -90,6 +90,7 @@ def updateeveryonesdata():
             print(f"{Fore.GREEN}Updated {profile.name}")
             print(datafile.dumps(uuid))
             sleep(0.25)
+    datafile.dump(data)
 
 
 def __httptohttps__():
