@@ -212,7 +212,7 @@ def updatevianickname(nickname: str) -> None:
         print(datafile.dumps(nickname.lower()))
 
 
-logo = rf"""{Fore.MAGENTA}____    ____   ______  ______           _            ______         __   __                _                   
+logo = rf"""{Fore.MAGENTA} ____    ____   ______  ______           _            ______         __   __                _                   
 {Fore.MAGENTA}|_   \  /   _|.' ___  ||_   _ `.        / |_        .' ___  |       [  | [  |              / |_                 
 {Fore.MAGENTA}  |   \/   | / .'   \_|  | | `. \ ,--. `| |-',--.  / .'   \_|  .--.  | |  | | .---.  .---.`| |-' .--.   _ .--.  
 {Fore.MAGENTA}  | |\  /| | | |         | |  | |`'_\ : | | `'_\ : | |       / .'`\ \| |  | |/ /__\\/ /'`\]| | / .'`\ \[ `/'`\] 
