@@ -11,6 +11,7 @@ def main():
             "3. Update data.\n"
             "4. Statistics\n"
             "5. Quit\n"
+            "> "
         ).strip()
         match inp:
             case "1":
@@ -24,6 +25,7 @@ def main():
                         "6. Get all zombie accounts nicknames in the DB\n"
                         "7. Get all not-zombie accounts nicknames in the DB\n"
                         "8. Back to previous stage\n"
+                        "> "
                     ).strip()
                     try:
                         match inp:
@@ -81,6 +83,7 @@ def main():
                         "3. HTML model\n"
                         "4. Everything above\n"
                         "5. Back to previous stage\n"
+                        "> "
                     ).strip()
                     match mode:
                         case "1":
@@ -113,6 +116,7 @@ def main():
                         "2. With /list\n"
                         "3. Everyone's data (last time seen won't be touched)\n"
                         "4. Back to previous stage\n"
+                        "> "
                     ).strip()
                     match a:
                         case "1":
@@ -138,6 +142,7 @@ def main():
                         "1. Add stats\n"
                         "2. Parse stats\n"
                         "3. Back to previous stage\n"
+                        "> "
                     ).strip()
                     match a:
 
