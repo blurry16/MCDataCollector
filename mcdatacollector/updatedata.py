@@ -73,7 +73,8 @@ def updatewithlist() -> None:
 
 def updateeveryonesdata():
     data = datafile.load()
-    for uuid in data:
+    datalen = len(data)
+    for index, uuid in enumerate(data):
         if data[uuid]["id"] is not None:
             profile = mapi.get_profile(uuid)
             data[uuid] = {
@@ -87,7 +88,7 @@ def updateeveryonesdata():
                 "db_id": data[uuid]["db_id"],
                 "does_exist": True,
             }
-            print(f"{Fore.GREEN}Updated {profile.name}")
+            print(f"{Fore.GREEN}Updated {profile.name} [{index + 1}/{datalen}]")
             print(datafile.dumps(uuid))
             sleep(0.25)
     datafile.dump(data)
