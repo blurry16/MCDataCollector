@@ -137,7 +137,7 @@ def main():
                     a = input(
                         "1. Add stats\n"
                         "2. Parse stats\n"
-                        "3. Back to previous stage"
+                        "3. Back to previous stage\n"
                     ).strip()
                     match a:
 
