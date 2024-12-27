@@ -18,9 +18,8 @@ def generatepasscode() -> str:
 def main():
     CHATBOTACTIVE = False  # Init chatbot activity flag
     HOST = "blurry16"  # Host player name
-    PASSCODE = generatepasscode()  # generating passcode
 
-    print(f"Chatbot passcode for this session is: {PASSCODE}")  # logging
+    # print(f"Chatbot passcode for this session is: {PASSCODE}")  # logging
 
     while True:
         LOGFILE = open(
@@ -93,8 +92,9 @@ if __name__ == "__main__":
     warn(Data.__tracker__)
     datawarn()
 
+    PASSCODE = generatepasscode()  # generating passcode
     print(logo)
-    print(Fore.MAGENTA + f"{Fore.RESET + ' tracker ' + Fore.MAGENTA:=^121}\n")
+    print(Fore.MAGENTA + f"{Fore.RESET + ' tracker ' + PASSCODE + ' ' + Fore.MAGENTA:=^121}\n")
 
     mapi = API()  # Init Mojang API
 
