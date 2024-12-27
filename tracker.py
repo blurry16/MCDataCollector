@@ -16,7 +16,7 @@ def generatepasscode() -> str:
 
 
 def main():
-    CHATBOTACTIVE = False  # Init chatbot activity flag
+    chatbotflag = False  # Init chatbot activity flag
     HOST = "blurry16"  # Host player name
 
     # print(f"Chatbot passcode for this session is: {PASSCODE}")  # logging
@@ -39,16 +39,16 @@ def main():
                                 line.replace("\n", "").split(f"{command} ", 1)[1].split()[0]
                             )
                             if username == HOST and arg == PASSCODE:
-                                CHATBOTACTIVE = not CHATBOTACTIVE
+                                chatbotflag = not chatbotflag
                                 print(
                                     f"{Fore.GREEN}Chatbot activated."
-                                    if CHATBOTACTIVE
+                                    if chatbotflag
                                     else f"{Fore.RED}Chatbot unactivated."
                                 )
                         except IndexError:
                             if username == HOST:
                                 print(f"{Fore.MAGENTA}Not enough arguments!")
-                    elif CHATBOTACTIVE:
+                    elif chatbotflag:
                         match line.lower().split()[5]:
 
                             case "#lastseen":
