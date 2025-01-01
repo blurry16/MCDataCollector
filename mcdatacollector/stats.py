@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, UTC
 from json import dumps
 
 from colorama import Fore
@@ -11,7 +11,7 @@ def savestats():
     statsdata: dict = statsdataobj.load()
     last_date = list(statsdata)[-1]
     # now_date = (datetime.now().date() - timedelta(days=1)).strftime("%Y-%m-%d")
-    now_date = (datetime.now().date()).strftime("%Y-%m-%d")
+    now_date = datetime.now(UTC).date().strftime("%Y-%m-%d")
     print(now_date)
     statsdata[now_date] = {
         "count": data_len,
