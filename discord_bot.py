@@ -7,7 +7,7 @@ from disnake.ext import commands
 from dotenv import dotenv_values
 from mojang import API, errors
 
-from mcdatacollector import datafile, datawarn, logo
+from mcdatacollector import datafile, datawarn, logo, getuuid
 
 mapi = API()
 # argv = [i.lower() for i in argv[1:]]
@@ -62,7 +62,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
     if nickname is not None:
         logger.info(f"{inter.author} used /lastseen {nickname=}")
         try:
-            uuid = mapi.get_uuid(nickname)
+            uuid = getuuid(nickname)
             if uuid in data:
                 last_seen = data[uuid]["last_seen"]
                 await inter.send(
@@ -117,7 +117,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
         logger.info(f"{inter.author} used /firsttimeseen nickname={nickname}")
         data = datafile.load()
         try:
-            uuid = mapi.get_uuid(nickname)
+            uuid = getuuid(nickname)
             if uuid in data:
                 first_time_seen = data[uuid]["first_time_seen"]
                 await inter.send(
@@ -170,7 +170,7 @@ async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = 
         logger.info(f"{inter.author} used /getdbid nickname={nickname}")
         data = datafile.load()
         try:
-            uuid = mapi.get_uuid(nickname)
+            uuid = getuuid(nickname)
             if uuid in data:
                 await inter.send(
                     f"{data[uuid]['name']}'s database ID is {data[uuid]['db_id']}."
@@ -211,7 +211,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
         indent = 2 if (0 > indent) or (indent > 20) else indent
         data = datafile.load()
         try:
-            uuid = mapi.get_uuid(nickname)
+            uuid = getuuid(nickname)
             if uuid in data:
                 await inter.send(f"```json\n{datafile.dumps(uuid, indent=indent)}```")
             else:

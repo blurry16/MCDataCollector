@@ -156,6 +156,15 @@ def follow(file: TextIO) -> Generator[str, None, None]:
 datafile = JsonFile(Data.DATAPATH)
 statsdataobj = JsonFile(Data.STATSPATH)
 
+uuids = {}
+
+
+def getuuid(nickname: str) -> str:
+    global uuids
+    if nickname not in uuids:
+        uuids[nickname] = mapi.get_uuid(nickname)
+    return uuids[nickname]
+
 
 def updateviauuid(uuid: str) -> None:
     global datafile

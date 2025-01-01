@@ -4,7 +4,7 @@ from time import time
 from colorama import Fore
 from mojang import errors
 
-from mcdatacollector import datafile, mapi
+from mcdatacollector import datafile, getuuid
 
 
 def getlastseentime(arg: str):
@@ -14,7 +14,7 @@ def getlastseentime(arg: str):
         if arg == "1":
             nickname = input("Nickname: ").strip().split()[0]
             try:
-                local_uuid = mapi.get_uuid(nickname)
+                local_uuid = getuuid(nickname)
                 if local_uuid in data:
                     local_data = data[local_uuid]
                     dt_obj = datetime.fromtimestamp(
@@ -86,7 +86,7 @@ def getfirstseentime(arg: str):
         if arg == "1":
             nickname = input("Nickname: ").strip().split()[0]
             try:
-                local_uuid = mapi.get_uuid(nickname)
+                local_uuid = getuuid(nickname)
                 if local_uuid in data:
                     local_data = data[local_uuid]
                     timestamp = local_data["first_time_seen"]
@@ -172,7 +172,7 @@ def getdatajson(arg: str):
                         indent = None
                     except ValueError:
                         pass
-                local_uuid = mapi.get_uuid(nickname)
+                local_uuid = getuuid(nickname)
                 if local_uuid in data:
                     print(datafile.dumps(local_uuid, indent))
                 else:
@@ -241,7 +241,7 @@ def getdbid(arg: str):
         if arg == "1":
             inp = input("Nickname: ").lower().strip().split()[0]
             try:
-                uuid = mapi.get_uuid(inp)
+                uuid = getuuid(inp)
                 nickname = data[uuid]["name"]
                 if uuid in data:
                     print(

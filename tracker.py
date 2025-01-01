@@ -4,7 +4,7 @@ import random
 from colorama import Fore
 from mojang import API, errors
 
-from mcdatacollector import Data, follow, updateviauuid, updatevianickname, chatbot, datawarn, warn, logo
+from mcdatacollector import Data, follow, updateviauuid, updatevianickname, chatbot, datawarn, warn, logo, getuuid
 
 
 def generatepasscode() -> str:
@@ -80,7 +80,7 @@ def main():
                         ):
                             nickname = line.split("[CHAT]")[1].split()[0]
                             try:
-                                uuid = mapi.get_uuid(nickname)
+                                uuid = getuuid(nickname)
                                 updateviauuid(uuid)
                             except errors.NotFound:
                                 updatevianickname(nickname)

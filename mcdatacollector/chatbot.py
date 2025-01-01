@@ -5,7 +5,7 @@ import keyboard
 from colorama import Fore
 from mojang import errors
 
-from mcdatacollector import datafile, mapi
+from mcdatacollector import datafile, getuuid
 
 CHATBOTBANNED = []
 
@@ -36,7 +36,7 @@ def lastseen(line: str):
     if username.lower() not in CHATBOTBANNED:
         data = datafile.load()
         try:
-            uuid = mapi.get_uuid(arg)
+            uuid = getuuid(arg)
             if uuid not in data:
                 mcprint(f"The bot has never seen {arg}.")
             else:
@@ -64,7 +64,7 @@ def firsttimeseen(line: str):
     if username.lower() not in CHATBOTBANNED:
         data = datafile.load()
         try:
-            uuid = mapi.get_uuid(arg)
+            uuid = getuuid(arg)
             if uuid not in data:
                 mcprint(f"The bot has never seen {arg}.")
             else:
@@ -107,7 +107,7 @@ def getdbid(line: str):
     if username.lower() not in CHATBOTBANNED:
         data = datafile.load()
         try:
-            uuid = mapi.get_uuid(arg)
+            uuid = getuuid(arg)
             nickname = data[uuid]["name"]
             if uuid not in data:
                 mcprint(f"{nickname} is not in the database.")

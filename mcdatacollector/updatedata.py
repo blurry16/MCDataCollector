@@ -4,7 +4,7 @@ from typing import TextIO, Generator
 from colorama import Fore
 from mojang import errors
 
-from mcdatacollector import datafile, mapi, updateviauuid, updatevianickname, Data
+from mcdatacollector import datafile, mapi, updateviauuid, updatevianickname, Data, getuuid
 
 
 def updatebynicknames():
@@ -12,7 +12,7 @@ def updatebynicknames():
     count = len(nicknames)
     for nickname in nicknames:
         try:
-            uuid: str = mapi.get_uuid(nickname)
+            uuid: str = getuuid(nickname)
 
             updateviauuid(uuid)
             sleep(0.1)
@@ -61,7 +61,7 @@ def updatewithlist() -> None:
                 for nickname in nicknames:
                     nickname = nickname.strip()
                     try:
-                        uuid: str = mapi.get_uuid(nickname)
+                        uuid: str = getuuid(nickname)
                         updateviauuid(uuid)
                     except errors.NotFound:
                         updatevianickname(nickname)
