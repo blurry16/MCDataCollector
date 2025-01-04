@@ -28,3 +28,7 @@ def parsestats():
     stats = statsdataobj.load()
     for i in stats:
         print(f"{i}: {stats[i]['count']} players, {stats[i]['delta']} delta.")
+
+
+if __name__ == "__main__":
+    print(f"{Fore.GREEN}No errors found in {__file__}.")
