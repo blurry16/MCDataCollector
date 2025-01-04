@@ -10,9 +10,9 @@ Clone the repo and use `pip install -r requirements.txt`.
 ### How do I run it?
 
 Install requirements ofc :p  
-First of all replace `LOGPATH` constant in `.env` with your latest.log path with your
+First of all replace `LOG_PATH` constant in `.env` with your latest.log path with your
 values.  
-Then create a .json file at `DATAPATH` (you should replace it with your value) and run `tracker.py` script.  
+Then create a .json file at `DATA_PATH` (you should replace it with your value) and run `tracker.py` script.  
 It will write Mojang API data and last&first (in unix timestamp) time seen date in the file you gave it.  
 If you want to have my main data.json file, please contact me in Discord (blurry16) or
 in [![Telegram Badge](https://img.shields.io/badge/Telegram-blue?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/blurry16)
