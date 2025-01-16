@@ -228,5 +228,12 @@ logo = rf"""{Fore.MAGENTA} ____    ____   ______  ______           _            
 {Fore.MAGENTA} _| |_\/_| |_\ `.___.'\ _| |_.' /// | |,| |,// | |,\ `.___.'\| \__. || |  | || \__.,| \__. | |,| \__. | | |     
 {Fore.MAGENTA}|_____||_____|`.____ .'|______.' \'-;__/\__/\'-;__/ `.____ .' '.__.'[___][___]'.__.''.___.'\__/ '.__.' [___]    """
 
+
+def initializescript(script_name: str):
+    print("Currently running mcdatacollector " + __version__ + ".")
+    print(logo)
+    print(Fore.MAGENTA + f"{Fore.RESET + ' ' + script_name + ' ' + Fore.MAGENTA:=^121}\n")
+
+
 if __name__ == "__main__":
     print(f"{Fore.GREEN}No errors found in {__file__}.")

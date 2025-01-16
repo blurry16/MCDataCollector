@@ -2,12 +2,11 @@ import logging
 from time import sleep
 
 import disnake
-from colorama import Fore
 from disnake.ext import commands
 from dotenv import dotenv_values
 from mojang import API, errors
 
-from mcdatacollector import datafile, datawarn, logo, getuuid
+from mcdatacollector import datafile, datawarn, getuuid, initializescript
 
 mapi = API()
 # argv = [i.lower() for i in argv[1:]]
@@ -273,11 +272,8 @@ def main():
 
 if __name__ == "__main__":
     datawarn()
-
+    initializescript("discord_bot")
     try:
-        print(logo)
-        print(Fore.MAGENTA + f"{Fore.RESET + ' discord bot ' + Fore.MAGENTA:=^121}\n")
-
         main()
     except KeyboardInterrupt:
         exit(0)

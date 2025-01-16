@@ -1,6 +1,6 @@
 from colorama import Fore
 
-from mcdatacollector import getdata, saveskins, updatedata, Data, warn, datawarn, statswarn, stats, logo
+from mcdatacollector import getdata, saveskins, updatedata, Data, warn, datawarn, statswarn, stats, initializescript
 
 
 def main():
@@ -172,10 +172,7 @@ if __name__ == "__main__":
     warn(Data.__client__)
     datawarn()
     statswarn()
-
-    print(logo)
-    print(Fore.MAGENTA + f"{Fore.RESET + ' client ' + Fore.MAGENTA:=^121}\n")
-
+    initializescript("client")
     try:
         main()
     except KeyboardInterrupt:
