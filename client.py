@@ -141,7 +141,8 @@ def main():
                     a = input(
                         "1. Add stats\n"
                         "2. Parse stats\n"
-                        "3. Back to previous stage\n"
+                        "3. Preview raw stats JSON\n"
+                        "4. Back to previous stage\n"
                         "> "
                     ).strip()
                     match a:
@@ -153,6 +154,9 @@ def main():
                             stats.parsestats()
 
                         case "3":
+                            stats.parseraw()
+
+                        case "4":
                             break
                         case _:
                             print(f"{Fore.RED}Unknown command.")

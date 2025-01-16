@@ -30,5 +30,9 @@ def parsestats():
         print(f"{i}: {stats[i]['count']} players, {stats[i]['delta']} delta.")
 
 
+def parseraw():
+    print(statsdataobj.dumps())
+
+
 if __name__ == "__main__":
     print(f"{Fore.GREEN}No errors found in {__file__}.")
