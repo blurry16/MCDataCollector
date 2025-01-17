@@ -5,7 +5,7 @@ from time import sleep
 import requests
 from colorama import Fore
 
-from mcdatacollector import datafile, Data
+from mcdatacollector import datafile, Data, initializescript
 
 __allowed_types__ = ["models", "urls", "skins"]
 
@@ -77,7 +77,7 @@ def savehtml():
 def saveeverything():
     data = datafile.load()
     foldername = datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')
-    for i in __dirs__:
+    for i in Data.__dirs__:
         os.mkdir(rf"{i}/{foldername}")
         print(f"{Fore.GREEN}Folder {rf'{i}/{foldername}'} was created.")
 
@@ -100,4 +100,5 @@ def saveeverything():
 
 
 if __name__ == "__main__":
+    initializescript(__file__)
     print(f"{Fore.GREEN}No errors found in {__file__}.")

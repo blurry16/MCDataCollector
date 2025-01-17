@@ -236,4 +236,5 @@ def initializescript(script_name: str):
 
 
 if __name__ == "__main__":
+    initializescript(__file__)
     print(f"{Fore.GREEN}No errors found in {__file__}.")

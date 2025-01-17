@@ -4,7 +4,7 @@ from time import time
 from colorama import Fore
 from mojang import errors
 
-from mcdatacollector import datafile, getuuid
+from mcdatacollector import datafile, getuuid, initializescript
 
 
 def getlastseentime(arg: str):
@@ -305,4 +305,5 @@ def listallnonzombies():
 
 
 if __name__ == "__main__":
+    initializescript(__file__)
     print(f"{Fore.GREEN}No errors found in {__file__}.")

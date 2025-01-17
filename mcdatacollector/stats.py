@@ -3,7 +3,7 @@ from json import dumps
 
 from colorama import Fore
 
-from mcdatacollector import datafile, statsdataobj
+from mcdatacollector import datafile, statsdataobj, initializescript
 
 
 def savestats():
@@ -35,4 +35,5 @@ def parseraw():
 
 
 if __name__ == "__main__":
+    initializescript(__file__)
     print(f"{Fore.GREEN}No errors found in {__file__}.")

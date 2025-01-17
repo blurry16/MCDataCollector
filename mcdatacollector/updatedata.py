@@ -4,7 +4,7 @@ from typing import TextIO, Generator
 from colorama import Fore
 from mojang import errors
 
-from mcdatacollector import datafile, mapi, updateviauuid, updatevianickname, Data, getuuid
+from mcdatacollector import datafile, mapi, updateviauuid, updatevianickname, Data, getuuid, initializescript
 
 
 def updatebynicknames():
@@ -107,4 +107,5 @@ def __httptohttps__():
 
 
 if __name__ == "__main__":
+    initializescript(__file__)
     print(f"{Fore.GREEN}No errors found in {__file__}.")
