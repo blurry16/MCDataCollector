@@ -63,11 +63,11 @@ def warn(paths: list[Path]):
     for i in paths:
         if i == Path(""):
             print(f"{Back.RED}Empty string was given as path. Exceptions may be raised.")
-            print(f"{Back.RED}Please change the value at {__file__} file")
+            print(f"{Back.RED}Please change the value at .env")
             pause()
         elif not exists(i):
             print(f"{Back.RED}{i} doesn't exist. Exceptions may be raised.")
-            print(f"{Back.RED}Please change the value at {__file__} file")
+            print(f"{Back.RED}Please change the value at .env")
             pause()
         elif i in Data.__dirs__ and isfile(i):
             print(f"{Back.RED}{i} is a file, while it has to be a directory. Exceptions may be raised.")
