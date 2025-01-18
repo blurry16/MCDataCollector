@@ -21,7 +21,7 @@ bot = commands.Bot(
 TOKEN = dotenv_values(".env")["DISCORD_BOT_TOKEN"]
 
 logging.basicConfig()
-logger = logging.getLogger("mcdatacollector.discordbot")
+logger = logging.getLogger("mcdatacollector.discord_bot")
 logger.setLevel(logging.INFO)
 
 
