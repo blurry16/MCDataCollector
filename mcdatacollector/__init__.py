@@ -1,4 +1,4 @@
-__version__ = "1.4.0"
+__version__ = "dev1.4.0"
 
 #
 #  ___       ___
@@ -16,9 +16,10 @@ __version__ = "1.4.0"
 #                                                       .__.'
 
 from json import load, dump, dumps
+from logging import getLogger, basicConfig
 from math import ceil
 from os import name as osname
-from os import system
+from os import system, listdir
 from os.path import exists, isfile, isdir, splitext
 from pathlib import Path
 from time import sleep, time
@@ -27,6 +28,14 @@ from typing import Generator, TextIO, Callable
 from colorama import init, Back, Fore
 from dotenv import dotenv_values
 from mojang import API
+
+init(autoreset=True)  # Colorama init
+
+logger = getLogger("mcdatacollector")
+basicConfig()
+
+if ".env" not in listdir("/".join(__file__.split("\\" if osname == "nt" else "/")[:-2])):
+    logger.warning(f".env file not found! Exceptions WILL be raised.")
 
 __dotenv__ = dotenv_values(".env")
 
@@ -61,20 +70,17 @@ class Data:
 
 def warn(paths: list[Path]):
     for i in paths:
-        if i == Path(""):
-            print(f"{Back.RED}Empty string was given as path. Exceptions may be raised.")
-            print(f"{Back.RED}Please change the value at .env")
-            pause()
-        elif not exists(i):
-            print(f"{Back.RED}{i} doesn't exist. Exceptions may be raised.")
-            print(f"{Back.RED}Please change the value at .env")
-            pause()
-        elif i in Data.__dirs__ and isfile(i):
-            print(f"{Back.RED}{i} is a file, while it has to be a directory. Exceptions may be raised.")
-            pause()
-        elif i in Data.__files__ and isdir(i):
-            print(f"{Back.RED}{i} is a directory, while it has to be a file. Exceptions may be raised.")
-            pause()
+        if i != Path():
+            if not exists(i):
+                print(f"{Back.RED}{i} doesn't exist. Exceptions may be raised.")
+                print(f"{Back.RED}Please change the value at .env")
+                pause()
+            elif i in Data.__dirs__ and isfile(i):
+                print(f"{Back.RED}{i} is a file, while it has to be a directory. Exceptions may be raised.")
+                pause()
+            elif i in Data.__files__ and isdir(i):
+                print(f"{Back.RED}{i} is a directory, while it has to be a file. Exceptions may be raised.")
+                pause()
 
 
 def datawarn():
@@ -88,8 +94,6 @@ def statswarn():
         print(f"{Back.RED}{Data.STATSPATH} has not .json extension.")
         pause()
 
-
-init(autoreset=True)  # Colorama init
 
 mapi = API()  # Mojang API init
 
