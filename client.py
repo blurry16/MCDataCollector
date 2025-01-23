@@ -8,9 +8,9 @@ from mcdatacollector import getdata, saveskins, updatedata, Data, warn, datawarn
 def main():
     while True:
         inp = input(
-            "1. Get data.\n"
-            "2. Save skins.\n"
-            "3. Update data.\n"
+            "1. Get data\n"
+            "2. Save skins\n"
+            "3. Update data\n"
             "4. Statistics\n"
             "5. Check for updates\n"
             "6. Quit\n"
