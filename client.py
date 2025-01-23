@@ -1,5 +1,7 @@
+import requests
 from colorama import Fore
 
+from mcdatacollector import __version__ as localversion
 from mcdatacollector import getdata, saveskins, updatedata, Data, warn, datawarn, statswarn, stats, initializescript
 
 
@@ -10,7 +12,8 @@ def main():
             "2. Save skins.\n"
             "3. Update data.\n"
             "4. Statistics\n"
-            "5. Quit\n"
+            "5. Check for updates\n"
+            "6. Quit\n"
             "> "
         ).strip()
         match inp:
@@ -162,6 +165,15 @@ def main():
                             print(f"{Fore.RED}Unknown command.")
 
             case "5":
+                githubversion = requests.get(
+                    "https://raw.githubusercontent.com/blurry16/MCDataCollector/refs/heads/main/mcdatacollector/__init__.py").text.split(
+                    "\n")[0].split(" ")[2].replace("\"", "")
+                if githubversion[:3] != "dev" and githubversion != localversion:
+                    print(
+                        f"{Fore.GREEN}Good news! New version {githubversion} is available at https://github.com/blurry16/MCDataCollector/releases/latest!")
+                else:
+                    print(f"{Fore.RED}No updates found. {localversion} is up to date.")
+            case "6":
                 break
 
             case _:
