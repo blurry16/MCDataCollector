@@ -30,53 +30,50 @@ def main():
                         "8. Back to previous stage\n"
                         "> "
                     ).strip()
-                    try:
-                        match inp:
-                            case "1":
-                                arg = input(
-                                    "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
-                                ).strip()
+                    match inp:
+                        case "1":
+                            arg = input(
+                                "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
+                            ).strip()
 
-                                getdata.getlastseentime(arg)
+                            getdata.getlastseentime(arg)
 
-                            case "2":
-                                arg = input(
-                                    "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
-                                ).strip()
+                        case "2":
+                            arg = input(
+                                "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
+                            ).strip()
 
-                                getdata.getfirstseentime(arg)
+                            getdata.getfirstseentime(arg)
 
-                            case "3":
-                                arg = input(
-                                    "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
-                                ).strip()
+                        case "3":
+                            arg = input(
+                                "Lookup via [1] Nickname, [2] Mojang UUID, [3] DBID: "
+                            ).strip()
 
-                                getdata.getdatajson(arg)
-                            case "4":
-                                arg = input(
-                                    "Lookup via [1] Nickname, [2] Mojang UUID: "
-                                ).strip()
+                            getdata.getdatajson(arg)
+                        case "4":
+                            arg = input(
+                                "Lookup via [1] Nickname, [2] Mojang UUID: "
+                            ).strip()
 
-                                getdata.getdbid(arg)
-                            case "5":
+                            getdata.getdbid(arg)
+                        case "5":
 
-                                getdata.listallplayers()
+                            getdata.listallplayers()
 
-                            case "6":
+                        case "6":
 
-                                getdata.listallzombies()
+                            getdata.listallzombies()
 
-                            case "7":
+                        case "7":
 
-                                getdata.listallnonzombies()
+                            getdata.listallnonzombies()
 
-                            case "8":
-                                break
+                        case "8":
+                            break
 
-                            case _:
-                                print(f"{Fore.RED}Unknown command.")
-                    except KeyError:
-                        print("The bot has never seen this player.")
+                        case _:
+                            print(f"{Fore.RED}Unknown command.")
 
             case "2":
                 while True:
@@ -159,7 +156,7 @@ def main():
                         case "3":
                             stats.parseraw()
 
-                        case "4":
+                        case "99":
                             break
                         case _:
                             print(f"{Fore.RED}Unknown command.")
@@ -169,8 +166,10 @@ def main():
                     "https://raw.githubusercontent.com/blurry16/MCDataCollector/refs/heads/main/mcdatacollector/__init__.py").text.split(
                     "\n")[0].split(" ")[2].replace("\"", "")
                 if githubversion[:3] != "dev" and githubversion != localversion:
-                    print(
-                        f"{Fore.GREEN}Good news! New version {githubversion} is available at https://github.com/blurry16/MCDataCollector/releases/latest!")
+                    print(f"{Fore.GREEN}Good news! New version {githubversion} is available at "
+                          f"https://github.com/blurry16/MCDataCollector/releases/latest!")
+
+
                 else:
                     print(f"{Fore.RED}No updates found. {localversion} is up to date.")
             case "6":

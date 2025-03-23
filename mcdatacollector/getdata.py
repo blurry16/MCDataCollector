@@ -162,12 +162,7 @@ def getdatajson(arg: str):
             try:
                 if "--indent" in inp.split():
                     try:
-                        indent = int(
-                            inp.split()[
-                                inp.split().index("--indent")
-                                + 1
-                                ]
-                        )
+                        indent = int(inp.split()[inp.split().index("--indent") + 1])
                     except IndexError:
                         indent = None
                     except ValueError:
@@ -189,11 +184,7 @@ def getdatajson(arg: str):
             uuid = inp.split()[0].replace("-", "")
             if "--indent" in inp.split():
                 try:
-                    indent = int(
-                        inp.split()[
-                            inp.split().index("--indent") + 1
-                            ]
-                    )
+                    indent = int(inp.split()[inp.split().index("--indent") + 1])
                 except IndexError:
                     indent = None
                 except ValueError:
@@ -207,12 +198,7 @@ def getdatajson(arg: str):
                 inp = input("DBID: ")
                 if "--indent" in inp.split():
                     try:
-                        indent = int(
-                            inp.split()[
-                                inp.split().index("--indent")
-                                + 1
-                                ]
-                        )
+                        indent = int(inp.split()[inp.split().index("--indent") + 1])
                     except IndexError:
                         indent = None
                     except ValueError:
@@ -224,9 +210,7 @@ def getdatajson(arg: str):
             except ValueError:
                 print(f"{Fore.RED}Wrong value!")
             except IndexError:
-                print(
-                    f"{Fore.RED}DB has no player with this DBID."
-                )
+                print(f"{Fore.RED}DB has no player with this DBID.")
         else:
             print(
                 f"{Fore.RED}Unknown command."
@@ -244,17 +228,13 @@ def getdbid(arg: str):
                 uuid = getuuid(inp)
                 nickname = data[uuid]["name"]
                 if uuid in data:
-                    print(
-                        f"{nickname}'s database id is {data[uuid]['db_id']}."
-                    )
+                    print(f"{nickname}'s database id is {data[uuid]['db_id']}.")
                 else:
                     print(f"The bot has never seen {nickname}.")
             except errors.NotFound:
                 if inp.lower() in data:
                     local_data = data[inp]
-                    print(
-                        f"{local_data['name']}'s database id is {local_data['db_id']}"
-                    )
+                    print(f"{local_data['name']}'s database id is {local_data['db_id']}")
         elif arg == "2":
             local_uuid = (
                 input("UUID: ")

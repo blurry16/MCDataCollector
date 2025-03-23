@@ -1,12 +1,12 @@
 import logging
-from time import sleep
+import time
 
 import disnake
 from disnake.ext import commands
 from dotenv import dotenv_values
 from mojang import API, errors
 
-from mcdatacollector import datafile, datawarn, getuuid, initializescript
+from mcdatacollector import datafile, datawarn, getuuid, initializescript, __csvfolder
 
 mapi = API()
 # argv = [i.lower() for i in argv[1:]]
@@ -195,7 +195,6 @@ async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = 
         else:
             await inter.send("There's no such player in the Database with this UUID", ephemeral=True)
 
-
 @bot.slash_command(
     description="Returns data of selected player from the database in JSON format."
 )
@@ -248,6 +247,42 @@ async def count(inter: disnake.ApplicationCommandInteraction) -> None:
     await inter.send(f"There are {len(data)} players in the database.")
 
 
+def __gendumpname(format: str = "csv") -> str:
+    return f"dump-{time.time()}.{format}"
+
+
+def __dumpascsv() -> str:
+    data = datafile.load()
+    csv = "id,name,last_seen,first_time_seen,skin_variant,cape_url,skin_url,db_id,does_exist\n"
+    for i in data:
+        csv += ",".join([str(j) for j in data[i].values()]) + "\n"
+    __dumppath = f"{__csvfolder}/full/{__gendumpname()}"
+    with open(__dumppath, "x") as csvfile:
+        csvfile.write(csv)
+    return __dumppath
+
+
+@bot.slash_command(description="Get full data dump in DB (csv format)")
+async def getfulldata(inter: disnake.ApplicationCommandInteraction) -> None:
+    # async def getfulldata(inter: disnake.ApplicationCommandInteraction, format: bool) -> None:
+    logger.info(f"{inter.author} used /getfulldata")
+    # if format:
+    return await inter.send(file=disnake.File(__dumpascsv(), __gendumpname()))
+    # return await inter.send(file=disnake.File(datafile.file_path, __gendumpname("json")))
+
+
+@bot.slash_command(description="Get all uuids:usernames in DB (csv format)")
+async def getplayers(inter: disnake.ApplicationCommandInteraction) -> None:
+    logger.info(f"{inter.author} used /getusernames")
+    data = datafile.load()
+    filename = __gendumpname()
+    csv = "id,name\n" + "\n".join([f"{i},{data[i]["name"]}" for i in data])
+    path = f"{__csvfolder}/misc/{filename}.csv"
+    with open(path, "x") as f:
+        f.write(csv)
+    await inter.send(file=disnake.File(path, filename))
+
+
 @bot.slash_command(description="Project in a nutshell")
 async def description(inter: disnake.ApplicationCommandInteraction) -> None:
     logger.info(f"{inter.author} used /description")
@@ -257,16 +292,17 @@ async def description(inter: disnake.ApplicationCommandInteraction) -> None:
         f"Only Mojang API data, last/first time joined/left the server are collected."
         f"\nSource code can be obtained **[here](https://github.com/blurry16/MCDataCollector)**.\n"
         f"\n"
-        f"*Licensed under **[MIT License](https://github.com/blurry16/MCDataCollector/tree/main/LICENSE)**, Copyright (c) 2024 blurry16*",
+        f"*Licensed under **[MIT License](https://github.com/blurry16/MCDataCollector/tree/main/LICENSE)**, " +
+        open("LICENSE").read().split("\n")[2] + "*",
         ephemeral=True,
     )
 
 
 def main():
-    sleep(0.1)  # It's here because logger works faster than regular print, logo is printed after the first log line.
+    # It's here because logger works faster than regular print, logo is printed after the first log line.
+    time.sleep(.1)
 
     logger.info("Starting up the bot...")
-
     bot.run(TOKEN)
 
 

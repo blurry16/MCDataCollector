@@ -5,7 +5,7 @@ import keyboard
 from colorama import Fore
 from mojang import errors
 
-from mcdatacollector import datafile, getuuid, initializescript
+from mcdatacollector import datafile, getuuid, initializescript, __logger
 
 CHATBOTBANNED = []
 
@@ -128,4 +128,4 @@ def getdbid(line: str):
 
 if __name__ == "__main__":
     initializescript(__file__)
-    print(f"{Fore.GREEN}No errors found in {__file__}.")
+    __logger.info(f"{Fore.GREEN}No errors found in {__file__}.")

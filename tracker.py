@@ -5,7 +5,7 @@ from colorama import Fore
 from mojang import API, errors
 
 from mcdatacollector import Data, follow, updateviauuid, updatevianickname, chatbot, datawarn, warn, initializescript, \
-    getuuid
+    getuuid, DOTENV
 
 
 def generatepasscode() -> str:
@@ -18,8 +18,9 @@ def generatepasscode() -> str:
 
 def main():
     chatbotflag = False  # Init chatbot activity flag
-    HOST = "blurry16"  # Host player name
-
+    CHATBOT_HOST = DOTENV["CHATBOT_HOST"]  # Host player name
+    if CHATBOT_HOST == "":
+        CHATBOT_HOST = None
     # print(f"Chatbot passcode for this session is: {PASSCODE}")  # logging
     print("Tracker initialized.")
     while True:
@@ -32,41 +33,42 @@ def main():
         for line in lines:
             if "[CHAT]" in line:
                 if line[40] == "<":
-                    if line.lower().split()[5] == "#activate":
-                        command = line.split()[5]
-                        username = line.split()[4].split("<")[1].split(">")[0]
-                        try:
-                            arg = (
-                                line.replace("\n", "").split(f"{command} ", 1)[1].split()[0]
-                            )
-                            if username == HOST and arg == PASSCODE:
-                                chatbotflag = not chatbotflag
-                                print(
-                                    f"{Fore.GREEN}Chatbot activated."
-                                    if chatbotflag
-                                    else f"{Fore.RED}Chatbot unactivated."
+                    if CHATBOT_HOST:
+                        if line.lower().split()[5] == "#activate":
+                            command = line.split()[5]
+                            username = line.split()[4].split("<")[1].split(">")[0]
+                            try:
+                                arg = (
+                                    line.replace("\n", "").split(f"{command} ", 1)[1].split()[0]
                                 )
-                        except IndexError:
-                            if username == HOST:
-                                print(f"{Fore.MAGENTA}Not enough arguments!")
-                    elif chatbotflag:
-                        match line.lower().split()[5]:
+                                if username == CHATBOT_HOST and arg == PASSCODE:
+                                    chatbotflag = not chatbotflag
+                                    print(
+                                        f"{Fore.GREEN}Chatbot activated."
+                                        if chatbotflag
+                                        else f"{Fore.RED}Chatbot unactivated."
+                                    )
+                            except IndexError:
+                                if username == CHATBOT_HOST:
+                                    print(f"{Fore.MAGENTA}Not enough arguments!")
+                        elif chatbotflag:
+                            match line.lower().split()[5]:
 
-                            case "#lastseen":
+                                case "#lastseen":
 
-                                chatbot.lastseen(line)
+                                    chatbot.lastseen(line)
 
-                            case "#firsttimeseen":
+                                case "#firsttimeseen":
 
-                                chatbot.firsttimeseen(line)
+                                    chatbot.firsttimeseen(line)
 
-                            case "#count":
+                                case "#count":
 
-                                chatbot.count(line)
+                                    chatbot.count(line)
 
-                            case "#getdbid":
+                                case "#getdbid":
 
-                                chatbot.getdbid(line)
+                                    chatbot.getdbid(line)
 
                 else:
                     line_upd = line.split("CHAT")[1]

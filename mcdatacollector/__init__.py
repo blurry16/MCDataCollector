@@ -18,8 +18,7 @@ __version__ = "dev1.4.0"
 from json import load, dump, dumps
 from logging import getLogger, basicConfig
 from math import ceil
-from os import name as osname
-from os import system, listdir
+from os import name as osname, system, listdir, mkdir
 from os.path import exists, isfile, isdir, splitext
 from pathlib import Path
 from time import sleep, time
@@ -29,28 +28,39 @@ from colorama import init, Back, Fore
 from dotenv import dotenv_values
 from mojang import API
 
+__dir = Path(__file__).parent.parent
+
 init(autoreset=True)  # Colorama init
 
-logger = getLogger("mcdatacollector")
+__logger = getLogger("mcdatacollector")
 basicConfig()
 
 if ".env" not in listdir("/".join(__file__.split("\\" if osname == "nt" else "/")[:-2])):
-    logger.warning(f".env file not found! Exceptions WILL be raised.")
+    __logger.warning(f".env file not found! Exceptions WILL be raised.")
 
-__dotenv__ = dotenv_values(".env")
+__datafolder = __dir.joinpath("data/")
+__dumpsfolder = __datafolder.joinpath("dumps/")
+__csvfolder = __dumpsfolder.joinpath("csv/")
+
+for i in [__datafolder, __dumpsfolder, __csvfolder, __csvfolder.joinpath("full"), __csvfolder.joinpath("misc")]:
+    print(i)
+    if not i.exists():
+        mkdir(i)
+
+DOTENV = dotenv_values(".env")
 
 
 class Data:
     # Files
     try:
-        LOGPATH = Path(__dotenv__["LOG_PATH"])
-        DATAPATH = Path(__dotenv__["DATA_PATH"])
-        STATSPATH = Path(__dotenv__["STATS_PATH"])
+        LOGPATH = Path(DOTENV["LOG_PATH"])
+        DATAPATH = Path(DOTENV["DATA_PATH"])
+        STATSPATH = Path(DOTENV["STATS_PATH"])
 
         # Directories
-        MODELSPATH = Path(__dotenv__["MODELS_PATH"])
-        SKINSPATH = Path(__dotenv__["SKINS_PATH"])
-        SKINSURLPATH = Path(__dotenv__["SKINSURL_PATH"])
+        MODELSPATH = Path(DOTENV["MODELS_PATH"])
+        SKINSPATH = Path(DOTENV["SKINS_PATH"])
+        SKINSURLPATH = Path(DOTENV["SKINSURL_PATH"])
     except KeyError:
         LOGPATH = Path()
         DATAPATH = Path()
@@ -100,7 +110,7 @@ mapi = API()  # Mojang API init
 pause: Callable[[], int] = lambda: system("pause" if osname == "nt" else "")
 
 
-class JsonFile:
+class __JsonFile:
     """JsonFile class contains required methods to work with .json files"""
 
     def __init__(self, file_path: Path | str) -> None:
@@ -157,17 +167,19 @@ def follow(file: TextIO) -> Generator[str, None, None]:
         yield li
 
 
-datafile = JsonFile(Data.DATAPATH)
-statsdataobj = JsonFile(Data.STATSPATH)
+datafile = __JsonFile(Data.DATAPATH)
+statsdataobj = __JsonFile(Data.STATSPATH)
 
-uuids = {}
+__uuids = {}
 
 
 def getuuid(nickname: str) -> str:
-    global uuids
-    if nickname not in uuids:
-        uuids[nickname] = mapi.get_uuid(nickname)
-    return uuids[nickname]
+    """Stores UUIDs in a cache dictionary.\n
+    Raises the 'mojang.errors.NotFound' exception if uuid wasn't found."""
+    global __uuids
+    if nickname not in __uuids:
+        __uuids[nickname] = mapi.get_uuid(nickname)
+    return __uuids[nickname]
 
 
 def updateviauuid(uuid: str) -> None:
@@ -225,7 +237,7 @@ def updatevianickname(nickname: str) -> None:
         print(datafile.dumps(nickname.lower()))
 
 
-logo = rf"""{Fore.MAGENTA} ____    ____   ______  ______           _            ______         __   __                _                   
+__logo = rf"""{Fore.MAGENTA} ____    ____   ______  ______           _            ______         __   __                _                   
 |_   \  /   _|.' ___  ||_   _ `.        / |_        .' ___  |       [  | [  |              / |_                 
   |   \/   | / .'   \_|  | | `. \ ,--. `| |-',--.  / .'   \_|  .--.  | |  | | .---.  .---.`| |-' .--.   _ .--.  
   | |\  /| | | |         | |  | |`'_\ : | | `'_\ : | |       / .'`\ \| |  | |/ /__\\/ /'`\]| | / .'`\ \[ `/'`\] 
@@ -235,7 +247,7 @@ logo = rf"""{Fore.MAGENTA} ____    ____   ______  ______           _            
 
 def initializescript(script_name: str):
     print(f"Currently running mcdatacollector {__version__}.\n"
-          f"{logo}\n" +
+          f"{__logo}\n" +
           Fore.MAGENTA + f"{Fore.RESET + ' ' + script_name + ' ' + Fore.MAGENTA:=^121}\n")
 
 
