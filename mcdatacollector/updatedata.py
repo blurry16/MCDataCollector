@@ -4,7 +4,7 @@ from typing import TextIO, Generator
 from colorama import Fore
 from mojang import errors
 
-from mcdatacollector import datafile, mapi, updateviauuid, updatevianickname, Data, getuuid, initializescript
+from mcdatacollector import datafile, mapi, updateviauuid, updatevianickname, Data, getuuid, initializescript, __logger
 
 
 def updatebynicknames():
@@ -83,8 +83,8 @@ def updateeveryonesdata():
                 "last_seen": data[uuid]["last_seen"],
                 "first_time_seen": data[uuid]["first_time_seen"],
                 "skin_variant": profile.skin_variant,
-                "cape_url": profile.cape_url,
-                "skin_url": profile.skin_url,
+                "cape_url": None if profile.cape_url is None else profile.cape_url.replace("http://", "https://"),
+                "skin_url": profile.skin_url.replace("http://", "https://"),
                 "db_id": data[uuid]["db_id"],
                 "does_exist": True,
             }
@@ -102,9 +102,12 @@ def __httptohttps__():
             if data[uuid]["cape_url"] is not None:
                 data[uuid]["cape_url"] = data[uuid]["cape_url"].replace("http://", "https://")
             data[uuid]["skin_url"] = data[uuid]["skin_url"].replace("http://", "https://")
-
+            __logger.info(f"Updated {data[uuid]['name']} [{uuid}]")
     datafile.dump(data)
+    __logger.info(f"Updated & Dumped to JSON {len(data)} players.")
 
+
+__httptohttps__()
 
 if __name__ == "__main__":
     initializescript(__file__)

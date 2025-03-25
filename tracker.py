@@ -5,7 +5,7 @@ from colorama import Fore
 from mojang import API, errors
 
 from mcdatacollector import Data, follow, updateviauuid, updatevianickname, chatbot, datawarn, warn, initializescript, \
-    getuuid, DOTENV
+    getuuid
 
 
 def generatepasscode() -> str:
@@ -18,7 +18,7 @@ def generatepasscode() -> str:
 
 def main():
     chatbotflag = False  # Init chatbot activity flag
-    CHATBOT_HOST = DOTENV["CHATBOT_HOST"]  # Host player name
+    CHATBOT_HOST = Data.__raw__["CHATBOT_HOST"]  # Host player name
     if CHATBOT_HOST == "":
         CHATBOT_HOST = None
     # print(f"Chatbot passcode for this session is: {PASSCODE}")  # logging

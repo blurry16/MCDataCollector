@@ -1,7 +1,10 @@
+from os import mkdir
+from shutil import rmtree
+
 import requests
 from colorama import Fore
 
-from mcdatacollector import __version__ as localversion
+from mcdatacollector import __version__ as localversion, REPOURL, __csvfolder
 from mcdatacollector import getdata, saveskins, updatedata, Data, warn, datawarn, statswarn, stats, initializescript
 
 
@@ -12,9 +15,10 @@ def main():
             "2. Save skins\n"
             "3. Update data\n"
             "4. Statistics\n"
-            "5. Check for updates\n"
-            "6. Quit\n"
-            "> "
+            "5. Dumps\n"
+            "6. Check for updates\n"
+            "99. Quit\n"
+            "-> "
         ).strip()
         match inp:
             case "1":
@@ -27,8 +31,8 @@ def main():
                         "5. Get all players' nicknames in the DB\n"
                         "6. Get all zombie accounts nicknames in the DB\n"
                         "7. Get all not-zombie accounts nicknames in the DB\n"
-                        "8. Back to previous stage\n"
-                        "> "
+                        "99. Back to previous stage\n"
+                        "-> "
                     ).strip()
                     match inp:
                         case "1":
@@ -69,7 +73,7 @@ def main():
 
                             getdata.listallnonzombies()
 
-                        case "8":
+                        case "99":
                             break
 
                         case _:
@@ -82,8 +86,8 @@ def main():
                         "2. Name\n"
                         "3. HTML model\n"
                         "4. Everything above\n"
-                        "5. Back to previous stage\n"
-                        "> "
+                        "99. Back to previous stage\n"
+                        "-> "
                     ).strip()
                     match mode:
                         case "1":
@@ -102,7 +106,7 @@ def main():
 
                             saveskins.saveeverything()
 
-                        case "5":
+                        case "99":
 
                             break
 
@@ -115,8 +119,8 @@ def main():
                         "1. By nicknames\n"
                         "2. With /list\n"
                         "3. Everyone's data (last time seen won't be touched)\n"
-                        "4. Back to previous stage\n"
-                        "> "
+                        "99. Back to previous stage\n"
+                        "-> "
                     ).strip()
                     match a:
                         case "1":
@@ -131,7 +135,7 @@ def main():
 
                             updatedata.updateeveryonesdata()
 
-                        case "4":
+                        case "99":
                             break
                         case _:
                             print(f"{Fore.RED}Unknown command.")
@@ -142,8 +146,8 @@ def main():
                         "1. Add stats\n"
                         "2. Parse stats\n"
                         "3. Preview raw stats JSON\n"
-                        "4. Back to previous stage\n"
-                        "> "
+                        "99. Back to previous stage\n"
+                        "-> "
                     ).strip()
                     match a:
 
@@ -162,22 +166,44 @@ def main():
                             print(f"{Fore.RED}Unknown command.")
 
             case "5":
+                while True:
+                    a = input(
+                        "1. Delete all dumps\n"
+                        "2. Delete only full dumps\n"
+                        "3. Delete only miscellaneous dumps\n"
+                        "99. Back to previous stage\n"
+                        "-> "
+                    ).strip()
+                    if a == "99":
+                        break
+                    if a in ["1", "2"]:
+                        __csvfolderregen("full")
+                        print(f"{__csvfolder.joinpath('full')} regenerated.")
+                    if a in ["1", "3"]:
+                        __csvfolderregen("misc")
+                        print(f"{__csvfolder.joinpath('misc')} regenerated.")
+                    if a not in [str(i) for i in range(1, 4)]:
+                        print(f"{Fore.RED}Unknown command.")
+
+            case "6":
                 githubversion = requests.get(
                     "https://raw.githubusercontent.com/blurry16/MCDataCollector/refs/heads/main/mcdatacollector/__init__.py").text.split(
                     "\n")[0].split(" ")[2].replace("\"", "")
                 if githubversion[:3] != "dev" and githubversion != localversion:
                     print(f"{Fore.GREEN}Good news! New version {githubversion} is available at "
-                          f"https://github.com/blurry16/MCDataCollector/releases/latest!")
+                          f"{REPOURL}releases/latest!")
 
 
                 else:
                     print(f"{Fore.RED}No updates found. {localversion} is up to date.")
-            case "6":
+            case "99":
                 break
 
             case _:
                 print(f"{Fore.RED}Unknown command.")
 
+
+__csvfolderregen = lambda f: (rmtree(__csvfolder.joinpath(f)), mkdir(__csvfolder.joinpath(f)))
 
 if __name__ == "__main__":
     warn(Data.__client__)

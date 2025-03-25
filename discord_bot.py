@@ -1,5 +1,10 @@
+"""--dumprm: removes a dump from hard drive after posting"""
+
+import json
 import logging
 import time
+from pathlib import Path
+from sys import argv
 
 import disnake
 from disnake.ext import commands
@@ -9,7 +14,7 @@ from mojang import API, errors
 from mcdatacollector import datafile, datawarn, getuuid, initializescript, __csvfolder
 
 mapi = API()
-# argv = [i.lower() for i in argv[1:]]
+argv = [i.lower() for i in argv[1:]]
 
 activity = disnake.Activity(name="Forrest Gump", type=disnake.ActivityType.watching)
 bot = commands.Bot(
@@ -24,6 +29,9 @@ logging.basicConfig()
 logger = logging.getLogger("mcdatacollector.discord_bot")
 logger.setLevel(logging.INFO)
 
+dumprm = "--dumprm" in argv
+if dumprm:
+    logger.info("this session is run with --dumprm argument. the dump will be removed after posting")
 
 async def dbidcheck(db_id: int, inter: disnake.ApplicationCommandInteraction) -> str | None:
     if db_id < 0:
@@ -50,9 +58,7 @@ async def on_ready() -> None:
     logger.info(f"Bot {bot.user} is ready!")
 
 
-@bot.slash_command(
-    description="Check last time when a selected player was seen online. (if the bot saw them online)"
-)
+@bot.slash_command(description="Check last time when a selected player was seen online. (if the bot saw them online)")
 async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str = None, uuid: str = None,
                    db_id: int = None) -> None:
     if not await parsearguments(inter, nickname, uuid, db_id):
@@ -104,9 +110,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
         )
 
 
-@bot.slash_command(
-    description="Check the first time when the bot has seen selected player."
-)
+@bot.slash_command(description="Check the first time when the bot has seen selected player.")
 async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: str = None, uuid: str = None,
                         db_id: int = None) -> None:
     if not await parsearguments(inter, nickname, uuid, db_id):
@@ -195,9 +199,8 @@ async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = 
         else:
             await inter.send("There's no such player in the Database with this UUID", ephemeral=True)
 
-@bot.slash_command(
-    description="Returns data of selected player from the database in JSON format."
-)
+
+@bot.slash_command(description="Performs a search using nickname, uuid or db id")
 async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = None, uuid: str = None,
                   db_id: int = None,
                   indent: int = 2) -> None:
@@ -247,40 +250,55 @@ async def count(inter: disnake.ApplicationCommandInteraction) -> None:
     await inter.send(f"There are {len(data)} players in the database.")
 
 
-def __gendumpname(format: str = "csv") -> str:
-    return f"dump-{time.time()}.{format}"
+def __gendumpname(extension: str = "csv") -> str:
+    """
+    :param extension: file extension without the dot
+    :return: dump name as str
+    """
+    return f"dump-{time.time()}.{extension}"
 
 
-def __dumpascsv() -> str:
+def __dumpascsv() -> Path:
     data = datafile.load()
-    csv = "id,name,last_seen,first_time_seen,skin_variant,cape_url,skin_url,db_id,does_exist\n"
+    csv = "id,name,last_seen,first_time_seen,skin_variant,cape_url,skin_url,db_id,does_exist\n"  # header
     for i in data:
-        csv += ",".join([str(j) for j in data[i].values()]) + "\n"
-    __dumppath = f"{__csvfolder}/full/{__gendumpname()}"
+        csv += ",".join([json.dumps(j) for j in data[i].values()]) + "\n"
+    __dumppath = Path(f"{__csvfolder}/full/{__gendumpname()}")
     with open(__dumppath, "x") as csvfile:
         csvfile.write(csv)
     return __dumppath
 
 
+def __unlink(path: Path):
+    path.unlink()
+    logger.info(f"{path} removed")
+
 @bot.slash_command(description="Get full data dump in DB (csv format)")
 async def getfulldata(inter: disnake.ApplicationCommandInteraction) -> None:
     # async def getfulldata(inter: disnake.ApplicationCommandInteraction, format: bool) -> None:
     logger.info(f"{inter.author} used /getfulldata")
+    await inter.response.defer()
     # if format:
-    return await inter.send(file=disnake.File(__dumpascsv(), __gendumpname()))
+    path = __dumpascsv()
+    await inter.edit_original_message(file=disnake.File(path, __gendumpname()))
+    if dumprm:
+        __unlink(path)
     # return await inter.send(file=disnake.File(datafile.file_path, __gendumpname("json")))
 
 
 @bot.slash_command(description="Get all uuids:usernames in DB (csv format)")
 async def getplayers(inter: disnake.ApplicationCommandInteraction) -> None:
     logger.info(f"{inter.author} used /getusernames")
+    await inter.response.defer()
     data = datafile.load()
     filename = __gendumpname()
-    csv = "id,name\n" + "\n".join([f"{i},{data[i]["name"]}" for i in data])
-    path = f"{__csvfolder}/misc/{filename}.csv"
+    csv = "id,name\n" + "\n".join([f"{json.dumps(i)},{json.dumps(data[i]["name"])}" for i in data])
+    path = Path(f"{__csvfolder}/misc/{filename}")
     with open(path, "x") as f:
         f.write(csv)
-    await inter.send(file=disnake.File(path, filename))
+    await inter.edit_original_message(file=disnake.File(path, filename))
+    if dumprm:
+        __unlink(path)
 
 
 @bot.slash_command(description="Project in a nutshell")

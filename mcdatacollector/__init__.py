@@ -1,19 +1,12 @@
-__version__ = "dev1.4.0"
+__version__ = "dev1.4.0"  # MCDC version
 
-#
-#  ___       ___
-# (   )     (   )
-#  | |.-.    | |   ___  ___   ___ .-.     ___ .-.     ___  ___   .--.    .--.
-#  | /   \   | |  (   )(   ) (   )   \   (   )   \   (   )(   ) (_  |   / ,  ;
-#  |  .-. |  | |   | |  | |   | ' .-. ;   | ' .-. ;   | |  | |    | |  | .(___)
-#  | |  | |  | |   | |  | |   |  / (___)  |  / (___)  | |  | |    | |  | | _
-#  | |  | |  | |   | |  | |   | |         | |         | '  | |    | |  | '` `.
-#  | |  | |  | |   | |  | |   | |         | |         '  `-' |    | |  | .-,  .
-#  | '  | |  | |   | |  ; '   | |         | |          `.__. |    | |  | |  | |
-#  ' `-' ;   | |   ' `-'  /   | |         | |          ___ | |    | |  . `-'  ;
-#   `.__.   (___)   '.__.'   (___)       (___)        (   )' |   (___)  '.__.'
-#                                                      ; `-' '
-#                                                       .__.'
+# Designed, developed & made by blurry16 & ...
+# Contributions are welcome.
+# I'll add you into the contributors list and I won't be a jerk.
+
+# Licensed under MIT, Copyright (c) blurry16 2024-2025
+
+# Small mark - MCDC stands for MCDataCollector or MinecraftDataCollector. All these names are equal.
 
 from json import load, dump, dumps
 from logging import getLogger, basicConfig
@@ -28,14 +21,24 @@ from colorama import init, Back, Fore
 from dotenv import dotenv_values
 from mojang import API
 
-__dir = Path(__file__).parent.parent
+__logo = rf"""{Fore.MAGENTA} ____    ____   ______  ______           _            ______         __   __                _                   
+|_   \  /   _|.' ___  ||_   _ `.        / |_        .' ___  |       [  | [  |              / |_                 
+  |   \/   | / .'   \_|  | | `. \ ,--. `| |-',--.  / .'   \_|  .--.  | |  | | .---.  .---.`| |-' .--.   _ .--.  
+  | |\  /| | | |         | |  | |`'_\ : | | `'_\ : | |       / .'`\ \| |  | |/ /__\\/ /'`\]| | / .'`\ \[ `/'`\] 
+ _| |_\/_| |_\ `.___.'\ _| |_.' /// | |,| |,// | |,\ `.___.'\| \__. || |  | || \__.,| \__. | |,| \__. | | |     
+|_____||_____|`.____ .'|______.' \'-;__/\__/\'-;__/ `.____ .' '.__.'[___][___]'.__.''.___.'\__/ '.__.' [___]    """
+
+REPOURL = "https://github.com/blurry16/MCDataCollector"
+
+__mcdc = Path(__file__).parent
+__dir = __mcdc.parent
 
 init(autoreset=True)  # Colorama init
 
 __logger = getLogger("mcdatacollector")
 basicConfig()
 
-if ".env" not in listdir("/".join(__file__.split("\\" if osname == "nt" else "/")[:-2])):
+if ".env" not in listdir(__dir):
     __logger.warning(f".env file not found! Exceptions WILL be raised.")
 
 __datafolder = __dir.joinpath("data/")
@@ -43,33 +46,24 @@ __dumpsfolder = __datafolder.joinpath("dumps/")
 __csvfolder = __dumpsfolder.joinpath("csv/")
 
 for i in [__datafolder, __dumpsfolder, __csvfolder, __csvfolder.joinpath("full"), __csvfolder.joinpath("misc")]:
-    print(i)
     if not i.exists():
         mkdir(i)
 
-DOTENV = dotenv_values(".env")
+DOTENV = dotenv_values(f"{__dir}/.env")
 
 
 class Data:
-    # Files
-    try:
-        LOGPATH = Path(DOTENV["LOG_PATH"])
-        DATAPATH = Path(DOTENV["DATA_PATH"])
-        STATSPATH = Path(DOTENV["STATS_PATH"])
+    __raw__ = DOTENV
 
-        # Directories
-        MODELSPATH = Path(DOTENV["MODELS_PATH"])
-        SKINSPATH = Path(DOTENV["SKINS_PATH"])
-        SKINSURLPATH = Path(DOTENV["SKINSURL_PATH"])
-    except KeyError:
-        LOGPATH = Path()
-        DATAPATH = Path()
-        STATSPATH = Path()
+    LOGPATH = Path(DOTENV["LOG_PATH"])
+    DATAPATH = Path(DOTENV["DATA_PATH"])
+    STATSPATH = Path(DOTENV["STATS_PATH"])
 
-        # Directories
-        MODELSPATH = Path()
-        SKINSPATH = Path()
-        SKINSURLPATH = Path()
+    # Directories
+    MODELSPATH = Path(DOTENV["MODELS_PATH"])
+    SKINSPATH = Path(DOTENV["SKINS_PATH"])
+    SKINSURLPATH = Path(DOTENV["SKINSURL_PATH"])
+
     __paths__: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSPATH,
                        SKINSURLPATH]  # All paths
     __files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files' paths
@@ -78,7 +72,13 @@ class Data:
     __client__: list = [STATSPATH, MODELSPATH, SKINSPATH, SKINSURLPATH]
 
 
-def warn(paths: list[Path]):
+def warn(paths: list[Path]) -> None:
+    """
+    Warns if something is wrong with a given path
+
+    :param paths: list of paths
+    :return: None
+    """
     for i in paths:
         if i != Path():
             if not exists(i):
@@ -183,7 +183,6 @@ def getuuid(nickname: str) -> str:
 
 
 def updateviauuid(uuid: str) -> None:
-    global datafile
     profile = mapi.get_profile(uuid)
     data = datafile.load()
     data[uuid] = {
@@ -237,16 +236,9 @@ def updatevianickname(nickname: str) -> None:
         print(datafile.dumps(nickname.lower()))
 
 
-__logo = rf"""{Fore.MAGENTA} ____    ____   ______  ______           _            ______         __   __                _                   
-|_   \  /   _|.' ___  ||_   _ `.        / |_        .' ___  |       [  | [  |              / |_                 
-  |   \/   | / .'   \_|  | | `. \ ,--. `| |-',--.  / .'   \_|  .--.  | |  | | .---.  .---.`| |-' .--.   _ .--.  
-  | |\  /| | | |         | |  | |`'_\ : | | `'_\ : | |       / .'`\ \| |  | |/ /__\\/ /'`\]| | / .'`\ \[ `/'`\] 
- _| |_\/_| |_\ `.___.'\ _| |_.' /// | |,| |,// | |,\ `.___.'\| \__. || |  | || \__.,| \__. | |,| \__. | | |     
-|_____||_____|`.____ .'|______.' \'-;__/\__/\'-;__/ `.____ .' '.__.'[___][___]'.__.''.___.'\__/ '.__.' [___]    """
-
 
 def initializescript(script_name: str):
-    print(f"Currently running mcdatacollector {__version__}.\n"
+    print(f"Currently running {__mcdc.name} {__version__}.\n"
           f"{__logo}\n" +
           Fore.MAGENTA + f"{Fore.RESET + ' ' + script_name + ' ' + Fore.MAGENTA:=^121}\n")
 
