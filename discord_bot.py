@@ -1,6 +1,5 @@
 """--dumprm: removes a dump from hard drive after posting"""
 
-import json
 import logging
 import time
 from pathlib import Path
@@ -11,7 +10,7 @@ from disnake.ext import commands
 from dotenv import dotenv_values
 from mojang import API, errors
 
-from mcdatacollector import datafile, getuuid, initializescript, csvfolder
+from mcdatacollector import datafile, getuuid, initializescript
 from mcdatacollector import mcdcdumps
 
 mapi = API()
@@ -33,6 +32,7 @@ logger.setLevel(logging.INFO)
 dumprm = "--dumprm" in argv
 if dumprm:
     logger.info("this session is run with --dumprm argument. the dump will be removed after posting")
+
 
 async def dbidcheck(db_id: int, inter: disnake.ApplicationCommandInteraction) -> str | None:
     if db_id < 0:
@@ -251,7 +251,6 @@ async def count(inter: disnake.ApplicationCommandInteraction) -> None:
     await inter.send(f"There are {len(data)} players in the database.")
 
 
-
 def __unlink(path: Path):
     """
     Unlinks the path and logs it
@@ -260,6 +259,7 @@ def __unlink(path: Path):
     """
     path.unlink()
     logger.info(f"{path} removed")
+
 
 @bot.slash_command(description="Get full data dump in DB (csv format)")
 async def getfulldata(inter: disnake.ApplicationCommandInteraction) -> None:

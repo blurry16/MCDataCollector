@@ -1,4 +1,4 @@
-CHATBOT_HOST = None # Str
+CHATBOT_HOST = None  # Str
 
 # Imports
 import random
@@ -10,6 +10,7 @@ from mcdatacollector import Data, follow, updateviauuid, updatevianickname, chat
     getuuid
 
 CHATBOT_HOST = None if CHATBOT_HOST == "" else CHATBOT_HOST
+
 
 def generatepasscode() -> str:
     """Generates and returns a random passcode"""

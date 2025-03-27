@@ -15,6 +15,7 @@ def __csvfolderregen(subpath: str):
     rmtree(tmp)
     mkdir(tmp)
 
+
 def main():
     while True:
         inp = input(

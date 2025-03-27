@@ -30,8 +30,10 @@ def parsestats():
     else:
         print("No stats available. Try generating them.")
 
+
 def parseraw():
     print(statsdataobj.dumps())
+
 
 if __name__ == "__main__":
     initializescript(__file__)

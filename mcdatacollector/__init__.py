@@ -6,6 +6,7 @@ class Config:
     custom_main_data_path = None
     custom_stats_path = None
 
+
 # Designed, developed & made by blurry16 & ...
 # Contributions are welcome.
 # I'll add you into the contributors list and I won't be a jerk.
@@ -18,12 +19,11 @@ from json import load, dump, dumps
 from logging import getLogger, basicConfig
 from math import ceil
 from os import name as osname, system, listdir, mkdir
-from os.path import exists, isfile, isdir, splitext
 from pathlib import Path
 from time import sleep, time
 from typing import Generator, TextIO, Callable
 
-from colorama import init, Back, Fore
+from colorama import init, Fore
 from dotenv import dotenv_values
 from mojang import API
 
@@ -90,10 +90,8 @@ for i in Data.__files__:
         with open(i, "w") as f:
             f.write("{}")
 
-
 if not Data.DATAPATH.exists():
     Data.DATAPATH.touch()
-
 
 mapi = API()  # Mojang API init
 
@@ -224,7 +222,6 @@ def updatevianickname(nickname: str) -> None:
         datafile.dump(data)
         print(f"{Fore.GREEN}{nickname}'s dictionary updated.")
         print(datafile.dumps(nickname.lower()))
-
 
 
 def initializescript(script_name: str):
