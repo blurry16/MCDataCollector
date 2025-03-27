@@ -1,12 +1,5 @@
+# Path to the latest.log of Minecraft
+LOG_PATH=""
+
 # Discord bot token
 DISCORD_BOT_TOKEN=""
-
-# Files
-LOG_PATH=""
-DATA_PATH=""
-STATS_PATH=""
-
-# Directories
-SKINS_PATH=""
-MODELS_PATH=""
-SKINSURL_PATH=""

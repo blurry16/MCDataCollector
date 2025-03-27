@@ -7,7 +7,7 @@ from colorama import Fore
 
 from mcdatacollector import datafile, Data, initializescript
 
-__allowed_types__ = ["models", "urls", "skins"]
+__allowed_types__ = ["html", "urls", "skins"]
 
 
 def initsave(__type: str) -> tuple[str, dict]:
@@ -17,7 +17,7 @@ def initsave(__type: str) -> tuple[str, dict]:
         return os.curdir, data
 
     foldername = (
-        f"{Data.MODELSPATH if __type == 'models' else Data.SKINSURLPATH if __type == 'urls' else Data.SKINSPATH}\\"
+        f"{Data.HTMLPATH if __type == 'html' else Data.SKINSURLPATH if __type == 'urls' else Data.SKINSPATH}\\"
 
         f"{datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')}")
 
@@ -62,7 +62,7 @@ def savenames():
 
 
 def savehtml():
-    foldername, data = initsave("models")
+    foldername, data = initsave("html")
     for i in data:
         if data[i]["does_exist"]:
             name = data[i]["name"]
@@ -92,7 +92,7 @@ def saveeverything():
                 file.write(response.content)
             with open(rf"{Data.SKINSURLPATH}\{foldername}\{skin_url[39:]}.png", "wb") as file:
                 file.write(response.content)
-            with open(rf"{Data.MODELSPATH}\{foldername}\{name}.html", "x") as file:
+            with open(rf"{Data.HTMLPATH}\{foldername}\{name}.html", "x") as file:
                 file.write(rf'<iframe src="https://minerender.org/embed/skin/?skin={name}&shadow=true" \
                                 frameborder="0" width="1920px" height="972px"></iframe>')
             sleep(0.5)

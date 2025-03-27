@@ -1,12 +1,15 @@
+CHATBOT_HOST = None # Str
+
 # Imports
 import random
 
 from colorama import Fore
 from mojang import API, errors
 
-from mcdatacollector import Data, follow, updateviauuid, updatevianickname, chatbot, datawarn, warn, initializescript, \
+from mcdatacollector import Data, follow, updateviauuid, updatevianickname, chatbot, initializescript, \
     getuuid
 
+CHATBOT_HOST = None if CHATBOT_HOST == "" else CHATBOT_HOST
 
 def generatepasscode() -> str:
     """Generates and returns a random passcode"""
@@ -17,8 +20,8 @@ def generatepasscode() -> str:
 
 
 def main():
+    global CHATBOT_HOST
     chatbotflag = False  # Init chatbot activity flag
-    CHATBOT_HOST = Data.__raw__["CHATBOT_HOST"]  # Host player name
     if CHATBOT_HOST == "":
         CHATBOT_HOST = None
     # print(f"Chatbot passcode for this session is: {PASSCODE}")  # logging
@@ -91,9 +94,6 @@ def main():
 
 
 if __name__ == "__main__":
-
-    warn(Data.__tracker__)
-    datawarn()
 
     PASSCODE = generatepasscode()  # generating passcode
     initializescript("tracker " + PASSCODE)

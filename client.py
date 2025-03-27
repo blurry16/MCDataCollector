@@ -1,12 +1,19 @@
-from os import mkdir
+from os import mkdir, listdir
 from shutil import rmtree
 
 import requests
 from colorama import Fore
 
-from mcdatacollector import __version__ as localversion, REPOURL, __csvfolder
-from mcdatacollector import getdata, saveskins, updatedata, Data, warn, datawarn, statswarn, stats, initializescript
+from mcdatacollector import __version__ as localversion, REPOURL, csvfolder
+from mcdatacollector import getdata, saveskins, updatedata, stats, initializescript
+from mcdatacollector import mcdcdumps
 
+
+def __csvfolderregen(subpath: str):
+    tmp = csvfolder.joinpath(subpath)
+    print(f"Deleting {len(listdir(tmp))} {subpath} dump{'' if abs(len(listdir(tmp))) == 1 else 's'}.")
+    rmtree(tmp)
+    mkdir(tmp)
 
 def main():
     while True:
@@ -143,7 +150,7 @@ def main():
             case "4":
                 while True:
                     a = input(
-                        "1. Add stats\n"
+                        "1. Generate stats\n"
                         "2. Parse stats\n"
                         "3. Preview raw stats JSON\n"
                         "99. Back to previous stage\n"
@@ -152,7 +159,7 @@ def main():
                     match a:
 
                         case "1":
-                            stats.savestats()
+                            stats.genstats()
 
                         case "2":
                             stats.parsestats()
@@ -168,21 +175,28 @@ def main():
             case "5":
                 while True:
                     a = input(
-                        "1. Delete all dumps\n"
-                        "2. Delete only full dumps\n"
-                        "3. Delete only miscellaneous dumps\n"
+                        "1. Generate a full dump\n"
+                        "2. Generate an id,name dump\n"
+                        "3. Delete all dumps\n"
+                        "4. Delete only full dumps\n"
+                        "5. Delete only miscellaneous dumps\n"
                         "99. Back to previous stage\n"
                         "-> "
                     ).strip()
                     if a == "99":
                         break
                     if a in ["1", "2"]:
+                        path = mcdcdumps.dumpfullcsv() if a == "1" else mcdcdumps.dumpplayerscsv()
+                        print(f"The {path.name} dump generated.\n"
+                              f"Access the file at {path}")
+
+                    if a in ["3", "4"]:
                         __csvfolderregen("full")
-                        print(f"{__csvfolder.joinpath('full')} regenerated.")
-                    if a in ["1", "3"]:
+                        print(f"{csvfolder.joinpath('full')} regenerated.")
+                    if a in ["3", "5"]:
                         __csvfolderregen("misc")
-                        print(f"{__csvfolder.joinpath('misc')} regenerated.")
-                    if a not in [str(i) for i in range(1, 4)]:
+                        print(f"{csvfolder.joinpath('misc')} regenerated.")
+                    if a not in [str(i) for i in range(1, 6)]:
                         print(f"{Fore.RED}Unknown command.")
 
             case "6":
@@ -203,12 +217,9 @@ def main():
                 print(f"{Fore.RED}Unknown command.")
 
 
-__csvfolderregen = lambda f: (rmtree(__csvfolder.joinpath(f)), mkdir(__csvfolder.joinpath(f)))
+# __csvfolderregen = lambda f: (rmtree(csvfolder.joinpath(f)), mkdir(csvfolder.joinpath(f)))
 
 if __name__ == "__main__":
-    warn(Data.__client__)
-    datawarn()
-    statswarn()
     initializescript("client")
     try:
         main()

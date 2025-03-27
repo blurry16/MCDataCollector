@@ -11,7 +11,8 @@ from disnake.ext import commands
 from dotenv import dotenv_values
 from mojang import API, errors
 
-from mcdatacollector import datafile, datawarn, getuuid, initializescript, __csvfolder
+from mcdatacollector import datafile, getuuid, initializescript, csvfolder
+from mcdatacollector import mcdcdumps
 
 mapi = API()
 argv = [i.lower() for i in argv[1:]]
@@ -250,26 +251,13 @@ async def count(inter: disnake.ApplicationCommandInteraction) -> None:
     await inter.send(f"There are {len(data)} players in the database.")
 
 
-def __gendumpname(extension: str = "csv") -> str:
-    """
-    :param extension: file extension without the dot
-    :return: dump name as str
-    """
-    return f"dump-{time.time()}.{extension}"
-
-
-def __dumpascsv() -> Path:
-    data = datafile.load()
-    csv = "id,name,last_seen,first_time_seen,skin_variant,cape_url,skin_url,db_id,does_exist\n"  # header
-    for i in data:
-        csv += ",".join([json.dumps(j) for j in data[i].values()]) + "\n"
-    __dumppath = Path(f"{__csvfolder}/full/{__gendumpname()}")
-    with open(__dumppath, "x") as csvfile:
-        csvfile.write(csv)
-    return __dumppath
-
 
 def __unlink(path: Path):
+    """
+    Unlinks the path and logs it
+    :param path:
+    :return:
+    """
     path.unlink()
     logger.info(f"{path} removed")
 
@@ -279,8 +267,8 @@ async def getfulldata(inter: disnake.ApplicationCommandInteraction) -> None:
     logger.info(f"{inter.author} used /getfulldata")
     await inter.response.defer()
     # if format:
-    path = __dumpascsv()
-    await inter.edit_original_message(file=disnake.File(path, __gendumpname()))
+    path = mcdcdumps.dumpfullcsv()
+    await inter.edit_original_message(file=disnake.File(path, path.name))
     if dumprm:
         __unlink(path)
     # return await inter.send(file=disnake.File(datafile.file_path, __gendumpname("json")))
@@ -290,13 +278,8 @@ async def getfulldata(inter: disnake.ApplicationCommandInteraction) -> None:
 async def getplayers(inter: disnake.ApplicationCommandInteraction) -> None:
     logger.info(f"{inter.author} used /getusernames")
     await inter.response.defer()
-    data = datafile.load()
-    filename = __gendumpname()
-    csv = "id,name\n" + "\n".join([f"{json.dumps(i)},{json.dumps(data[i]["name"])}" for i in data])
-    path = Path(f"{__csvfolder}/misc/{filename}")
-    with open(path, "x") as f:
-        f.write(csv)
-    await inter.edit_original_message(file=disnake.File(path, filename))
+    path = mcdcdumps.dumpplayerscsv()
+    await inter.edit_original_message(file=disnake.File(path, path.name))
     if dumprm:
         __unlink(path)
 
@@ -325,7 +308,6 @@ def main():
 
 
 if __name__ == "__main__":
-    datawarn()
     initializescript("discord_bot")
     try:
         main()

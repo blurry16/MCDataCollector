@@ -1,5 +1,11 @@
 __version__ = "dev1.4.0"  # MCDC version
 
+
+class Config:
+    custom_data_folder = None
+    custom_main_data_path = None
+    custom_stats_path = None
+
 # Designed, developed & made by blurry16 & ...
 # Contributions are welcome.
 # I'll add you into the contributors list and I won't be a jerk.
@@ -41,68 +47,52 @@ basicConfig()
 if ".env" not in listdir(__dir):
     __logger.warning(f".env file not found! Exceptions WILL be raised.")
 
-__datafolder = __dir.joinpath("data/")
-__dumpsfolder = __datafolder.joinpath("dumps/")
-__csvfolder = __dumpsfolder.joinpath("csv/")
-
-for i in [__datafolder, __dumpsfolder, __csvfolder, __csvfolder.joinpath("full"), __csvfolder.joinpath("misc")]:
-    if not i.exists():
-        mkdir(i)
-
 DOTENV = dotenv_values(f"{__dir}/.env")
+
+datafolder = Config.custom_data_folder if Config.custom_data_folder is not None else __dir.joinpath("data/")
+
+dumpsfolder = datafolder.joinpath("dumps/")
+csvfolder = dumpsfolder.joinpath("csv/")
 
 
 class Data:
     __raw__ = DOTENV
 
     LOGPATH = Path(DOTENV["LOG_PATH"])
-    DATAPATH = Path(DOTENV["DATA_PATH"])
-    STATSPATH = Path(DOTENV["STATS_PATH"])
+    DATAPATH = Path(Config.custom_main_data_path) if Config.custom_data_folder else datafolder.joinpath("data.json")
+    STATSPATH = Path(Config.custom_stats_path) if Config.custom_stats_path else datafolder.joinpath("stats.json")
+
+    picsfolder = datafolder.joinpath("pics/")
 
     # Directories
-    MODELSPATH = Path(DOTENV["MODELS_PATH"])
-    SKINSPATH = Path(DOTENV["SKINS_PATH"])
-    SKINSURLPATH = Path(DOTENV["SKINSURL_PATH"])
+    HTMLPATH = picsfolder.joinpath("models/")
+    SKINSPATH = picsfolder.joinpath("skins/")
+    SKINSURLPATH = picsfolder.joinpath("skinsurl/")
 
-    __paths__: list = [LOGPATH, DATAPATH, STATSPATH, MODELSPATH, SKINSPATH,
-                       SKINSURLPATH]  # All paths
-    __files__: list = [LOGPATH, DATAPATH, STATSPATH]  # Only files' paths
-    __dirs__: list = [MODELSPATH, SKINSURLPATH, SKINSPATH]  # Only directories' paths
+    __files__: list = [DATAPATH, STATSPATH]  # Only files' paths
+    __dirs__: list = [datafolder, dumpsfolder, csvfolder, csvfolder.joinpath("full"), csvfolder.joinpath("misc"),
+                      picsfolder, HTMLPATH, SKINSURLPATH, SKINSPATH]  # Only directories' paths
+    __paths__ = __files__ + __dirs__
+
     __tracker__: list = [LOGPATH, DATAPATH]
-    __client__: list = [STATSPATH, MODELSPATH, SKINSPATH, SKINSURLPATH]
+    __client__: list = [STATSPATH, HTMLPATH, SKINSPATH, SKINSURLPATH]
 
 
-def warn(paths: list[Path]) -> None:
-    """
-    Warns if something is wrong with a given path
+if not Data.LOGPATH.exists():
+    raise Exception("Logpath doesn't exist.")
 
-    :param paths: list of paths
-    :return: None
-    """
-    for i in paths:
-        if i != Path():
-            if not exists(i):
-                print(f"{Back.RED}{i} doesn't exist. Exceptions may be raised.")
-                print(f"{Back.RED}Please change the value at .env")
-                pause()
-            elif i in Data.__dirs__ and isfile(i):
-                print(f"{Back.RED}{i} is a file, while it has to be a directory. Exceptions may be raised.")
-                pause()
-            elif i in Data.__files__ and isdir(i):
-                print(f"{Back.RED}{i} is a directory, while it has to be a file. Exceptions may be raised.")
-                pause()
+for i in Data.__dirs__:
+    if not i.exists():
+        mkdir(i)
+for i in Data.__files__:
+    if not i.exists():
+        i.touch()
+        with open(i, "w") as f:
+            f.write("{}")
 
 
-def datawarn():
-    if splitext(Data.DATAPATH)[1] != ".json" and exists(Data.DATAPATH) and Data.DATAPATH != Path(""):
-        print(f"{Back.RED}{Data.DATAPATH} has not .json extension.")
-        pause()
-
-
-def statswarn():
-    if splitext(Data.STATSPATH)[1] != ".json" and exists(Data.STATSPATH) and Data.STATSPATH != Path(""):
-        print(f"{Back.RED}{Data.STATSPATH} has not .json extension.")
-        pause()
+if not Data.DATAPATH.exists():
+    Data.DATAPATH.touch()
 
 
 mapi = API()  # Mojang API init
