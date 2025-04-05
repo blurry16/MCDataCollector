@@ -2,10 +2,10 @@ __version__ = "dev1.4.0"  # MCDC version
 
 
 class Config:
-    custom_data_folder = None
+    custom_data_folder_path = None
     custom_main_data_path = None
     custom_stats_path = None
-
+    custom_dotenv_path = None
 
 # Designed, developed & made by blurry16 & ...
 # Contributions are welcome.
@@ -39,6 +39,8 @@ REPOURL = "https://github.com/blurry16/MCDataCollector"
 __mcdc = Path(__file__).parent
 __dir = __mcdc.parent
 
+dotenvpath =  __dir.joinpath(".env") if Config.custom_dotenv_path is None else Config.custom_dotenv_path
+
 init(autoreset=True)  # Colorama init
 
 __logger = getLogger("mcdatacollector")
@@ -47,9 +49,9 @@ basicConfig()
 if ".env" not in listdir(__dir):
     __logger.warning(f".env file not found! Exceptions WILL be raised.")
 
-DOTENV = dotenv_values(f"{__dir}/.env")
+DOTENV = dotenv_values(dotenvpath)
 
-datafolder = Config.custom_data_folder if Config.custom_data_folder is not None else __dir.joinpath("data/")
+datafolder = Config.custom_data_folder_path if Config.custom_data_folder_path is not None else __dir.joinpath("data/")
 
 dumpsfolder = datafolder.joinpath("dumps/")
 csvfolder = dumpsfolder.joinpath("csv/")
@@ -59,7 +61,7 @@ class Data:
     __raw__ = DOTENV
 
     LOGPATH = Path(DOTENV["LOG_PATH"])
-    DATAPATH = Path(Config.custom_main_data_path) if Config.custom_data_folder else datafolder.joinpath("data.json")
+    DATAPATH = Path(Config.custom_main_data_path) if Config.custom_data_folder_path else datafolder.joinpath("data.json")
     STATSPATH = Path(Config.custom_stats_path) if Config.custom_stats_path else datafolder.joinpath("stats.json")
 
     picsfolder = datafolder.joinpath("pics/")
@@ -81,13 +83,13 @@ class Data:
 if not Data.LOGPATH.exists():
     raise Exception("Logpath doesn't exist.")
 
-for i in Data.__dirs__:
-    if not i.exists():
-        mkdir(i)
-for i in Data.__files__:
-    if not i.exists():
-        i.touch()
-        with open(i, "w") as f:
+for _dir in Data.__dirs__:
+    if not _dir.exists():
+        mkdir(_dir)
+for _file in Data.__files__:
+    if not _file.exists():
+        _file.touch()
+        with open(_file, "w") as f:
             f.write("{}")
 
 if not Data.DATAPATH.exists():

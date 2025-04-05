@@ -27,9 +27,9 @@ def updatebynicknames():
 returnupdatewithlist = False
 
 
-def followupdatewithlist(file: TextIO) -> Generator[str, None, None]:
-    global returnupdatewithlist
+def __follow(file: TextIO) -> Generator[str, None, None]:
     """follows selected file, used only in update with /list"""
+    global returnupdatewithlist
     file.seek(0, 2)
     while True:
         try:
@@ -47,7 +47,7 @@ def updatewithlist() -> None:
     global returnupdatewithlist
 
     logfile = open(Data.LOGPATH, "r", encoding="UTF-8")
-    loglines = followupdatewithlist(logfile)
+    loglines = __follow(logfile)
     print(f"{Fore.MAGENTA}Waiting for /list...\nDo CTRL+C do break updating.")
     for line in loglines:
         if returnupdatewithlist:

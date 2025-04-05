@@ -1,10 +1,11 @@
+from logging import getLogger
 from os import mkdir, listdir
 from shutil import rmtree
 
 import requests
 from colorama import Fore
 
-from mcdatacollector import __version__ as localversion, REPOURL, csvfolder
+from mcdatacollector import __version__ as localversion, REPOURL, csvfolder, updateviauuid, updatevianickname
 from mcdatacollector import getdata, saveskins, updatedata, stats, initializescript
 from mcdatacollector import mcdcdumps
 
@@ -14,6 +15,9 @@ def __csvfolderregen(subpath: str):
     print(f"Deleting {len(listdir(tmp))} {subpath} dump{'' if abs(len(listdir(tmp))) == 1 else 's'}.")
     rmtree(tmp)
     mkdir(tmp)
+
+
+logger = getLogger("mcdc.client")
 
 
 def main():
@@ -28,7 +32,9 @@ def main():
             "99. Quit\n"
             "-> "
         ).strip()
-        match inp:
+        if len(inp) == 0:
+            continue
+        match inp.split()[0]:
             case "1":
                 while True:
                     inp = input(
@@ -201,10 +207,21 @@ def main():
                         print(f"{Fore.RED}Unknown command.")
 
             case "6":
+
+                isdevbuild = localversion[:3] == "dev"
+                if isdevbuild:
+                    logger.warning(
+                        "please mind that you're currently using DEVELOPER build. update checking may work wrong.")
                 githubversion = requests.get(
                     "https://raw.githubusercontent.com/blurry16/MCDataCollector/refs/heads/main/mcdatacollector/__init__.py").text.split(
                     "\n")[0].split(" ")[2].replace("\"", "")
-                if githubversion[:3] != "dev" and githubversion != localversion:
+                if githubversion[:3] == "dev":
+                    print(
+                        f"{Fore.RED}Update checking is unavailable. The main branch has 'dev' tag in its __version__.")
+                    continue
+                la, lb, lc = map(int, (localversion[3:] if isdevbuild else localversion).split("."))  # local a, ...
+                a, b, c = map(int, githubversion.split("."))
+                if a > la or (a == la and b > lb) or (a == la and b == lb and c > lc):
                     print(f"{Fore.GREEN}Good news! New version {githubversion} is available at "
                           f"{REPOURL}releases/latest!")
 
@@ -213,6 +230,15 @@ def main():
                     print(f"{Fore.RED}No updates found. {localversion} is up to date.")
             case "99":
                 break
+
+            case "--forceadd":
+                if len(inp.split()) > 2:
+                    m = inp.split()[1]
+                    arg = inp.split()[2]
+                    if m == "--uuid":
+                        updateviauuid(arg)
+                    elif m == "--username":
+                        updatevianickname(arg)
 
             case _:
                 print(f"{Fore.RED}Unknown command.")

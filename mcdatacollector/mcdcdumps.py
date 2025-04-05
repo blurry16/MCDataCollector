@@ -7,7 +7,8 @@ from mcdatacollector import datafile, csvfolder
 
 def __gendumpname(_type: str, extension: str = "csv") -> str:
     """
-    :param extension: file extension without the dot
+    :param _type: type of the data the dump has
+    :param extension: the file extension without the dot
     :return: dump name as str
     """
     return f"mcdcdump-{_type}-{time.time()}.{extension}"
@@ -36,7 +37,7 @@ def dumpplayerscsv() -> Path:
     data = datafile.load()
     filename = __gendumpname("idname")
     csv = "id,name\n" + "\n".join([f"{json.dumps(i)},{json.dumps(data[i]["name"])}" for i in data])
-    path = Path(f"{csvfolder}/misc/{filename}")
-    with open(path, "x") as f:
+    __dumppath = Path(f"{csvfolder}/misc/{filename}")
+    with open(__dumppath, "x") as f:
         f.write(csv)
-    return path
+    return __dumppath

@@ -11,7 +11,7 @@ from dotenv import dotenv_values
 from mojang import API, errors
 
 from mcdatacollector import datafile, getuuid, initializescript
-from mcdatacollector import mcdcdumps
+from mcdatacollector import mcdcdumps, dotenvpath
 
 mapi = API()
 argv = [i.lower() for i in argv[1:]]
@@ -23,10 +23,10 @@ bot = commands.Bot(
     activity=activity,
     status=disnake.Status.offline,
 )
-TOKEN = dotenv_values(".env")["DISCORD_BOT_TOKEN"]
+TOKEN = dotenv_values(dotenvpath)["DISCORD_BOT_TOKEN"]
 
 logging.basicConfig()
-logger = logging.getLogger("mcdatacollector.discord_bot")
+logger = logging.getLogger("mcdc.discord_bot")
 logger.setLevel(logging.INFO)
 
 dumprm = "--dumprm" in argv
@@ -276,7 +276,7 @@ async def getfulldata(inter: disnake.ApplicationCommandInteraction) -> None:
 
 @bot.slash_command(description="Get all uuids:usernames in DB (csv format)")
 async def getplayers(inter: disnake.ApplicationCommandInteraction) -> None:
-    logger.info(f"{inter.author} used /getusernames")
+    logger.info(f"{inter.author} used /getplayer")
     await inter.response.defer()
     path = mcdcdumps.dumpplayerscsv()
     await inter.edit_original_message(file=disnake.File(path, path.name))
