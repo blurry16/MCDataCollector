@@ -7,6 +7,15 @@ class Config:
     custom_stats_path = None
     custom_dotenv_path = None
 
+
+__DOTENVTEMPLATE = \
+    r"""# Path to the latest.log of Minecraft
+    LOG_PATH=""
+    
+    # Discord bot token
+    DISCORD_BOT_TOKEN=""
+    """
+
 # Designed, developed & made by blurry16 & ...
 # Contributions are welcome.
 # I'll add you into the contributors list and I won't be a jerk.
@@ -18,7 +27,7 @@ class Config:
 from json import load, dump, dumps
 from logging import getLogger, basicConfig
 from math import ceil
-from os import name as osname, system, listdir, mkdir
+from os import name as osname, system, mkdir
 from pathlib import Path
 from time import sleep, time
 from typing import Generator, TextIO, Callable
@@ -46,8 +55,16 @@ init(autoreset=True)  # Colorama init
 __logger = getLogger("mcdatacollector")
 basicConfig()
 
-if ".env" not in listdir(__dir):
-    __logger.warning(f".env file not found! Exceptions WILL be raised.")
+dotEnvFileIsEmptyException = Exception(".env file is empty")
+
+if not dotenvpath.exists():
+    dotenvpath.touch()
+
+    __logger.warning(f".env file created at {dotenvpath}")
+
+    with open(dotenvpath, "w") as f:
+        f.write(__DOTENVTEMPLATE)
+    __logger.warning(".env file filled with the template. please fill it up")
 
 DOTENV = dotenv_values(dotenvpath)
 
@@ -58,9 +75,17 @@ csvfolder = dumpsfolder.joinpath("csv/")
 
 
 class Data:
+    """
+    Even I don't know what the fuck is this.
+    """
+    global dotEnvFileIsEmptyException
+
     __raw__ = DOTENV
 
     LOGPATH = Path(DOTENV["LOG_PATH"])
+    if LOGPATH == Path(""):
+        raise dotEnvFileIsEmptyException
+
     DATAPATH = Path(Config.custom_main_data_path) if Config.custom_data_folder_path else datafolder.joinpath("data.json")
     STATSPATH = Path(Config.custom_stats_path) if Config.custom_stats_path else datafolder.joinpath("stats.json")
 
