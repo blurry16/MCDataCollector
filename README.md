@@ -7,7 +7,7 @@ last on.
 
 Clone the repo and use `pip install -r requirements.txt`.
 
-### How do I run it?
+### How do I run it? (outdated)
 
 Install requirements ofc :p  
 First of all replace `LOG_PATH` constant in `.env` with your latest.log path with your
