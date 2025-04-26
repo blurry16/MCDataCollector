@@ -284,19 +284,19 @@ async def getplayers(inter: disnake.ApplicationCommandInteraction) -> None:
         __unlink(path)
 
 
-@bot.slash_command(description="Project in a nutshell")
-async def description(inter: disnake.ApplicationCommandInteraction) -> None:
-    logger.info(f"{inter.author} used /description")
-    await inter.send(
-        f"# This project is NOT run by Cubeville staff. Everything is done by blurry16.\n"
-        f"Your personal data is not collected, your account is completely safe. "
-        f"Only Mojang API data, last/first time joined/left the server are collected."
-        f"\nSource code can be obtained **[here](https://github.com/blurry16/MCDataCollector)**.\n"
-        f"\n"
-        f"*Licensed under **[MIT License](https://github.com/blurry16/MCDataCollector/tree/main/LICENSE)**, " +
-        open("LICENSE").read().split("\n")[2] + "*",
-        ephemeral=True,
-    )
+# @bot.slash_command(description="Project in a nutshell")
+# async def description(inter: disnake.ApplicationCommandInteraction) -> None:
+#     logger.info(f"{inter.author} used /description")
+#     await inter.send(
+#         f"# This project is NOT run by Cubeville staff. Everything is done by blurry16.\n"
+#         f"Your personal data is not collected, your account is completely safe. "
+#         f"Only Mojang API data, last/first time joined/left the server are collected."
+#         f"\nSource code can be obtained **[here](https://github.com/blurry16/MCDataCollector)**.\n"
+#         f"\n"
+#         f"*Licensed under **[MIT License](https://github.com/blurry16/MCDataCollector/tree/main/LICENSE)**, " +
+#         open("LICENSE").read().split("\n")[2] + "*",
+#         ephemeral=True,
+#     )
 
 
 def main():
