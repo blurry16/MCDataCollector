@@ -51,7 +51,7 @@ REPOURL = "https://github.com/blurry16/MCDataCollector"
 __mcdc = Path(__file__).parent
 __dir = __mcdc.parent
 
-dotenvpath =  __dir.joinpath(".env") if Config.custom_dotenv_path is None else Config.custom_dotenv_path
+dotenvpath = __dir.joinpath(".env") if Config.custom_dotenv_path is None else Config.custom_dotenv_path
 
 init(autoreset=True)  # Colorama init
 
@@ -59,7 +59,6 @@ __logger = getLogger("mcdatacollector")
 basicConfig()
 
 dotEnvFileIsEmptyException = Exception(".env file is empty")
-
 
 if not dotenvpath.exists():
     dotenvpath.touch()
@@ -90,7 +89,8 @@ class Data:
     if LOGPATH == Path(""):
         raise dotEnvFileIsEmptyException
 
-    DATAPATH = Path(Config.custom_main_data_path) if Config.custom_data_folder_path else datafolder.joinpath("data.json")
+    DATAPATH = Path(Config.custom_main_data_path) if Config.custom_data_folder_path else datafolder.joinpath(
+        "data.json")
     STATSPATH = Path(Config.custom_stats_path) if Config.custom_stats_path else datafolder.joinpath("stats.json")
 
     picsfolder = datafolder.joinpath("pics/")

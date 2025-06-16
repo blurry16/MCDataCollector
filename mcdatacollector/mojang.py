@@ -46,7 +46,6 @@ def get_profile(uuid: str = None, username: str = None) -> UserProfile:
     if "errorMessage" in raw:
         raise NotFoundException(uuid)
 
-    username = raw["name"]
     properties = json.loads(base64.b64decode(raw["properties"][0]["value"]))
 
     userprofile = UserProfile(

@@ -3,8 +3,8 @@ from time import time
 
 from colorama import Fore
 
-from mcdatacollector import datafile, getuuid, initializescript
 import mcdatacollector.mojang as mcdcapi
+from mcdatacollector import datafile, getuuid, initializescript
 
 
 def getlastseentime(arg: str):

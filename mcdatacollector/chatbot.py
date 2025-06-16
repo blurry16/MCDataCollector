@@ -4,8 +4,8 @@ from datetime import datetime
 import keyboard
 from colorama import Fore
 
-from mcdatacollector import datafile, getuuid, initializescript, __logger
 import mcdatacollector.mojang as mcdcapi
+from mcdatacollector import datafile, getuuid, initializescript, __logger
 
 CHATBOTBANNED = []
 
