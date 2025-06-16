@@ -10,11 +10,10 @@ class Config:
 
 __DOTENVTEMPLATE = \
     r"""# Path to the latest.log of Minecraft
-    LOG_PATH=""
+LOG_PATH=""
     
-    # Discord bot token
-    DISCORD_BOT_TOKEN=""
-    """
+# Discord bot token
+DISCORD_BOT_TOKEN="""""
 
 # Designed, developed & made by blurry16 & ...
 # Contributions are welcome.
@@ -29,12 +28,16 @@ from logging import getLogger, basicConfig
 from math import ceil
 from os import name as osname, system, mkdir
 from pathlib import Path
+from sys import argv
 from time import sleep, time
 from typing import Generator, TextIO, Callable
 
 from colorama import init, Fore
 from dotenv import dotenv_values
-from mojang import API
+
+import mcdatacollector.mojang
+
+argv = [arg.lower() for arg in argv]
 
 __logo = rf"""{Fore.MAGENTA} ____    ____   ______  ______           _            ______         __   __                _                   
 |_   \  /   _|.' ___  ||_   _ `.        / |_        .' ___  |       [  | [  |              / |_                 
@@ -56,6 +59,7 @@ __logger = getLogger("mcdatacollector")
 basicConfig()
 
 dotEnvFileIsEmptyException = Exception(".env file is empty")
+
 
 if not dotenvpath.exists():
     dotenvpath.touch()
@@ -108,19 +112,19 @@ class Data:
 if not Data.LOGPATH.exists():
     raise Exception("Logpath doesn't exist.")
 
-for _dir in Data.__dirs__:
-    if not _dir.exists():
-        mkdir(_dir)
-for _file in Data.__files__:
-    if not _file.exists():
-        _file.touch()
-        with open(_file, "w") as f:
-            f.write("{}")
+if "--no-gen" not in argv:
 
-if not Data.DATAPATH.exists():
-    Data.DATAPATH.touch()
+    for _dir in Data.__dirs__:
+        if not _dir.exists():
+            mkdir(_dir)
+    for _file in Data.__files__:
+        if not _file.exists():
+            _file.touch()
+            with open(_file, "w") as f:
+                f.write("{}")
 
-mapi = API()  # Mojang API init
+    if not Data.DATAPATH.exists():
+        Data.DATAPATH.touch()
 
 pause: Callable[[], int] = lambda: system("pause" if osname == "nt" else "")
 
@@ -193,12 +197,13 @@ def getuuid(nickname: str) -> str:
     Raises the 'mojang.errors.NotFound' exception if uuid wasn't found."""
     global __uuids
     if nickname not in __uuids:
-        __uuids[nickname] = mapi.get_uuid(nickname)
+        # __uuids[nickname] = mapi.get_uuid(nickname)  # For some reason this started throwing mojang.errors.Forbidden
+        __uuids[nickname] = mojang.get_uuid(nickname)
     return __uuids[nickname]
 
 
 def updateviauuid(uuid: str) -> None:
-    profile = mapi.get_profile(uuid)
+    profile = mojang.get_profile(uuid)
     data = datafile.load()
     data[uuid] = {
         "id": profile.id,

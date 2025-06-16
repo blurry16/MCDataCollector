@@ -8,12 +8,12 @@ from sys import argv
 import disnake
 from disnake.ext import commands
 from dotenv import dotenv_values
-from mojang import API, errors
 
+import mcdatacollector.mojang as mcdcapi
 from mcdatacollector import datafile, getuuid, initializescript
 from mcdatacollector import mcdcdumps, dotenvpath
 
-mapi = API()
+# mapi = API()
 argv = [i.lower() for i in argv[1:]]
 
 activity = disnake.Activity(name="Forrest Gump", type=disnake.ActivityType.watching)
@@ -77,7 +77,7 @@ async def lastseen(inter: disnake.ApplicationCommandInteraction, nickname: str =
                 )
             else:
                 await inter.send("The bot has never seen this player.", ephemeral=True)
-        except errors.NotFound:
+        except mcdcapi.NotFoundException:
             nickname = nickname.lower()
             if nickname in data:
                 last_seen = data[nickname]["last_seen"]
@@ -130,7 +130,7 @@ async def firsttimeseen(inter: disnake.ApplicationCommandInteraction, nickname: 
                 )
             else:
                 await inter.send("The bot has never seen this player.", ephemeral=True)
-        except errors.NotFound:
+        except mcdcapi.NotFoundException:
             nickname = nickname.lower()
             if nickname in data:
                 first_time_seen = data[nickname]["first_time_seen"]
@@ -181,7 +181,7 @@ async def getdbid(inter: disnake.ApplicationCommandInteraction, nickname: str = 
                 )
             else:
                 await inter.send("The bot has never seen this player.", ephemeral=True)
-        except errors.NotFound:
+        except mcdcapi.NotFoundException:
             nickname = nickname.lower()
             if nickname in data:
                 await inter.send(
@@ -218,7 +218,7 @@ async def getdata(inter: disnake.ApplicationCommandInteraction, nickname: str = 
                 await inter.send(f"```json\n{datafile.dumps(uuid, indent=indent)}```")
             else:
                 await inter.send("The bot has never seen this player.", ephemeral=True)
-        except errors.NotFound:
+        except mcdcapi.NotFoundException:
             nickname = nickname.lower()
             if nickname in data:
                 await inter.send(f"```json\n{datafile.dumps(nickname, indent=indent)}```")

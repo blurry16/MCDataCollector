@@ -1,9 +1,10 @@
+import json
 from datetime import datetime, UTC
-from json import dumps
+from pathlib import Path
 
 from colorama import Fore
 
-from mcdatacollector import datafile, statsdataobj, initializescript
+from mcdatacollector import datafile, statsdataobj, initializescript, __JsonFile
 
 
 def genstats():
@@ -17,7 +18,7 @@ def genstats():
         "count": data_len,
         "delta": data_len if len(statsdata) == 0 else data_len - int(statsdata[last_date]["count"]),
     }
-    print(dumps(statsdata, indent=2) + "\n")
+    print(json.dumps(statsdata, indent=2) + "\n")
     if input(f"{Fore.GREEN}Proceed? {Fore.RESET}y/n: ").strip().lower() in ["y", ""]:
         statsdataobj.dump(statsdata)
 
@@ -33,6 +34,23 @@ def parsestats():
 
 def parseraw():
     print(statsdataobj.dumps())
+
+
+def mergestats(path1: Path, path2: Path = statsdataobj.file_path):
+    merged = __JsonFile(path1).load()
+    tomerge = __JsonFile(path2).load()
+    for i in tomerge:
+        if i in merged:
+            print("Merge conflict!")
+            print(f"{i} already existed. Please choose what version you want to merge in.")
+            merged[i] = {"1": merged[i], "2": tomerge[i]}[input(f"1. {merged[i]}\n"
+                                                                f"2. {tomerge[i]}\n").strip()]
+            print("Merge conflict resolved.")
+            continue
+        merged[i] = tomerge[i]
+    mergedfile = DATA.DATAPATH.join("merged-stats.json")
+    with open(mergedfile, "x", encoding="UTF-8") as f:
+        json.dump(merged, f, indent=2)
 
 
 if __name__ == "__main__":

@@ -2,9 +2,9 @@ from datetime import datetime
 from time import time
 
 from colorama import Fore
-from mojang import errors
 
 from mcdatacollector import datafile, getuuid, initializescript
+from mcdatacollector.mojang import NotFoundException
 
 
 def getlastseentime(arg: str):
@@ -26,7 +26,7 @@ def getlastseentime(arg: str):
                     )
                 else:
                     print(f"The bot has never seen {nickname}.")
-            except errors.NotFound:
+            except NotFoundException:
                 if nickname in data:
                     local_data = data[nickname]
                     dt_obj = datetime.fromtimestamp(
@@ -168,17 +168,12 @@ def getdatajson(arg: str):
                     except ValueError:
                         pass
                 local_uuid = getuuid(nickname)
-                if local_uuid in data:
-                    print(datafile.dumps(local_uuid, indent))
-                else:
-                    print(f"The bot has never seen {nickname}.")
+
+                print(
+                    datafile.dumps(local_uuid, indent) if local_uuid in data else f"The bot has never seen {nickname}.")
             except errors.NotFound:
-                if nickname in data:
+                print(datafile.dumps(nickname, indent) if nickname in data else "This player doesn't exist")
 
-                    print(datafile.dumps(nickname, indent))
-
-                else:
-                    print("This player doesn't exist.")
         elif arg == "2":
             inp = input("UUID: ").strip()
             uuid = inp.split()[0].replace("-", "")

@@ -4,8 +4,8 @@ CHATBOT_HOST = None  # Str
 import random
 
 from colorama import Fore
-from mojang import API, errors
 
+import mcdatacollector.mojang as mcdcapi
 from mcdatacollector import Data, follow, updateviauuid, updatevianickname, chatbot, initializescript, \
     getuuid
 
@@ -89,7 +89,7 @@ def main():
                             try:
                                 uuid = getuuid(nickname)
                                 updateviauuid(uuid)
-                            except errors.NotFound:
+                            except mcdcapi.NotFoundException:
                                 updatevianickname(nickname)
                             print("\n")
 
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     PASSCODE = generatepasscode()  # generating passcode
     initializescript("tracker " + PASSCODE)
 
-    mapi = API()  # Init Mojang API
+    # mapi = API()  # Init Mojang API
 
     try:
         main()

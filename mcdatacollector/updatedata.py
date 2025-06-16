@@ -2,9 +2,9 @@ from time import sleep
 from typing import TextIO, Generator
 
 from colorama import Fore
-from mojang import errors
 
-from mcdatacollector import datafile, mapi, updateviauuid, updatevianickname, Data, getuuid, initializescript, __logger
+import mcdatacollector.mojang as mcdcapi
+from mcdatacollector import datafile, updateviauuid, updatevianickname, Data, getuuid, initializescript, __logger
 
 
 def updatebynicknames():
@@ -16,7 +16,7 @@ def updatebynicknames():
 
             updateviauuid(uuid)
             sleep(0.1)
-        except errors.NotFound:
+        except mcdcapi.NotFoundException:
             count -= 1
             print(f"{Fore.RED}{nickname} doesn't exist.")
             continue
@@ -63,7 +63,7 @@ def updatewithlist() -> None:
                     try:
                         uuid: str = getuuid(nickname)
                         updateviauuid(uuid)
-                    except errors.NotFound:
+                    except mcdcapi.NotFoundException:
                         updatevianickname(nickname)
                         continue
                     sleep(0.25)
@@ -76,7 +76,7 @@ def updateeveryonesdata():
     datalen = len(data)
     for index, uuid in enumerate(data):
         if data[uuid]["id"] is not None:
-            profile = mapi.get_profile(uuid)
+            profile = mcdcapi.get_profile(uuid)
             data[uuid] = {
                 "id": profile.id,
                 "name": profile.name,
