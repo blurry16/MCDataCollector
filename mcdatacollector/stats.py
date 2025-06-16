@@ -4,7 +4,7 @@ from pathlib import Path
 
 from colorama import Fore
 
-from mcdatacollector import datafile, statsdataobj, initializescript, __JsonFile
+from mcdatacollector import datafile, statsdataobj, initializescript, __JsonFile, Data
 
 
 def genstats():
@@ -48,7 +48,7 @@ def mergestats(path1: Path, path2: Path = statsdataobj.file_path):
             print("Merge conflict resolved.")
             continue
         merged[i] = tomerge[i]
-    mergedfile = DATA.DATAPATH.join("merged-stats.json")
+    mergedfile = Data.DATAPATH.join("merged-stats.json")
     with open(mergedfile, "x", encoding="UTF-8") as f:
         json.dump(merged, f, indent=2)
 

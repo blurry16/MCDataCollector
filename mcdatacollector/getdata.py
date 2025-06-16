@@ -4,7 +4,7 @@ from time import time
 from colorama import Fore
 
 from mcdatacollector import datafile, getuuid, initializescript
-from mcdatacollector.mojang import NotFoundException
+import mcdatacollector.mojang as mcdcapi
 
 
 def getlastseentime(arg: str):
@@ -26,7 +26,7 @@ def getlastseentime(arg: str):
                     )
                 else:
                     print(f"The bot has never seen {nickname}.")
-            except NotFoundException:
+            except mcdcapi.NotFoundException:
                 if nickname in data:
                     local_data = data[nickname]
                     dt_obj = datetime.fromtimestamp(
@@ -98,7 +98,7 @@ def getfirstseentime(arg: str):
                     )
                 else:
                     print(f"The bot has never seen {nickname}.")
-            except errors.NotFound:
+            except mcdcapi.NotFoundException:
                 if nickname in data:
                     local_data = data[nickname]
                     timestamp = local_data["first_time_seen"]
@@ -171,7 +171,7 @@ def getdatajson(arg: str):
 
                 print(
                     datafile.dumps(local_uuid, indent) if local_uuid in data else f"The bot has never seen {nickname}.")
-            except errors.NotFound:
+            except mcdcapi.NotFoundException:
                 print(datafile.dumps(nickname, indent) if nickname in data else "This player doesn't exist")
 
         elif arg == "2":
@@ -226,7 +226,7 @@ def getdbid(arg: str):
                     print(f"{nickname}'s database id is {data[uuid]['db_id']}.")
                 else:
                     print(f"The bot has never seen {nickname}.")
-            except errors.NotFound:
+            except mcdcapi.NotFoundException:
                 if inp.lower() in data:
                     local_data = data[inp]
                     print(f"{local_data['name']}'s database id is {local_data['db_id']}")

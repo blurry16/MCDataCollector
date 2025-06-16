@@ -3,9 +3,9 @@ from datetime import datetime
 
 import keyboard
 from colorama import Fore
-from mojang import errors
 
 from mcdatacollector import datafile, getuuid, initializescript, __logger
+import mcdatacollector.mojang as mcdcapi
 
 CHATBOTBANNED = []
 
@@ -46,7 +46,7 @@ def lastseen(line: str):
                     f"({datetime.fromtimestamp(round(time.time())) -
                         datetime.fromtimestamp(data[uuid]['last_seen'])} ago)"
                 )
-        except errors.NotFound:
+        except mcdcapi.NotFoundException:
             arg = arg.lower()
             if arg not in data:
                 mcprint("This player doesn't exist.")
@@ -74,7 +74,7 @@ def firsttimeseen(line: str):
                     f"({datetime.fromtimestamp(round(time.time())) -
                         datetime.fromtimestamp(data[uuid]['first_time_seen'])} ago)"
                 )
-        except errors.NotFound:
+        except mcdcapi.NotFoundException:
             arg = arg.lower()
             if arg not in data:
                 mcprint("This player doesn't exist.")
@@ -115,7 +115,7 @@ def getdbid(line: str):
                 mcprint(
                     f"{nickname}'s database ID is {data[uuid]['db_id']}"
                 )
-        except errors.NotFound:
+        except mcdcapi.NotFoundException:
             arg = arg.lower()
             if arg not in data:
                 mcprint("This player doesn't exist.")
