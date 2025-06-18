@@ -214,17 +214,17 @@ def main():
                     logger.warning(
                         "please mind that you're currently using DEVELOPER build. update checking may work wrong.")
                 githubversion = requests.get(
-                    "https://raw.githubusercontent.com/blurry16/MCDataCollector/refs/heads/main/mcdatacollector/__init__.py").text.split(
+                    "https://raw.githubusercontent.com/blurry16/MCDataCollector/refs/heads/release/mcdatacollector/__init__.py").text.split(
                     "\n")[0].split(" ")[2].replace("\"", "")
                 if githubversion[:3] == "dev":
                     print(
-                        f"{Fore.RED}Update checking is unavailable. The main branch has 'dev' tag in its __version__.")
+                        f"{Fore.RED}Update checking is unavailable. The release branch has 'dev' tag in its __version__.")
                     continue
                 la, lb, lc = map(int, (localversion[3:] if isdevbuild else localversion).split("."))  # local a, ...
                 a, b, c = map(int, githubversion.split("."))
                 if a > la or (a == la and b > lb) or (a == la and b == lb and c > lc):
                     print(f"{Fore.GREEN}Good news! New version {githubversion} is available at "
-                          f"{REPOURL}releases/latest!")
+                          f"{REPOURL}releases/!")
 
 
                 else:
