@@ -8,6 +8,7 @@ from colorama import Fore
 from mcdatacollector import __version__ as localversion, REPOURL, csvfolder, updateviauuid, updatevianickname
 from mcdatacollector import getdata, saveskins, updatedata, stats, initializescript
 from mcdatacollector import mcdcdumps
+from mcdatacollector.mojang import get_uuid
 
 
 def __csvfolderregen(subpath: str):
@@ -239,6 +240,11 @@ def main():
                         updateviauuid(arg)
                     elif m == "--username":
                         updatevianickname(arg)
+
+            case "--getuuid" | "--uuid":
+                if len(inp.split()) > 1:
+                    arg = inp.split()[1]
+                    print(get_uuid(arg))
 
             case _:
                 print(f"{Fore.RED}Unknown command.")

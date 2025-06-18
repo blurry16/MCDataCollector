@@ -1,4 +1,4 @@
-__version__ = "dev1.4.0"  # MCDC version
+__version__ = "pre1-v1.4.0"  # MCDC version
 
 
 class Config:
